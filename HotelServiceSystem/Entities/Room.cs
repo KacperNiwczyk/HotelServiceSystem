@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using HotelServiceSystem.Interfaces.Entities;
 
 namespace HotelServiceSystem.Entities
@@ -23,5 +24,7 @@ namespace HotelServiceSystem.Entities
         public bool IsOutOfService { get; set; }
         
         public bool ShouldBeCleaned { get; set; }
+        
+        public ICollection<RoomReservation> RoomReservations { get; set; }
     }
 }

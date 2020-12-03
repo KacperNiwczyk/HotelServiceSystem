@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using HotelServiceSystem.Interfaces.Entities;
 
 namespace HotelServiceSystem.Entities
@@ -19,5 +20,7 @@ namespace HotelServiceSystem.Entities
         public string Email { get; set; }
         
         public string PhoneNumber { get; set; }
+        
+        public ICollection<Reservation> Reservations { get; set; }
     }
 }
