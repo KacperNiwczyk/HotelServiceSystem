@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HotelServiceSystem.Core;
+using HotelServiceSystem.Core.Repositories;
+using HotelServiceSystem.Core.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using HotelServiceSystem.Data;
+using HotelServiceSystem.Interfaces.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,6 +36,9 @@ namespace HotelServiceSystem
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
             services.AddScoped<AuthenticationStateProvider, HotelServiceAuthenticationStateProvider>();
+            services.AddTransient(typeof(IRepository<>), typeof(BaseRepository<>));
+            services.AddTransient<IRoomRepository, RoomRepository>();
+            services.AddTransient<IRoomService, RoomService>();
             services.AddDbContext<HotelServiceDatabaseContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
         }

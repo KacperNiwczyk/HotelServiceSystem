@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using HotelServiceSystem.Entities;
 
-namespace HotelServiceSystem.Core.Service
+namespace HotelServiceSystem.Core.Repositories
 {
-    public class RoomService : BaseRepository<Room>, IRoomRepository
+    public class RoomRepository : BaseRepository<Room>, IRoomRepository
     {
-        public RoomService(HotelServiceDatabaseContext hotelServiceDatabaseContext) : base(hotelServiceDatabaseContext)
+        public RoomRepository(HotelServiceDatabaseContext hotelServiceDatabaseContext) : base(hotelServiceDatabaseContext)
         {
         }
 
