@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using HotelServiceSystem.Data;
+
 using HotelServiceSystem.Interfaces.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -34,7 +34,6 @@ namespace HotelServiceSystem
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
             services.AddScoped<AuthenticationStateProvider, HotelServiceAuthenticationStateProvider>();
             services.AddTransient(typeof(IRepository<>), typeof(BaseRepository<>));
             services.AddTransient<IRoomRepository, RoomRepository>();

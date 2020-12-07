@@ -1,0 +1,64 @@
+﻿@typeparam T
+@using System.Globalization
+@using System.Linq.Expressions
+@inherits InputBase<T>
+
+
+<div class="col-12 row">
+    <label class="col-2">@Caption</label>
+    <input class="form-control col-3" @bind="@CurrentValue"/>
+</div>
+<br />
+
+@code {
+    [Parameter]
+    public string Caption { get; set; }
+    [Parameter]
+    public Expression<Func<T>> ValidationFor { get; set; }
+
+    protected override bool TryParseValueFromString(string value, out T result, out string validationErrorMessage)
+    {
+        if (typeof(T) == typeof(string))
+        {
+            result = (T) (object) value;
+            validationErrorMessage = null;
+
+            return true;
+        }
+        if (typeof(T) == typeof(int))
+        {
+            int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var parsedValue);
+            result = (T) (object) parsedValue;
+            validationErrorMessage = null;
+
+            return true;
+        }
+        if (typeof(T) == typeof(Guid))
+        {
+            Guid.TryParse(value, out var parsedValue);
+            result = (T) (object) parsedValue;
+            validationErrorMessage = null;
+
+            return true;
+        }
+        if (typeof(T).IsEnum)
+        {
+            try
+            {
+                result = (T) Enum.Parse(typeof(T), value);
+                validationErrorMessage = null;
+
+                return true;
+            }
+            catch (ArgumentException)
+            {
+                result = default;
+                validationErrorMessage = $"The {FieldIdentifier.FieldName} field is not valid.";
+
+                return false;
+            }
+        }
+        throw new InvalidOperationException($"{GetType()} does not support the type '{typeof(T)}'.");
+    }
+
+}

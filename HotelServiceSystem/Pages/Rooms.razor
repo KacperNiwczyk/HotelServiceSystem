@@ -1,54 +1,43 @@
 ﻿@page "/rooms"
 @using HotelServiceSystem.Interfaces.Services
 @using HotelServiceSystem.Entities
+@using HotelServiceSystem.Core.Components
 @inject IRoomService roomService
 
 <h3>Rooms</h3>
 <div class="col-12">
     <hr/>
-    <EditForm Model="@ModelRoom" OnSubmit="@SaveRoom">
-        <div class="col-12 row">
-            <label class="col-2">Nr pokoju</label>
-            <InputText class="form-control col-3" @bind-Value="ModelRoom.RoomIdentifier"/>
-        </div>
-        <br />
-        <div class="col-12 row">
-            <label class="col-2">Piętro</label>
-            <InputNumber class="form-control col-3" @bind-Value="ModelRoom.Floor"/>
-        </div>
-        <br />
-        <div class="col-12 row">
-            <label class="col-2">Ilość łóżek</label>
-            <InputNumber class="form-control col-3" @bind-Value="ModelRoom.NumberOfBeds"/>
-        </div>
-        <br />
+    <EditForm Model="@ModelRoom" OnValidSubmit="@SaveRoom">
+        <HssInputCustom Caption="Room identifier" @bind-Value="ModelRoom.RoomIdentifier"/>
+        <HssInputCustom Caption="Floor" @bind-Value="ModelRoom.Floor" />
+        <HssInputCustom Caption="Number of beds" @bind-Value="ModelRoom.NumberOfBeds"/>
+        <HssInputCustom Caption="Capacity of guests" @bind-Value="ModelRoom.GuestsCapacity"/>
+        <HssInputCustom Caption="Price" @bind-Value="ModelRoom.Price"/>
         <div class="col-12 row">
             <span class="col-2"></span>
-            <input type="submit" class="form-control col-1 btn btn-primary" value="Zapisz"/>
-            <span>&nbsp;</span>
-            <input type="submit" class="form-control col-1 btn btn-primary" value="Wyczyść"/>
+            <input type="submit" class="form-control col-1 btn btn-primary" value="Submit"/>
         </div>
     </EditForm>
     
     <div class="col-10">
-        <h3>Pokoje</h3>
+        <h3>Rooms</h3>
         <table class="table">
             <thead>
             <tr>
-                <th>Nr Pokoju</th>
-                <th>Ilość miejsc</th>
-                <th>Ilość łóżek</th>
-                <th>Piętro</th>
-                <th>Cena</th>
-                <th>Czy jest wolny?</th>
-                <th>Dostępny?</th>
-                <th>Czeka na sprzątanie?</th>
+                <th>Room number</th>
+                <th>Capacity</th>
+                <th>Number of beds</th>
+                <th>Floor</th>
+                <th>Price</th>
+                <th>Is free?</th>
+                <th>Is out of service?</th>
+                <th>Need cleaning?</th>
             </tr>
             </thead>
             <tbody>
-            @if (roomList != null)
+            @if (RoomList != null)
             {
-                foreach (var room in roomList)
+                foreach (var room in RoomList)
                 {
                     <tr>
                         <td>@room.RoomIdentifier</td>
@@ -71,25 +60,32 @@
     </div>
 </div>
 
-
 @code {
-    private List<Room> roomList { get; set; }
+    private List<Room> RoomList { get; set; }
     private Room ModelRoom { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        ModelRoom = new Room();
-        roomList = roomService.GetAllRoomsAsync();
+        ModelRoom = SetNewRoom();
+        RoomList = roomService.GetAllRoomsAsync();
         await base.OnInitializedAsync();
     }
 
-    private async void SaveRoom()
+    private async Task SaveRoom()
     {
-        ModelRoom.RoomReservations = new List<RoomReservation>();
-        ModelRoom.IsFree = true;
-        ModelRoom.IsOutOfService = false;
-        ModelRoom.ShouldBeCleaned = false;
         await roomService.AddRoomAsync(ModelRoom);
-        ModelRoom = new Room();
+        RoomList.Add(ModelRoom);
+        ModelRoom = SetNewRoom();
+    }
+
+    private Room SetNewRoom()
+    {
+        return new Room()
+        {
+            RoomReservations = new List<RoomReservation>(),
+            IsFree = true,
+            IsOutOfService = false,
+            ShouldBeCleaned = false
+        };
     }
 }
