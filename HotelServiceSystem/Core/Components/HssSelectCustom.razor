@@ -1,9 +1,10 @@
 ﻿@using System.Globalization
 @using System.Linq.Expressions
+@using HotelServiceSystem.Interfaces.Entities
 @typeparam T
 @inherits InputBase<T>
 
-<div class="form-control-wrapper">
+<div class="form-control-wrapper col-12-row">
     @if (!string.IsNullOrWhiteSpace(Label))
     {
         <label class="form-control-label" for="@Id">@Label</label>
@@ -18,9 +19,10 @@
     </select>
 
     <div class="form-control-validation">
-        <ValidationMessage For="@ValidationFor" />
+        <ValidationMessage For="@ValidationFor" /> 
     </div>
 </div>
+<br /> 
 
 @code {
     [Parameter] public string Id { get; set; }

@@ -1,6 +1,104 @@
 ﻿@page "/reservations"
+@using HotelServiceSystem.Entities
+@using HotelServiceSystem.Interfaces.Services
+@inject IHotelReservationService hotelReservationService
+@inject IRoomService roomService
+@inject IClientService clientService
+
 <h3>Reservations</h3>
+<div class="col-12">
+    <hr/>
+    <EditForm Model="@ReservationModel" OnValidSubmit="@SaveReservation">
+        <HssSelectCustom Label="Client" @bind-Value="SelectedClient.Id" ValidationFor="@(() => SelectedClient.Id)">
+            @foreach (var client in ClientList)
+            {
+                <option value="@client.Id">@client.FirstName @client.LastName</option>
+            }
+        </HssSelectCustom>
+        <HssInputCustom Caption="Number of guests" @bind-Value="ReservationModel.NumberOfGuests"/>
+        <HssInputCustom Caption="Price" @bind-Value="ReservationModel.Price"/>
+        <HssInputCustom Caption="Discount" @bind-Value="ReservationModel.Discount"/>
+        <div class="col-12 row">
+            <span class="col-2"></span>
+            <input type="submit" class="form-control col-1 btn btn-primary" value="Submit"/>
+        </div>
+    </EditForm>
+    
+    <div class="col-10">
+        <h3>Reservations</h3>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Client</th>
+                <th>Price</th>
+                <th>Discount</th>
+                <th>Date of submission</th>
+                <th>Number of guests</th>
+            </tr>
+            </thead>
+            <tbody>
+            @if (ReservationList != null)
+            {
+                if (ReservationList.Count > 0)
+                {
+                    foreach (var reservation in ReservationList)
+                    {
+                        <tr>
+                            <td>@reservation.Id</td>
+                            <td>@reservation.Client.FirstName @reservation.Client.LastName</td>
+                            <td>@reservation.Price</td>
+                            <td>@reservation.Discount</td>
+                            <td>@reservation.DateOfSubmission</td>
+                            <td>@reservation.NumberOfGuests</td>
+                        </tr>
+                    }
+                }
+            }
+            else
+            {
+                <h3>..Loading</h3>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
 
 @code {
+    
+    private List<HotelReservation> ReservationList { get; set; }
+    private HotelReservation ReservationModel { get; set; }
+    private List<Client> ClientList { get; set; }
+    private List<Room> RoomList { get; set; }
+    private Client SelectedClient = new Client();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ReservationList = hotelReservationService.GetAllHotelReservations();
+        RoomList = roomService.GetAllRoomsAsync();
+        ClientList = clientService.GetAllClients();
+        ReservationModel = SetNewHotelReservation();
+        await base.OnInitializedAsync();
+    }
+
+    private async Task SaveReservation()
+    {
+        SelectedClient = ClientList.FirstOrDefault(x => x.Id == SelectedClient.Id);
+        ReservationModel.Client = SelectedClient;
+        await hotelReservationService.AddHotelReservationAsync(ReservationModel);
+        ReservationList.Add(ReservationModel);
+        ReservationModel = SetNewHotelReservation();
+    }
+
+    private HotelReservation SetNewHotelReservation()
+    {
+        return new HotelReservation()
+        {
+            RoomReservations = new List<RoomReservation>(),
+            AdditionalServiceReservations = new List<AdditionalServiceReservation>()
+        };
+    }
     
 }
