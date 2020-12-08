@@ -46,7 +46,7 @@ namespace HotelServiceSystem.Core
             return entity;
         }
 
-        public async Task<TEntity> DeleteAsync(TEntity entity)
+        public async Task DeleteAsync(TEntity entity)
         {
             if (entity == null)
             {
@@ -55,8 +55,6 @@ namespace HotelServiceSystem.Core
 
             HotelServiceDatabaseContext.Remove(entity);
             await HotelServiceDatabaseContext.SaveChangesAsync();
-
-            return entity;
         }
     }
 }

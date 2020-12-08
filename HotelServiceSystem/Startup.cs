@@ -38,6 +38,10 @@ namespace HotelServiceSystem
             services.AddTransient(typeof(IRepository<>), typeof(BaseRepository<>));
             services.AddTransient<IRoomRepository, RoomRepository>();
             services.AddTransient<IRoomService, RoomService>();
+            services.AddTransient<IClientRepository, ClientRepository>();
+            services.AddTransient<IClientService, ClientService>();
+            services.AddTransient<IHotelReservationRepository, HotelReservationRepository>();
+            services.AddTransient<IHotelReservationService, HotelReservationService>();
             services.AddDbContext<HotelServiceDatabaseContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
         }

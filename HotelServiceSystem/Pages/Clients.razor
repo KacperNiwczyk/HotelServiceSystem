@@ -1,6 +1,78 @@
 ﻿@page "/clients"
+@using HotelServiceSystem.Entities
+@using HotelServiceSystem.Interfaces.Services
+@inject IClientService clientService
 <h3>Clients</h3>
 
-@code {
+<div class="col-12">
+    <hr/>
+    <EditForm Model="@ClientModel" OnValidSubmit="@SaveClient">
+        <HssInputCustom Caption="First name" @bind-Value="ClientModel.FirstName"/>
+        <HssInputCustom Caption="Last name" @bind-Value="ClientModel.LastName" />
+        <HssInputCustom Caption="Company name" @bind-Value="ClientModel.CompanyName"/>
+        <HssInputCustom Caption="Email" @bind-Value="ClientModel.Email"/>
+        <HssInputCustom Caption="Phone number" @bind-Value="ClientModel.PhoneNumber"/>
+        <HssInputCustom Caption="Tax Id" @bind-Value="ClientModel.TaxId"/>
+        <div class="col-12 row">
+            <span class="col-2"></span>
+            <input type="submit" class="form-control col-1 btn btn-primary" value="Submit"/>
+        </div>
+    </EditForm>
     
+    <div class="col-10">
+        <h3>Clients</h3>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>First mame</th>
+                <th>Last name</th>
+                <th>Company name</th>
+                <th>Email</th>
+                <th>Phone number</th>
+                <th>Tax Id</th>
+            </tr>
+            </thead>
+            <tbody>
+            @if (ClientList != null)
+            {
+                foreach (var client in ClientList)
+                {
+                    <tr>
+                        <td>@client.FirstName</td>
+                        <td>@client.LastName</td>
+                        <td>@client.CompanyName</td>
+                        <td>@client.Email</td>
+                        <td>@client.PhoneNumber</td>
+                        <td>@client.TaxId</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <h3>..Loading</h3>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@code {
+    private Client ClientModel { get; set; }
+    private List<Client> ClientList { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ClientModel = new Client();
+        ClientList = clientService.GetAllClients();
+        await base.OnInitializedAsync();
+    }
+
+
+    private async Task SaveClient()
+    {
+        await clientService.AddClientAsync(ClientModel);
+        ClientList.Add(ClientModel);
+        ClientModel = new Client();
+    }
 }
