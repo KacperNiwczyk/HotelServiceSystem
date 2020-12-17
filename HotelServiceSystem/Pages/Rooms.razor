@@ -1,6 +1,8 @@
 ﻿@page "/rooms"
 @using HotelServiceSystem.Interfaces.Services
 @using HotelServiceSystem.Entities
+@using MatBlazor.Components
+@using HotelServiceSystem.Core
 
 @inject IRoomService roomService
 
@@ -10,23 +12,29 @@
     <EditForm Model="@ModelRoom" OnValidSubmit="@SaveRoom">
         <HssInputCustom Caption="Room identifier" @bind-Value="ModelRoom.RoomIdentifier"/>
         <HssInputCustom Caption="Floor" @bind-Value="ModelRoom.Floor" />
-        <HssInputCustom Caption="Number of beds" @bind-Value="ModelRoom.NumberOfBeds"/>
-        <HssInputCustom Caption="Capacity of guests" @bind-Value="ModelRoom.GuestsCapacity"/>
         <HssInputCustom Caption="Price" @bind-Value="ModelRoom.Price"/>
+        <div class="col-12 row">
+            <MatButton Unelevated="true" Type="Button" Class="form-control col-2" OnClick="@( s => AddBed(BedType.SingleBed))">Add single bed</MatButton>
+            <MatButton Unelevated="true" Type="Button" Class="form-control col-2" OnClick="@( s => AddBed(BedType.DoubleBed))">Add double bed</MatButton>
+        </div>
+        <div class="col-12 row">
+            <label class="col-2">X @BedCount(BedType.SingleBed) Single Beds</label>
+            <label class="col-2">X @BedCount(BedType.DoubleBed) Double Beds</label>
+        </div>
+        <br/>
         <div class="col-12 row">
             <span class="col-2"></span>
             <input type="submit" class="form-control col-1 btn btn-primary" value="Submit"/>
         </div>
     </EditForm>
-    
     <div class="col-10">
         <h3>Rooms</h3>
         <table class="table">
             <thead>
             <tr>
                 <th>Room number</th>
-                <th>Capacity</th>
-                <th>Number of beds</th>
+                <th>Single beds</th>
+                <th>Double beds</th>
                 <th>Floor</th>
                 <th>Price</th>
                 <th>Is free?</th>
@@ -41,10 +49,8 @@
                 {
                     <tr>
                         <td>@room.RoomIdentifier</td>
-                        <td>@room.GuestsCapacity</td>
-                        <td>@room.NumberOfBeds</td>
-                        <td>@room.Floor</td>
-                        <td>@room.Price</td>
+                        <td>@BedCount(room, BedType.SingleBed)</td>
+                        <td>@BedCount(room, BedType.DoubleBed)</td>
                         <td>@room.IsFree</td>
                         <td>@room.IsOutOfService</td>
                         <td>@room.ShouldBeCleaned</td>
@@ -83,9 +89,25 @@
         return new Room()
         {
             RoomReservations = new List<RoomReservation>(),
+            Beds = new List<Bed>(),
             IsFree = true,
             IsOutOfService = false,
             ShouldBeCleaned = false
         };
+    }
+
+    private void AddBed(BedType bedType)
+    {
+        ModelRoom.Beds.Add(new Bed() {BedType = bedType});
+    }
+
+    private int BedCount(BedType bedType)
+    {
+        return ModelRoom.Beds.Count(x => x.BedType == bedType);
+    }
+
+    private int BedCount(Room room, BedType bedType)
+    {
+        return room.Beds.Count(x => x.BedType == bedType);
     }
 }

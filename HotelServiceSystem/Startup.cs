@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using HotelServiceSystem.Core;
 using HotelServiceSystem.Core.Repositories;
 using HotelServiceSystem.Core.Service;
+using HotelServiceSystem.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
@@ -14,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 using HotelServiceSystem.Interfaces.Services;
+using MatBlazor;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,6 +36,7 @@ namespace HotelServiceSystem
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddMatBlazor();
             services.AddScoped<AuthenticationStateProvider, HotelServiceAuthenticationStateProvider>();
             services.AddTransient(typeof(IRepository<>), typeof(BaseRepository<>));
             services.AddTransient<IRoomRepository, RoomRepository>();

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using HotelServiceSystem.Core;
 using HotelServiceSystem.Interfaces.Entities;
 
 namespace HotelServiceSystem.Entities
@@ -10,10 +11,8 @@ namespace HotelServiceSystem.Entities
         public int Id { get; set; }
         
         public string RoomIdentifier { get; set; }
-        
-        public int GuestsCapacity { get; set; }
-        
-        public int NumberOfBeds { get; set; }
+
+        public ICollection<Bed> Beds { get; set; }
         
         public int Floor { get; set; }
         

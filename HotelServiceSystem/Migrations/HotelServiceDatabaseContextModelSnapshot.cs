@@ -52,6 +52,26 @@ namespace HotelServiceSystem.Migrations
                     b.ToTable("AdditionalServiceReservation");
                 });
 
+            modelBuilder.Entity("HotelServiceSystem.Entities.Bed", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("BedType")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RoomId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoomId");
+
+                    b.ToTable("Beds");
+                });
+
             modelBuilder.Entity("HotelServiceSystem.Entities.Client", b =>
                 {
                     b.Property<int>("Id")
@@ -127,17 +147,11 @@ namespace HotelServiceSystem.Migrations
                     b.Property<int>("Floor")
                         .HasColumnType("int");
 
-                    b.Property<int>("GuestsCapacity")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsFree")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsOutOfService")
                         .HasColumnType("bit");
-
-                    b.Property<int>("NumberOfBeds")
-                        .HasColumnType("int");
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
@@ -231,6 +245,15 @@ namespace HotelServiceSystem.Migrations
                     b.Navigation("Reservation");
                 });
 
+            modelBuilder.Entity("HotelServiceSystem.Entities.Bed", b =>
+                {
+                    b.HasOne("HotelServiceSystem.Entities.Room", "Room")
+                        .WithMany("Beds")
+                        .HasForeignKey("RoomId");
+
+                    b.Navigation("Room");
+                });
+
             modelBuilder.Entity("HotelServiceSystem.Entities.Reservation", b =>
                 {
                     b.HasOne("HotelServiceSystem.Entities.Client", "Client")
@@ -276,6 +299,8 @@ namespace HotelServiceSystem.Migrations
 
             modelBuilder.Entity("HotelServiceSystem.Entities.Room", b =>
                 {
+                    b.Navigation("Beds");
+
                     b.Navigation("RoomReservations");
                 });
 
