@@ -14,6 +14,9 @@ namespace HotelServiceSystem.Entities
         
         public int NumberOfGuests { get; set; }
         
+        public DateTime DateFrom { get; set; }
+        public DateTime DateTo { get; set; }
+        
         public double Price { get; set; }
         
         public DateTime DateOfSubmission { get; set; }
@@ -21,5 +24,10 @@ namespace HotelServiceSystem.Entities
         public double Discount { get; set; }
         
         public ICollection<AdditionalServiceReservation> AdditionalServiceReservations { get; set; }
+
+        public Reservation()
+        {
+            AdditionalServiceReservations = new List<AdditionalServiceReservation>();
+        }
     }
 }

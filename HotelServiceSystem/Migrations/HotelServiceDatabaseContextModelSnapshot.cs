@@ -112,7 +112,13 @@ namespace HotelServiceSystem.Migrations
                     b.Property<int?>("ClientId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("DateFrom")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("DateOfSubmission")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateTo")
                         .HasColumnType("datetime2");
 
                     b.Property<double>("Discount")

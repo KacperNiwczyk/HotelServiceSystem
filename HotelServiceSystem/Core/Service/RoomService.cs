@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using HotelServiceSystem.Entities;
 using HotelServiceSystem.Interfaces.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace HotelServiceSystem.Core.Service
 {
@@ -17,7 +18,7 @@ namespace HotelServiceSystem.Core.Service
 
         public List<Room> GetAllRoomsAsync()
         {
-            return _roomRepository.GetAll().ToList();
+            return _roomRepository.GetAll().Include(x => x.Beds).ToList();
         }
 
         public async Task<Room> AddRoomAsync(Room room)
