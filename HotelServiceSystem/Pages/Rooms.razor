@@ -1,7 +1,6 @@
 ﻿@page "/rooms"
 @using HotelServiceSystem.Interfaces.Services
 @using HotelServiceSystem.Entities
-@using MatBlazor.Components
 @using HotelServiceSystem.Core
 
 @inject IRoomService roomService
@@ -14,12 +13,8 @@
         <HssInputCustom Caption="Floor" @bind-Value="ModelRoom.Floor" />
         <HssInputCustom Caption="Price" @bind-Value="ModelRoom.Price"/>
         <div class="col-12 row">
-            <MatButton Unelevated="true" Type="Button" Class="form-control col-2" OnClick="@( s => AddBed(BedType.SingleBed))">Add single bed</MatButton>
-            <MatButton Unelevated="true" Type="Button" Class="form-control col-2" OnClick="@( s => AddBed(BedType.DoubleBed))">Add double bed</MatButton>
-        </div>
-        <div class="col-12 row">
-            <label class="col-2">X @BedCount(BedType.SingleBed) Single Beds</label>
-            <label class="col-2">X @BedCount(BedType.DoubleBed) Double Beds</label>
+            <MatButton Unelevated="true" Type="Button" Class="form-control col-2" Style="margin-right: 10px" OnClick="@( s => AddBed(BedType.SingleBed))">X @BedCount(BedType.SingleBed) Single Beds</MatButton>
+            <MatButton Unelevated="true" Type="Button" Class="form-control col-2" OnClick="@( s => AddBed(BedType.DoubleBed))">X @BedCount(BedType.DoubleBed) Double Beds</MatButton>
         </div>
         <br/>
         <div class="col-12 row">
@@ -73,7 +68,7 @@
     protected override async Task OnInitializedAsync()
     {
         ModelRoom = SetNewRoom();
-        RoomList = roomService.GetAllRoomsAsync();
+        RoomList = roomService.GetAllRoomsWithRelations(x => x.Beds);
         await base.OnInitializedAsync();
     }
 

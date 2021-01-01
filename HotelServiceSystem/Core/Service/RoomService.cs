@@ -1,9 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
+using HotelServiceSystem.Core.Helpers;
 using HotelServiceSystem.Entities;
 using HotelServiceSystem.Interfaces.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace HotelServiceSystem.Core.Service
 {
@@ -18,7 +22,7 @@ namespace HotelServiceSystem.Core.Service
 
         public List<Room> GetAllRoomsAsync()
         {
-            return _roomRepository.GetAll().Include(x => x.Beds).ToList();
+            return _roomRepository.GetAll().ToList();
         }
 
         public async Task<Room> AddRoomAsync(Room room)
@@ -34,6 +38,11 @@ namespace HotelServiceSystem.Core.Service
         public Task RemoveRoomAsync(Room room)
         {
             throw new System.NotImplementedException();
+        }
+
+        public List<Room> GetAllRoomsWithRelations(params Expression<Func<Room, object>>[] navigationProperties)
+        {
+            return _roomRepository.GetAll().IncludeMultiple(navigationProperties).ToList();
         }
     }
 }
