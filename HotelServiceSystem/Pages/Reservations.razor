@@ -1,41 +1,25 @@
 ﻿@page "/reservations"
 @using HotelServiceSystem.Entities
-@using HotelServiceSystem.Features
 @using HotelServiceSystem.Interfaces.Services
 @using System.Text
 @inject IHotelReservationService hotelReservationService
 @inject IRoomService roomService
-@inject IClientService clientService
 
 <h3>Reservations</h3>
 <div class="col-12">
     <hr/>
-    <EditForm Model="@ReservationModel" OnValidSubmit="@SaveReservation">
-        <HssSelectCustom Label="Client" @bind-Value="_selectedClient.Id" ValidationFor="@(() => _selectedClient.Id)">
-            @foreach (var client in ClientList)
-            {
-                <option value="@client.Id">@client.FirstName @client.LastName</option>
-            }
-        </HssSelectCustom>
-        <HssInputCustom Caption="Number of guests" @bind-Value="ReservationModel.NumberOfGuests"/>
-        <div class="col-12 row">
-            <label class="col-2">Date From</label>
-            <MatDatePicker class="form-control col-3" @bind-Value="ReservationModel.DateFrom"/>
-        </div>
-        <div class="col-12 row">
-            <label class="col-2">Date to</label>
-            <MatDatePicker class="form-control col-3" @bind-Value="ReservationModel.DateTo"/>
-        </div>
-          <div class="form-group">
-               <HSSMultiSelector Selected="@_selected" NotSelected="@_notSelected"></HSSMultiSelector>
-          </div>
-        <HssInputCustom Caption="Price" @bind-Value="ReservationModel.Price"/>
-        <HssInputCustom Caption="Discount" @bind-Value="ReservationModel.Discount"/>
-        <div class="col-12 row">
-            <span class="col-2"></span>
-            <input type="submit" class="form-control col-1 btn btn-primary" value="Submit"/>
-        </div>
-    </EditForm>
+    <MatAccordion>
+        <MatExpansionPanel>
+            <MatExpansionPanelSummary>
+                <MatExpansionPanelHeader>
+                    Add Hotel Reservation
+                </MatExpansionPanelHeader>
+            </MatExpansionPanelSummary>
+            <MatExpansionPanelDetails>
+                <HssHotelReservationAdd OnReservationAdd="@OnReservationAdd"/>
+            </MatExpansionPanelDetails>
+        </MatExpansionPanel>
+    </MatAccordion>
     <div class="col-10">
         <h3>Reservations</h3>
         <table class="table">
@@ -81,66 +65,37 @@
 @code {
     
     private List<HotelReservation> ReservationList { get; set; }
-    private HotelReservation ReservationModel { get; set; }
-    private List<Client> ClientList { get; set; }
-    private List<Room> RoomList { get; set; }
-    private Client _selectedClient = new Client();
-    private readonly List<MultiSelector> _selected = new List<MultiSelector>();
-    private List<MultiSelector> _notSelected = new List<MultiSelector>();
-    private List<Room> _selectedRooms = new List<Room>();
 
     protected override async Task OnInitializedAsync()
     {
-        ReservationList = hotelReservationService.GetAllHotelReservations();
-        RoomList = roomService.GetAllRoomsAsync();
-        ClientList = clientService.GetAllClients();
-        ReservationModel = SetNewHotelReservation();
-        _notSelected = RoomList.Select(x => new MultiSelector(x.Id.ToString(), $"Room Number : {x.RoomIdentifier}")).ToList();
+        ReservationList = hotelReservationService.GetAllHotelReservations();//Sprawdzić dlaczego sie zjebao po wprowadzeniu eager loading
         await base.OnInitializedAsync();
-    }
-
-    private async Task SaveReservation()
-    {
-        _selectedRooms = RoomList.Where(x => _selected.Any(y => y.Key == x.Id.ToString())).ToList();
-        _selectedClient = ClientList.FirstOrDefault(x => x.Id == _selectedClient.Id);
-        ReservationModel.Client = _selectedClient;
-        
-        _selectedRooms.ForEach( x=> ReservationModel.RoomReservations.Add(new RoomReservation
-        {
-            HotelReservation = ReservationModel,
-            Room = x
-        }));
-
-        await hotelReservationService.AddHotelReservationAsync(ReservationModel);
-        
-        ReservationList.Add(ReservationModel);
-        ReservationModel = SetNewHotelReservation();
-    }
-
-    private HotelReservation SetNewHotelReservation()
-    {
-        return new HotelReservation()
-        {
-            RoomReservations = new List<RoomReservation>(),
-            AdditionalServiceReservations = new List<AdditionalServiceReservation>()
-        };
     }
 
     private string GetReservedRoomsList(ICollection<RoomReservation> roomReservations)
     {
         var builder = new StringBuilder();
-        var separator = " ";
-        for(int i = 0; i < roomReservations.Count; i++)
+        const string separator = " ";
+        for(var i = 0; i < roomReservations.Count; i++)
         {
             var roomReservation = roomReservations.ElementAt(i);
-            builder.Append(roomReservation.Room.RoomIdentifier);
-            if (i < roomReservations.Count - 1)
+
+            if (roomReservation.Room != null)
             {
-                builder.Append(separator);
+               builder.Append(roomReservation.Room.RoomIdentifier);
+               if (i < roomReservations.Count - 1)
+               {
+                   builder.Append(separator);
+               }
             }
         }
 
         return builder.ToString();
+    }
+
+    private void OnReservationAdd(HotelReservation hotelReservation)
+    {
+        ReservationList.Add(hotelReservation);
     }
     
 }

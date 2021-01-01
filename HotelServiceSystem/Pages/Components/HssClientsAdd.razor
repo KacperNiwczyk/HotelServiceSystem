@@ -1,0 +1,36 @@
+﻿@using HotelServiceSystem.Entities
+@using HotelServiceSystem.Interfaces.Services
+@inject IClientService clientService
+
+    <EditForm Model="@ClientModel" OnValidSubmit="@SaveClient">
+        <HssInputCustom Caption="First name" @bind-Value="ClientModel.FirstName"/>
+        <HssInputCustom Caption="Last name" @bind-Value="ClientModel.LastName" />
+        <HssInputCustom Caption="Company name" @bind-Value="ClientModel.CompanyName"/>
+        <HssInputCustom Caption="Email" @bind-Value="ClientModel.Email"/>
+        <HssInputCustom Caption="Phone number" @bind-Value="ClientModel.PhoneNumber"/>
+        <HssInputCustom Caption="Tax Id" @bind-Value="ClientModel.TaxId"/>
+        <div class="col-12 row">
+            <span class="col-2"></span>
+            <input type="submit" class="form-control col-1 btn btn-primary" value="Submit"/>
+        </div>
+    </EditForm>
+
+    @code {
+        private Client ClientModel { get; set; }
+        
+        [Parameter]
+        public EventCallback<Client> OnClientAdd { get; set; }
+
+        protected override async Task OnInitializedAsync()
+        {
+            ClientModel = new Client();
+            await base.OnInitializedAsync();
+        }
+
+        private async Task SaveClient()
+        {
+            await clientService.AddClientAsync(ClientModel);
+            await OnClientAdd.InvokeAsync(ClientModel);
+            ClientModel = new Client();
+        }
+    }

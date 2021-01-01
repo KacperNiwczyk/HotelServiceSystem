@@ -21,7 +21,11 @@ namespace HotelServiceSystem.Core.Service
 		
 		public List<HotelReservation> GetAllHotelReservations()
 		{
-			return _hotelReservationRepository.GetAll().Include(x => x.RoomReservations).ToList();
+			return _hotelReservationRepository.GetAll()
+				.Include(x => x.RoomReservations)
+				.ThenInclude(x => x.Room)
+				.Include(x => x.Client)
+				.ToList();
 		}
 
 		public List<HotelReservation> GetAllWithRelations(params Expression<Func<HotelReservation, object>>[] navigationProperties)
