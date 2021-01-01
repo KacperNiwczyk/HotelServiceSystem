@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using HotelServiceSystem.Core.Helpers;
-using HotelServiceSystem.Core.Repositories;
 using HotelServiceSystem.Entities;
 using HotelServiceSystem.Interfaces.Services;
 
@@ -12,9 +11,9 @@ namespace HotelServiceSystem.Core.Service
 {
 	public class EventReservationService : IEventReservationService
 	{
-		private readonly EventReservationRepository _eventRepository;
+		private readonly IEventReservationRepository _eventRepository;
 
-		public EventReservationService(EventReservationRepository eventRepository)
+		public EventReservationService(IEventReservationRepository eventRepository)
 		{
 			_eventRepository = eventRepository;
 		}

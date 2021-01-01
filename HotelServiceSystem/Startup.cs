@@ -39,12 +39,25 @@ namespace HotelServiceSystem
             services.AddMatBlazor();
             services.AddScoped<AuthenticationStateProvider, HotelServiceAuthenticationStateProvider>();
             services.AddTransient(typeof(IRepository<>), typeof(BaseRepository<>));
+            
             services.AddTransient<IRoomRepository, RoomRepository>();
             services.AddTransient<IRoomService, RoomService>();
+            
             services.AddTransient<IClientRepository, ClientRepository>();
             services.AddTransient<IClientService, ClientService>();
+            
             services.AddTransient<IHotelReservationRepository, HotelReservationRepository>();
             services.AddTransient<IHotelReservationService, HotelReservationService>();
+            
+            services.AddTransient<IEventReservationRepository, EventReservationRepository>();
+            services.AddTransient<IEventReservationService, EventReservationService>();
+            
+            services.AddTransient<IAdditionalServiceRepository, AdditionalServiceRepository>();
+            services.AddTransient<IAdditionalServiceService, AdditionalServiceService>();
+
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IUserService, UserService>();
+            
             services.AddDbContext<HotelServiceDatabaseContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
         }
