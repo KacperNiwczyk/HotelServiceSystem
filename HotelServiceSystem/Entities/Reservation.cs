@@ -27,7 +27,7 @@ namespace HotelServiceSystem.Entities
 
         public Reservation()
         {
-            AdditionalServiceReservations = new List<AdditionalServiceReservation>();
+            AdditionalServiceReservations = new HashSet<AdditionalServiceReservation>();
         }
     }
 }

@@ -8,7 +8,7 @@ namespace HotelServiceSystem.Entities
 
         public HotelReservation()
         {
-            RoomReservations = new List<RoomReservation>();
+            RoomReservations = new HashSet<RoomReservation>();
         }
     }
 }
