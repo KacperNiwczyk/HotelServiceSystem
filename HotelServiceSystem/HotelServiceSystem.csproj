@@ -20,4 +20,10 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Core\Components\HssInputCustom.razor" />
+      <_ContentIncludedByDefault Remove="Core\Components\HSSMultiSelector.razor" />
+      <_ContentIncludedByDefault Remove="Core\Components\HssSelectCustom.razor" />
+    </ItemGroup>
+
 </Project>

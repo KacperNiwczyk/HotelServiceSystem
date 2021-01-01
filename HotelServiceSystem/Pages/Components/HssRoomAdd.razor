@@ -1,0 +1,61 @@
+﻿@using HotelServiceSystem.Core
+@using HotelServiceSystem.Entities
+@using HotelServiceSystem.Interfaces.Services
+@inject IRoomService roomService
+
+<EditForm Model="@ModelRoom" OnValidSubmit="@SaveRoom">
+        <HssInputCustom Caption="Room identifier" @bind-Value="ModelRoom.RoomIdentifier"/>
+        <HssInputCustom Caption="Floor" @bind-Value="ModelRoom.Floor" />
+        <HssInputCustom Caption="Price" @bind-Value="ModelRoom.Price"/>
+        <div class="col-12 row">
+            <MatButton Unelevated="true" Type="Button" Class="form-control col-2" Style="margin-right: 10px" OnClick="@( s => AddBed(BedType.SingleBed))">X @BedCount(BedType.SingleBed) Single Beds</MatButton>
+            <MatButton Unelevated="true" Type="Button" Class="form-control col-2" OnClick="@( s => AddBed(BedType.DoubleBed))">X @BedCount(BedType.DoubleBed) Double Beds</MatButton>
+        </div>
+        <br/>
+        <div class="col-12 row">
+            <span class="col-2"></span>
+            <input type="submit" class="form-control col-1 btn btn-primary" value="Submit"/>
+        </div>
+    </EditForm>
+
+@code {
+    
+    
+    [Parameter]
+    public EventCallback<Room> OnRoomAdded { get; set; }
+
+    private Room ModelRoom { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ModelRoom = SetNewRoom();
+        await base.OnInitializedAsync();
+    }
+
+    private async Task SaveRoom()
+    {
+        await roomService.AddRoomAsync(ModelRoom);
+        await OnRoomAdded.InvokeAsync(ModelRoom);
+        ModelRoom = SetNewRoom();
+    }
+
+    private Room SetNewRoom()
+    {
+        return new Room()
+        {
+            IsFree = true,
+            IsOutOfService = false,
+            ShouldBeCleaned = false
+        };
+    }
+
+    private void AddBed(BedType bedType)
+    {
+        ModelRoom.Beds.Add(new Bed() {BedType = bedType});
+    }
+
+    private int BedCount(BedType bedType)
+    {
+        return ModelRoom.Beds.Count(x => x.BedType == bedType);
+    }
+}

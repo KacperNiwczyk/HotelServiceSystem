@@ -30,14 +30,14 @@ namespace HotelServiceSystem.Core.Service
             return await _roomRepository.AddAsync(room);
         }
 
-        public Task<Room> UpdateRoomAsync(Room room)
+        public async Task<Room> UpdateRoomAsync(Room room)
         {
-            throw new System.NotImplementedException();
+            return await _roomRepository.UpdateAsync(room);
         }
 
-        public Task RemoveRoomAsync(Room room)
+        public async Task RemoveRoomAsync(Room room)
         {
-            throw new System.NotImplementedException();
+            await _roomRepository.DeleteAsync(room);
         }
 
         public List<Room> GetAllRoomsWithRelations(params Expression<Func<Room, object>>[] navigationProperties)
