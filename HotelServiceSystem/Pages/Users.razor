@@ -1,19 +1,18 @@
-﻿@page "/additionalServices"
-@using HotelServiceSystem.Entities
+﻿@page "/users"
 @using HotelServiceSystem.Interfaces.Services
-@inject IAdditionalServiceService additionalServiceService
-<h3>AdditionalServices</h3>
+@using HotelServiceSystem.Entities
+@inject IUserService userService
 <div class="col-12">
         <hr/>
         <MatAccordion>
             <MatExpansionPanel>
                 <MatExpansionPanelSummary>
                     <MatExpansionPanelHeader>
-                        Add addiotional service
+                        Add user
                     </MatExpansionPanelHeader>
                 </MatExpansionPanelSummary>
                 <MatExpansionPanelDetails>
-                    <HssAdditionalServiceAdd OnAdditionalServiceAdd="@OnAdditionalServiceAdd" /> 
+                    <HssUserAdd OnUserAdd="@OnUserAdd" /> 
                 </MatExpansionPanelDetails>
             </MatExpansionPanel>
         </MatAccordion>
@@ -21,18 +20,22 @@
         <table class="table">
             <thead>
             <tr>
-                <th>Name</th>
-                <th>Price</th>
+                <th>ID</th>
+                <th>User name</th>
+                <th>Role</th>
+                <th>Last login</th>
             </tr>
             </thead>
             <tbody>
-            @if (AdditionalServiceList != null)
+            @if (UserList != null)
             {
-                foreach (var additionalService in AdditionalServiceList)
+                foreach (var user in UserList)
                 {
                     <tr>
-                        <td>@additionalService.Name</td>
-                        <td>@additionalService.Price</td>
+                        <td>@user.Id</td>
+                        <td>@user.UserName</td>
+                        <td>@user.UserRole</td>
+                        <td>@user.LastLogin</td>
                     </tr>
                 }
             }
@@ -45,19 +48,18 @@
     </div>
 </div>
 
-
 @code {
-    private List<AdditionalService> AdditionalServiceList { get; set; }
+    private List<User> UserList { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        AdditionalServiceList = additionalServiceService.GetAllAdditionalServices();
+        UserList = userService.GetAllUserAsync();
         await base.OnInitializedAsync();
     }
 
-    private void OnAdditionalServiceAdd(AdditionalService additionalService)
+    private void OnUserAdd(User user)
     {
-        AdditionalServiceList.Add(additionalService);
+        UserList.Add(user);
     }
 
 }

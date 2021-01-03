@@ -1,0 +1,50 @@
+﻿@using HotelServiceSystem.Interfaces.Services
+@using HotelServiceSystem.Entities
+@using HotelServiceSystem.Features.Enums
+@inject IUserService userService
+     
+<EditForm Model="@UserModel" OnValidSubmit="@SaveUser">
+        <HssInputCustom Caption="Name" @bind-Value="UserModel.UserName"/>
+        <HssInputCustom Caption="Password" @bind-Value="UserModel.Password" />
+        <HssSelectCustom Label="Role" @bind-Value="SelectedRole" ValidationFor="@(() => SelectedRole)">
+            @foreach (var role in AvailableRoles)
+            {
+                <option value="@role">@role.ToString()</option>
+            }
+        </HssSelectCustom>
+        <div class="col-12 row">
+            <span class="col-2"></span>
+            <input type="submit" class="form-control col-2 btn btn-primary" value="Submit"/>
+        </div>
+    </EditForm>
+
+@code {
+    private User UserModel { get; set; }
+    private UserRole SelectedRole { get; set; }
+    
+    [Parameter]
+    public EventCallback<User> OnUserAdd { get; set; }
+    
+    private List<UserRole> AvailableRoles { get; set; }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        
+        AvailableRoles = GetAvailableRoles();
+        UserModel = new User();
+        await base.OnInitializedAsync();
+    }
+
+    private List<UserRole> GetAvailableRoles()
+    {
+        return new List<UserRole> {UserRole.Standard, UserRole.Manager, UserRole.Admin};
+    }
+
+    private async Task SaveUser()
+    {
+        UserModel.UserRole = SelectedRole;
+        await userService.AddUserAsync(UserModel);
+        await OnUserAdd.InvokeAsync(UserModel);
+        UserModel = new User();
+    }
+}

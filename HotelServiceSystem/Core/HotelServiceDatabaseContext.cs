@@ -40,7 +40,7 @@ namespace HotelServiceSystem.Core
                 .WithMany(x => x.RoomReservations)
                 .HasForeignKey(x => x.RoomId);
             modelBuilder.Entity<RoomReservation>()
-                .HasOne(x => x.HotelReservation)
+                .HasOne(x => x.Reservation)
                 .WithMany(x => x.RoomReservations)
                 .HasForeignKey(x => x.ReservationId);
             modelBuilder.Entity<Reservation>()

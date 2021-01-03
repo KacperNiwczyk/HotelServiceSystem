@@ -181,7 +181,12 @@ namespace HotelServiceSystem.Migrations
                     b.Property<int>("ReservationId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("EventReservationId")
+                        .HasColumnType("int");
+
                     b.HasKey("RoomId", "ReservationId");
+
+                    b.HasIndex("EventReservationId");
 
                     b.HasIndex("ReservationId");
 
@@ -271,6 +276,10 @@ namespace HotelServiceSystem.Migrations
 
             modelBuilder.Entity("HotelServiceSystem.Entities.RoomReservation", b =>
                 {
+                    b.HasOne("HotelServiceSystem.Entities.EventReservation", null)
+                        .WithMany("RoomReservations")
+                        .HasForeignKey("EventReservationId");
+
                     b.HasOne("HotelServiceSystem.Entities.HotelReservation", "HotelReservation")
                         .WithMany("RoomReservations")
                         .HasForeignKey("ReservationId")
@@ -307,6 +316,11 @@ namespace HotelServiceSystem.Migrations
                 {
                     b.Navigation("Beds");
 
+                    b.Navigation("RoomReservations");
+                });
+
+            modelBuilder.Entity("HotelServiceSystem.Entities.EventReservation", b =>
+                {
                     b.Navigation("RoomReservations");
                 });
 

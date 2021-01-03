@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using HotelServiceSystem.Core.Helpers;
 using HotelServiceSystem.Entities;
 using HotelServiceSystem.Interfaces.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace HotelServiceSystem.Core.Service
 {
@@ -20,7 +21,11 @@ namespace HotelServiceSystem.Core.Service
 		
 		public List<EventReservation> GetAllEvents()
 		{
-			return _eventRepository.GetAll().ToList();
+			return _eventRepository.GetAll()
+				.Include(x => x.Client)
+				.Include(x => x.RoomReservations)
+				.ThenInclude(x => x.Room)
+				.ToList();
 		}
 
 		public List<EventReservation> GetAllEventsWithRelations(

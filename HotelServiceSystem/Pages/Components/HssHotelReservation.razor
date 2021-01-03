@@ -1,0 +1,108 @@
+﻿@using HotelServiceSystem.Entities
+@using HotelServiceSystem.Interfaces.Services
+@using System.Text
+@inject IHotelReservationService hotelReservationService
+@inject IRoomService roomService
+<br/>
+<h3>Reservations</h3>
+<div class="col-12">
+    <hr/>
+    <div class="col-6">
+        <MatAccordion>
+            <MatExpansionPanel>
+                <MatExpansionPanelSummary>
+                    <MatExpansionPanelHeader>
+                        Add Hotel Reservation
+                    </MatExpansionPanelHeader>
+                </MatExpansionPanelSummary>
+                <MatExpansionPanelDetails>
+                    <HssHotelReservationAdd OnReservationAdd="@OnReservationAdd"/>
+                </MatExpansionPanelDetails>
+            </MatExpansionPanel>
+        </MatAccordion>
+    </div>
+    <br/>
+    <div class="col-10">
+        <h3>Reservations</h3>
+        <br/>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Client</th>
+                <th>Room list</th>
+                <th>Price</th>
+                <th>Discount</th>
+                <th>Date of submission</th>
+                <th>Number of guests</th>
+            </tr>
+            </thead>
+            <tbody>
+            @if (ReservationList != null)
+            {
+                if (ReservationList.Count > 0)
+                {
+                    foreach (var reservation in ReservationList)
+                    {
+                        <tr>
+                            <td>@reservation.Id</td>
+                            <td>@GetFirstNameLastName(reservation.Client)</td>
+                            <td>@GetReservedRoomsList(reservation.RoomReservations)</td>
+                            <td>@reservation.Price</td>
+                            <td>@reservation.Discount</td>
+                            <td>@reservation.DateOfSubmission</td>
+                            <td>@reservation.NumberOfGuests</td>
+                        </tr>
+                    }
+                }
+            }
+            else
+            {
+                <h3>..Loading</h3>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    
+    private List<HotelReservation> ReservationList { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ReservationList = hotelReservationService.GetAllHotelReservations();//TODO Sprawdzić dlaczego sie zjebao po wprowadzeniu eager loading
+        await base.OnInitializedAsync();
+    }
+
+    private string GetReservedRoomsList(ICollection<RoomReservation> roomReservations)
+    {
+        var builder = new StringBuilder();
+        const string separator = " ";
+        for(var i = 0; i < roomReservations.Count; i++)
+        {
+            var roomReservation = roomReservations.ElementAt(i);
+
+            if (roomReservation.Room != null)
+            {
+               builder.Append(roomReservation.Room.RoomIdentifier);
+               if (i < roomReservations.Count - 1)
+               {
+                   builder.Append(separator);
+               }
+            }
+        }
+
+        return builder.ToString();
+    }
+
+    private void OnReservationAdd(HotelReservation hotelReservation)
+    {
+        ReservationList.Add(hotelReservation);
+    }
+
+    private string GetFirstNameLastName(Client client)
+    {
+        return client == null ? string.Empty : $"{client.FirstName} {client.LastName}";
+    }
+}

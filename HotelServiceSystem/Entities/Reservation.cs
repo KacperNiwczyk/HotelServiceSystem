@@ -23,10 +23,13 @@ namespace HotelServiceSystem.Entities
         
         public double Discount { get; set; }
         
-        public ICollection<AdditionalServiceReservation> AdditionalServiceReservations { get; set; }
+        public virtual ICollection<RoomReservation> RoomReservations { get; set; }
+        
+        public virtual ICollection<AdditionalServiceReservation> AdditionalServiceReservations { get; set; }
 
         public Reservation()
         {
+            RoomReservations = new HashSet<RoomReservation>();
             AdditionalServiceReservations = new HashSet<AdditionalServiceReservation>();
         }
     }

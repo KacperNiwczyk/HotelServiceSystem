@@ -1,0 +1,103 @@
+﻿@using HotelServiceSystem.Entities
+@using System.Text
+@using HotelServiceSystem.Interfaces.Services
+@inject IEventReservationService eventReservationService
+<h3>HssEventReservation</h3>
+<div class="col-12">
+    <hr/>
+        <div class="col-6">
+            <MatAccordion>
+                <MatExpansionPanel>
+                    <MatExpansionPanelSummary>
+                        <MatExpansionPanelHeader>
+                            Add Event Reservation
+                        </MatExpansionPanelHeader>
+                    </MatExpansionPanelSummary>
+                    <MatExpansionPanelDetails>
+                        <HssEventReservationAdd OnReservationAdd="@OnEventReservationAdd"/>
+                    </MatExpansionPanelDetails>
+                </MatExpansionPanel>
+            </MatAccordion>
+        </div>
+        <br/>
+    <br/>
+    <div class="col-10">
+        <h3>Reservations</h3>
+        <br/>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Client</th>
+                <th>Room list</th>
+                <th>Price</th>
+                <th>Discount</th>
+                <th>Date of submission</th>
+                <th>Number of guests</th>
+                <td>Description</td>
+            </tr>
+            </thead>
+            <tbody>
+            @if (EventReservationList != null)
+            {
+                if (EventReservationList.Count > 0)
+                {
+                    foreach (var reservation in EventReservationList)
+                    {
+                        <tr>
+                            <td>@reservation.Id</td>
+                            <td>@reservation.Client.FirstName @reservation.Client.LastName</td>
+                            <td>@GetReservedRoomsList(reservation.RoomReservations)</td> 
+                            <td>@reservation.Price</td>
+                            <td>@reservation.Discount</td>
+                            <td>@reservation.DateOfSubmission</td>
+                            <td>@reservation.NumberOfGuests</td>
+                            <td>@reservation.Description</td>
+                        </tr>
+                    }
+                }
+            }
+            else
+            {
+                <h3>..Loading</h3>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    private List<EventReservation> EventReservationList { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        EventReservationList = eventReservationService.GetAllEvents();
+        await base.OnInitializedAsync();
+    }
+
+    private void OnEventReservationAdd(EventReservation eventReservation)
+    {
+        EventReservationList.Add(eventReservation);
+    }
+    
+    private string GetReservedRoomsList(ICollection<RoomReservation> roomReservations)
+    {
+        var builder = new StringBuilder();
+        const string separator = " ";
+        for(var i = 0; i < roomReservations.Count; i++)
+        {
+            var roomReservation = roomReservations.ElementAt(i);
+
+            if (roomReservation.Room != null)
+            {
+                builder.Append(roomReservation.Room.RoomIdentifier);
+                if (i < roomReservations.Count - 1)
+                {
+                    builder.Append(separator);
+                }
+            }
+        }
+
+        return builder.ToString();
+    }
+}

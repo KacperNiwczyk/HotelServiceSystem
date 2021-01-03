@@ -1,0 +1,126 @@
+﻿@using HotelServiceSystem.Entities
+@using HotelServiceSystem.Features
+@using HotelServiceSystem.Interfaces.Services
+@using HotelServiceSystem.Core
+@inject IHotelReservationService hotelReservationService
+@inject IClientService clientService
+@inject IRoomService roomService
+
+<EditForm Model="@ReservationModel" OnValidSubmit="@SaveReservation">
+    <FluentValidationValidator/>
+    @*     @if (ClientList != null && ClientList.Any()) *@
+    @*     { *@
+    @*             <MatAutocompleteList Items="@ClientList.ToArray()" TItem="Client" CustomStringSelector="@(i => i.FirstName + " " + i.LastName)" Label="Choose client" @bind-Value="@ReservationModel.Client" FullWidth="@true" ShowClearButton="@true"> *@
+    @*                 <ItemTemplate Context="template"> *@
+    @*                     <div style="display: flex; flex-direction: row; width: 100%;"> *@
+    @*                         <div>@template.FirstName @template.LastName @template.PhoneNumber</div> *@
+    @*                     </div> *@
+    @*                 </ItemTemplate> *@
+    @*             </MatAutocompleteList> *@
+    @*     } *@
+    @*     else *@
+    @*     { *@
+    @*         <p>First u need to add clients</p> *@
+    @*     } *@
+
+    @if (ClientList != null && ClientList.Any())
+    {
+        <BlazoredTypeahead SearchMethod="ClientSearch" @bind-Value="ReservationModel.Client" p>
+            <SelectedTemplate Context="template">
+                @template.FirstName @template.LastName - @template.PhoneNumber
+            </SelectedTemplate>
+            <ResultTemplate Context="template">
+                @template.FirstName @template.LastName - @template.PhoneNumber
+            </ResultTemplate>
+            <NotFoundTemplate>
+                Client not found
+            </NotFoundTemplate>
+        </BlazoredTypeahead>
+    }
+    @if (SelectedClient != null)
+    {
+        <p>@SelectedClient.FirstName @SelectedClient.LastName @SelectedClient.PhoneNumber</p>
+    }
+    <br/>
+    <ValidationMessage For="@(() => ReservationModel.Client.Id)"></ValidationMessage>
+    <HssInputCustom Caption="Number of guests" @bind-Value="ReservationModel.NumberOfGuests"/>
+    <div class="col-12 row">
+        <label class="col-2">Date From</label>
+        <MatDatePicker class="form-control col-3" @bind-Value="ReservationModel.DateFrom"/>
+        <ValidationMessage For="@(() => ReservationModel.DateFrom)"></ValidationMessage>
+    </div>
+    <div class="col-12 row">
+        <label class="col-2">Date to</label>
+        <MatDatePicker class="form-control col-3" @bind-Value="ReservationModel.DateTo"/>
+        <ValidationMessage For="@(() => ReservationModel.DateTo)"></ValidationMessage>
+    </div>
+    <div class="form-group">
+        <HSSMultiSelector Selected="@_selected" NotSelected="@_notSelected"/>
+    </div>
+    <ValidationMessage For="@(() => _selected)"></ValidationMessage>
+    <HssInputCustom Caption="Price" @bind-Value="ReservationModel.Price"/>
+    <HssInputCustom Caption="Discount" @bind-Value="ReservationModel.Discount"/>
+    <div class="col-12 row">
+        <span class="col-2"></span>
+        <input type="submit" class="form-control col-2 btn btn-primary" value="Submit"/>
+    </div>
+</EditForm>
+
+@code {
+    private HotelReservation ReservationModel { get; set; }
+    private readonly List<MultiSelector> _selected = new List<MultiSelector>();
+    private List<MultiSelector> _notSelected = new List<MultiSelector>();
+    private List<Room> _selectedRooms = new List<Room>();
+    private Client SelectedClient { get; set; }
+    private List<Room> RoomList { get; set; }
+    private List<Client> ClientList { get; set; }
+
+    [Parameter]
+    public EventCallback<HotelReservation> OnReservationAdd { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        RoomList = roomService.GetAllRoomsAsync();
+        ClientList = clientService.GetAllClients();
+        ReservationModel = new HotelReservation()
+        {
+            Client = new Client()
+        };
+        _notSelected = RoomList.Select(x => new MultiSelector(x.Id.ToString(), $"Room Number : {x.RoomIdentifier}")).ToList();
+        await base.OnInitializedAsync();
+    }
+    
+
+    private async Task SaveReservation()
+    {
+        _selectedRooms = RoomList.Where(x => _selected.Any(y => y.Key == x.Id.ToString())).ToList();
+        
+        _selectedRooms.ForEach( x=> ReservationModel.RoomReservations.Add(new RoomReservation
+        {
+            Reservation = ReservationModel,
+            Room = x
+        }));
+
+        ReservationModel.Client = SelectedClient;
+        await hotelReservationService.AddHotelReservationAsync(ReservationModel);
+        await OnReservationAdd.InvokeAsync(ReservationModel);
+        SelectedClient = new Client();
+        ReservationModel = new HotelReservation()
+        {
+            Client = new Client()
+        };
+    }
+
+    private async Task<IEnumerable<Client>> ClientSearch(string searchClient)
+    {
+        if (string.IsNullOrEmpty(searchClient))
+        {
+            return await Task.FromResult(ClientList);
+        }
+        
+        var search = searchClient.ToLower();
+        return await Task.FromResult(ClientList.Where(x => x.FirstName.ToLower().Contains(search) ||
+                                                            x.LastName.ToLower().Contains(search) ||
+                                                            x.PhoneNumber.ToLower().Contains(search)).ToList());
+    } 
+}
