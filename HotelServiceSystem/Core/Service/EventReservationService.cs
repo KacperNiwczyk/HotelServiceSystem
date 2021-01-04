@@ -28,6 +28,11 @@ namespace HotelServiceSystem.Core.Service
 				.ToList();
 		}
 
+		public EventReservation GetById(int id)
+		{
+			return _eventRepository.GetById(id);
+		}
+
 		public List<EventReservation> GetAllEventsWithRelations(
 			params Expression<Func<EventReservation, object>>[] navigationProperties)
 		{

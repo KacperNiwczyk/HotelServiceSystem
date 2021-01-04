@@ -2,6 +2,7 @@
 @using HotelServiceSystem.Entities
 @using HotelServiceSystem.Interfaces.Services
 @inject IClientService clientService
+@inject NavigationManager navigationManager
 <h3>Clients</h3>
 
 <div class="col-12">
@@ -43,6 +44,7 @@
                         <td>@client.Email</td>
                         <td>@client.PhoneNumber</td>
                         <td>@client.TaxId</td>
+                        <td><MatButton Type="Button" OnClick="@(() => EditClient(client.Id))">Edit</MatButton></td>
                     </tr>
                 }
             }
@@ -70,4 +72,10 @@
         await clientService.AddClientAsync(client);
         ClientList.Add(client);
     }
+
+    private void EditClient(int id)
+    {
+       navigationManager.NavigateTo($"clientDetails/{id}"); 
+    }
+
 }

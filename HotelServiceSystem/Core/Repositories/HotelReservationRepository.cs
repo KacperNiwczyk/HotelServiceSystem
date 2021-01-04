@@ -1,4 +1,5 @@
 ﻿using HotelServiceSystem.Entities;
+using HotelServiceSystem.Interfaces.Repositories;
 
 namespace HotelServiceSystem.Core.Repositories
 {

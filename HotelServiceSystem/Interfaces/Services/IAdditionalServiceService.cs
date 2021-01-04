@@ -10,6 +10,7 @@ namespace HotelServiceSystem.Interfaces.Services
 	{
 		List<AdditionalService> GetAllAdditionalServices();
 
+		AdditionalService GetById(int id);
 		List<AdditionalService> GetAllAdditionalServicesWithRelations(
 			params Expression<Func<AdditionalService, object>>[] navigationProperties);
 

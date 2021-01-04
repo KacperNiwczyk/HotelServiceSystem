@@ -10,6 +10,7 @@ namespace HotelServiceSystem.Interfaces.Services
 	{
 		List<EventReservation> GetAllEvents();
 
+		EventReservation GetById(int id);
 		List<EventReservation> GetAllEventsWithRelations(
 			params Expression<Func<EventReservation, object>>[] navigationProperties);
 

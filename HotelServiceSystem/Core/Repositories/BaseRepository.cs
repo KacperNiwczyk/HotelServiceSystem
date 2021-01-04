@@ -2,9 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using HotelServiceSystem.Interfaces.Entities;
-using Microsoft.EntityFrameworkCore;
 
-namespace HotelServiceSystem.Core
+namespace HotelServiceSystem.Core.Repositories
 {
     public class BaseRepository<TEntity> : IRepository<TEntity> where TEntity : class, IEntity, new()
     {
@@ -18,6 +17,11 @@ namespace HotelServiceSystem.Core
         public IQueryable<TEntity> GetAll()
         {
             return HotelServiceDatabaseContext.Set<TEntity>();
+        }
+
+        public TEntity GetById(int id)
+        {
+            return HotelServiceDatabaseContext.Set<TEntity>().Find(id);
         }
 
         public async Task<TEntity> AddAsync(TEntity entity)

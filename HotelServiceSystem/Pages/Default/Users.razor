@@ -2,6 +2,8 @@
 @using HotelServiceSystem.Interfaces.Services
 @using HotelServiceSystem.Entities
 @inject IUserService userService
+@inject NavigationManager navigationManager
+
 <div class="col-12">
         <hr/>
         <MatAccordion>
@@ -36,6 +38,7 @@
                         <td>@user.UserName</td>
                         <td>@user.UserRole</td>
                         <td>@user.LastLogin</td>
+                        <td><MatButton Type="Button" OnClick="@(() => EditUser(user.Id))"></MatButton></td>
                     </tr>
                 }
             }
@@ -61,6 +64,11 @@
     {
         await userService.AddUserAsync(user);
         UserList.Add(user);
+    }
+
+    private void EditUser(int id)
+    {
+        navigationManager.NavigateTo($"userDetails/{id}");
     }
 
 }

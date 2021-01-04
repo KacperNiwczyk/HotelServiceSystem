@@ -9,6 +9,7 @@ namespace HotelServiceSystem.Interfaces.Services
 	public interface IUserService
 	{
 		List<User> GetAllUserAsync();
+		User GetById(int id);
 		List<User> GetAllUserWithRelations(params Expression<Func<User, object>>[] navigationProperties);
 		Task<User> AddUserAsync(User user);
 		Task<User> UpdateUserAsync(User user);

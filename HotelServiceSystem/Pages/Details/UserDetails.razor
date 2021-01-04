@@ -1,0 +1,25 @@
+﻿@page "/userDetails/{Id:int}"
+@using HotelServiceSystem.Interfaces.Services
+@using HotelServiceSystem.Entities
+@inject IUserService userService
+@inject NavigationManager navigationManager
+<HssUserInput UserModel="@UserModel" OnSubmit="@OnUserEdit"></HssUserInput>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    
+    private User UserModel { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        UserModel = userService.GetById(Id);
+        await base.OnInitializedAsync();
+    }
+
+    private async Task OnUserEdit(User user)
+    {
+        await userService.UpdateUserAsync(user);
+        navigationManager.NavigateTo("/users");
+    }
+}

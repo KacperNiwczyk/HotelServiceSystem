@@ -1,6 +1,7 @@
-﻿using HotelServiceSystem.Entities;
+﻿using HotelServiceSystem.Core;
+using HotelServiceSystem.Entities;
 
-namespace HotelServiceSystem.Core
+namespace HotelServiceSystem.Interfaces.Repositories
 {
     public interface IHotelReservationRepository : IRepository<HotelReservation>
     {

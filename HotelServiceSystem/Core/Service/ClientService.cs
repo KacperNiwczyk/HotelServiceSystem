@@ -23,6 +23,11 @@ namespace HotelServiceSystem.Core.Service
 			return _clientRepository.GetAll().ToList();
 		}
 
+		public Client GetById(int id)
+		{
+			return _clientRepository.GetById(id);
+		}
+
 		public List<Client> GetAllWithRelations(params Expression<Func<Client, object>>[] navigationProperties)
 		{
 			return _clientRepository.GetAll().IncludeMultiple(navigationProperties).ToList();

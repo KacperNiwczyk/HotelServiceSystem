@@ -1,0 +1,26 @@
+﻿@page "/additionalServiceDetails/{Id:int}"
+@using HotelServiceSystem.Entities
+@using HotelServiceSystem.Interfaces.Services
+@inject IAdditionalServiceService additionalServiceService
+@inject NavigationManager navigationManager
+<HssAdditionalServiceInput AdditionalServiceModel="@AdditionalServiceModel" OnSubmit="@OnAdditionalServiceEdit"/>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    
+    private AdditionalService AdditionalServiceModel { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        AdditionalServiceModel = additionalServiceService.GetById(Id);
+        await base.OnInitializedAsync();
+    }
+
+    private async Task OnAdditionalServiceEdit(AdditionalService additionalService)
+    {
+        await additionalServiceService.UpdateAdditionalServiceAsync(additionalService);
+        navigationManager.NavigateTo("/additionalServices");
+    }
+
+}

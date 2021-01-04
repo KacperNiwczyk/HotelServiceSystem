@@ -2,6 +2,8 @@
 @using System.Text
 @using HotelServiceSystem.Interfaces.Services
 @inject IEventReservationService eventReservationService
+@inject NavigationManager navigationManager
+
 <h3>HssEventReservation</h3>
 <div class="col-12">
     <hr/>
@@ -53,6 +55,7 @@
                             <td>@reservation.DateOfSubmission</td>
                             <td>@reservation.NumberOfGuests</td>
                             <td>@reservation.Description</td>
+                            <td><MatButton Type="Button" OnClick="@(() => EditReservation(reservation.Id))"></MatButton></td>
                         </tr>
                     }
                 }
@@ -99,5 +102,10 @@
         }
 
         return builder.ToString();
+    }
+
+    private void EditReservation(int id)
+    {
+        navigationManager.NavigateTo($"eventReservationDetails/{id}");
     }
 }

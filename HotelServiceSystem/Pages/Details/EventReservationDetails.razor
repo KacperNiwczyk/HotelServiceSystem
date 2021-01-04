@@ -1,0 +1,26 @@
+﻿@page "/eventReservationDetails/{Id:int}"
+@using HotelServiceSystem.Interfaces.Services
+@using HotelServiceSystem.Entities
+@inject IEventReservationService eventReservationService
+@inject NavigationManager navigationManager
+<HssEventReservationInput EventReservationModel="@EventReservationModel" OnSubmit="@OnReservationEdit"/>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    
+    private EventReservation EventReservationModel { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        EventReservationModel = eventReservationService.GetById(Id);
+        await base.OnInitializedAsync();
+    }
+
+    private async Task OnReservationEdit(EventReservation eventReservation)
+    {
+        await eventReservationService.UpdateEventAsync(eventReservation);
+        navigationManager.NavigateTo("/reservations");
+    }
+
+}

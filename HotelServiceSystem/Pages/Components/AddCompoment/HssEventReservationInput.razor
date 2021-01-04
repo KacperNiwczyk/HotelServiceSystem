@@ -5,7 +5,7 @@
 @inject IClientService clientService
 @inject IRoomService roomService
 
-<EditForm Model="@EventReservationModel" OnValidSubmit="@SaveEventReservation">
+<EditForm Model="@EventReservationModel" OnValidSubmit="@Submit">
     <FluentValidationValidator/>
     @if (ClientList != null && ClientList.Any())
     {
@@ -52,21 +52,17 @@
 </EditForm>
 
 @code {
-    private EventReservation EventReservationModel { get; set; }
-    
+    [Parameter]
+    public EventReservation EventReservationModel { get; set; }
     
     private List<MultiSelector> _selected = new List<MultiSelector>();
     private List<MultiSelector> _notSelected = new List<MultiSelector>();
     private List<Room> _selectedRooms = new List<Room>();
-    
-    [Parameter]
     private List<Room> RoomList { get; set; }
-    
-    [Parameter]
     private List<Client> ClientList { get; set; }
 
     [Parameter]
-    public EventCallback<EventReservation> OnReservationAdd { get; set; }
+    public EventCallback<EventReservation> OnSubmit { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -83,7 +79,7 @@
     }
     
 
-    private async Task SaveEventReservation()
+    private async Task Submit()
     {
         _selectedRooms = RoomList.Where(x => _selected.Any(y => y.Key == x.Id.ToString())).ToList();
 
@@ -94,7 +90,7 @@
         }));
 
         await eventReservationService.AddEventAsync(EventReservationModel);
-        await OnReservationAdd.InvokeAsync(EventReservationModel);
+        await OnSubmit.InvokeAsync(EventReservationModel);
         EventReservationModel = new EventReservation
         {
             Client = new Client()

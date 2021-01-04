@@ -1,0 +1,26 @@
+﻿@page "/clientDetails/{Id:int}"
+@using HotelServiceSystem.Entities
+@using HotelServiceSystem.Interfaces.Services
+@inject IClientService clientService
+@inject NavigationManager navigationManager
+
+<HssClientsInput ClientModel="ClientModel" OnSubmit="OnClientEdit"></HssClientsInput>
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    
+    private Client ClientModel { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ClientModel = clientService.GetById(Id);
+        await base.OnInitializedAsync();
+    }
+
+    private async Task OnClientEdit(Client client)
+    {
+        await clientService.UpdateClientAsync(client);
+        navigationManager.NavigateTo("/clients");
+    }
+
+}

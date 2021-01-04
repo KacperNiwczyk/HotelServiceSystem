@@ -6,6 +6,7 @@ using HotelServiceSystem.Core;
 using HotelServiceSystem.Core.Repositories;
 using HotelServiceSystem.Core.Service;
 using HotelServiceSystem.Entities;
+using HotelServiceSystem.Interfaces.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;

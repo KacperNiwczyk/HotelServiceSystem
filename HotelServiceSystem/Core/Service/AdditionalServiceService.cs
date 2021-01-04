@@ -23,6 +23,11 @@ namespace HotelServiceSystem.Core.Service
 			return _additionalServiceRepository.GetAll().ToList();
 		}
 
+		public AdditionalService GetById(int id)
+		{
+			return _additionalServiceRepository.GetById(id);
+		}
+
 		public List<AdditionalService> GetAllAdditionalServicesWithRelations(params Expression<Func<AdditionalService, object>>[] navigationProperties)
 		{
 			return _additionalServiceRepository.GetAll().IncludeMultiple(navigationProperties).ToList();

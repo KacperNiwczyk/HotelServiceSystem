@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using HotelServiceSystem.Core.Helpers;
 using HotelServiceSystem.Entities;
+using HotelServiceSystem.Interfaces.Repositories;
 using HotelServiceSystem.Interfaces.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,6 +27,11 @@ namespace HotelServiceSystem.Core.Service
 				.ThenInclude(x => x.Room)
 				.Include(x => x.Client)
 				.ToList();
+		}
+
+		public HotelReservation GetById(int id)
+		{
+			return _hotelReservationRepository.GetById(id);
 		}
 
 		public List<HotelReservation> GetAllWithRelations(params Expression<Func<HotelReservation, object>>[] navigationProperties)

@@ -6,7 +6,7 @@
 @inject IClientService clientService
 @inject IRoomService roomService
 
-<EditForm Model="@ReservationModel" OnValidSubmit="@SaveReservation">
+<EditForm Model="@ReservationModel" OnValidSubmit="@Submit">
     <FluentValidationValidator/>
     @*     @if (ClientList != null && ClientList.Any()) *@
     @*     { *@
@@ -37,10 +37,6 @@
             </NotFoundTemplate>
         </BlazoredTypeahead>
     }
-    @if (SelectedClient != null)
-    {
-        <p>@SelectedClient.FirstName @SelectedClient.LastName @SelectedClient.PhoneNumber</p>
-    }
     <br/>
     <ValidationMessage For="@(() => ReservationModel.Client.Id)"></ValidationMessage>
     <HssInputCustom Caption="Number of guests" @bind-Value="ReservationModel.NumberOfGuests"/>
@@ -67,48 +63,64 @@
 </EditForm>
 
 @code {
-    private HotelReservation ReservationModel { get; set; }
-    private readonly List<MultiSelector> _selected = new List<MultiSelector>();
-    private List<MultiSelector> _notSelected = new List<MultiSelector>();
-    private List<Room> _selectedRooms = new List<Room>();
-    private Client SelectedClient { get; set; }
+    [Parameter]
+    public HotelReservation ReservationModel { get; set; }
+    
+    [Parameter]
+    public EventCallback<HotelReservation> OnSubmit { get; set; }
+
+    private List<MultiSelector> _selected;
+    private List<MultiSelector> _notSelected;
     private List<Room> RoomList { get; set; }
     private List<Client> ClientList { get; set; }
-
-    [Parameter]
-    public EventCallback<HotelReservation> OnReservationAdd { get; set; }
-
+    
     protected override async Task OnInitializedAsync()
     {
         RoomList = roomService.GetAllRoomsAsync();
         ClientList = clientService.GetAllClients();
-        ReservationModel = new HotelReservation()
+        _notSelected = RoomList.Select(GetMultiSelectorValue).ToList();
+        _selected = new List<MultiSelector>();
+        
+        var roomReservations = ReservationModel.RoomReservations;
+        if (roomReservations != null && roomReservations.Count > 0)
         {
-            Client = new Client()
-        };
-        _notSelected = RoomList.Select(x => new MultiSelector(x.Id.ToString(), $"Room Number : {x.RoomIdentifier}")).ToList();
+            
+            foreach (var roomReservation in roomReservations)
+            {
+                var room = roomReservation.Room;
+                if (room != null)
+                {
+                    _selected.Add(GetMultiSelectorValue(room));
+                }
+                
+            }
+            _notSelected.RemoveAll(x => _selected.Any(y => y.Key == x.Key));
+        }
+        
         await base.OnInitializedAsync();
     }
     
 
-    private async Task SaveReservation()
+    private async Task Submit()
     {
-        _selectedRooms = RoomList.Where(x => _selected.Any(y => y.Key == x.Id.ToString())).ToList();
+        var selectedRooms = RoomList.Where(x => _selected.Any(y => y.Key == x.Id.ToString())).ToList();
         
-        _selectedRooms.ForEach( x=> ReservationModel.RoomReservations.Add(new RoomReservation
+        ReservationModel.RoomReservations.Clear();
+        selectedRooms.ForEach( x=> ReservationModel.RoomReservations.Add(new RoomReservation
         {
             Reservation = ReservationModel,
             Room = x
         }));
+        
+        await OnSubmit.InvokeAsync(ReservationModel);
+        
+        _notSelected = RoomList.Select(GetMultiSelectorValue).ToList();
+        _selected = new List<MultiSelector>();
+    }
 
-        ReservationModel.Client = SelectedClient;
-        await hotelReservationService.AddHotelReservationAsync(ReservationModel);
-        await OnReservationAdd.InvokeAsync(ReservationModel);
-        SelectedClient = new Client();
-        ReservationModel = new HotelReservation()
-        {
-            Client = new Client()
-        };
+    private MultiSelector GetMultiSelectorValue(Room room)
+    {
+        return new MultiSelector(room.Id.ToString(), $"Room Number : {room.RoomIdentifier}");
     }
 
     private async Task<IEnumerable<Client>> ClientSearch(string searchClient)

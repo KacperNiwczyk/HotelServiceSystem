@@ -3,6 +3,8 @@
 @using System.Text
 @inject IHotelReservationService hotelReservationService
 @inject IRoomService roomService
+@inject NavigationManager navigationManager
+
 <br/>
 <h3>Reservations</h3>
 <div class="col-12">
@@ -16,7 +18,7 @@
                     </MatExpansionPanelHeader>
                 </MatExpansionPanelSummary>
                 <MatExpansionPanelDetails>
-                    <HssHotelReservationInput OnReservationAdd="@OnReservationAdd"/>
+                    <HssHotelReservationInput ReservationModel="@SetNewHotelReservation()"  OnSubmit="@OnReservationAdd"/>
                 </MatExpansionPanelDetails>
             </MatExpansionPanel>
         </MatAccordion>
@@ -52,6 +54,7 @@
                             <td>@reservation.Discount</td>
                             <td>@reservation.DateOfSubmission</td>
                             <td>@reservation.NumberOfGuests</td>
+                            <td><MatButton Type="Button" OnClick="@(() => EditHotelReservation(reservation.Id))">Edit</MatButton></td>
                         </tr>
                     }
                 }
@@ -66,7 +69,6 @@
 </div>
 
 @code {
-    
     private List<HotelReservation> ReservationList { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -96,13 +98,29 @@
         return builder.ToString();
     }
 
-    private void OnReservationAdd(HotelReservation hotelReservation)
+    private async Task OnReservationAdd(HotelReservation hotelReservation)
     {
+        await hotelReservationService.AddHotelReservationAsync(hotelReservation);
         ReservationList.Add(hotelReservation);
     }
 
     private string GetFirstNameLastName(Client client)
     {
         return client == null ? string.Empty : $"{client.FirstName} {client.LastName}";
+    }
+
+    private void EditHotelReservation(int id)
+    {
+        navigationManager.NavigateTo($"HotelReservationDetails/{id}");
+    }
+
+    private HotelReservation SetNewHotelReservation()
+    {
+        return new HotelReservation
+        {
+            AdditionalServiceReservations = new List<AdditionalServiceReservation>(),
+            RoomReservations = new List<RoomReservation>(),
+            Client = new Client()
+        };
     }
 }
