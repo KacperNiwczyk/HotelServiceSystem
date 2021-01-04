@@ -53,10 +53,16 @@
 
 @code {
     private EventReservation EventReservationModel { get; set; }
-    private readonly List<MultiSelector> _selected = new List<MultiSelector>();
+    
+    
+    private List<MultiSelector> _selected = new List<MultiSelector>();
     private List<MultiSelector> _notSelected = new List<MultiSelector>();
     private List<Room> _selectedRooms = new List<Room>();
+    
+    [Parameter]
     private List<Room> RoomList { get; set; }
+    
+    [Parameter]
     private List<Client> ClientList { get; set; }
 
     [Parameter]

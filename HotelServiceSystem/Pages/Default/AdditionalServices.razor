@@ -13,7 +13,7 @@
                     </MatExpansionPanelHeader>
                 </MatExpansionPanelSummary>
                 <MatExpansionPanelDetails>
-                    <HssAdditionalServiceAdd OnAdditionalServiceAdd="@OnAdditionalServiceAdd" /> 
+                    <HssAdditionalServiceInput AdditionalServiceModel="@(new AdditionalService())" OnSubmit="@OnAdditionalServiceAdd" /> 
                 </MatExpansionPanelDetails>
             </MatExpansionPanel>
         </MatAccordion>
@@ -55,9 +55,9 @@
         await base.OnInitializedAsync();
     }
 
-    private void OnAdditionalServiceAdd(AdditionalService additionalService)
+    private async Task OnAdditionalServiceAdd(AdditionalService additionalService)
     {
+        await additionalServiceService.AddAdditionalServiceAsync(additionalService);
         AdditionalServiceList.Add(additionalService);
     }
-
 }

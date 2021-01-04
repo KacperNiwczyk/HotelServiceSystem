@@ -12,7 +12,7 @@
                     </MatExpansionPanelHeader>
                 </MatExpansionPanelSummary>
                 <MatExpansionPanelDetails>
-                    <HssUserAdd OnUserAdd="@OnUserAdd" /> 
+                    <HssUserInput UserModel="@(new User())" OnSubmit="@OnUserAdd" /> 
                 </MatExpansionPanelDetails>
             </MatExpansionPanel>
         </MatAccordion>
@@ -57,8 +57,9 @@
         await base.OnInitializedAsync();
     }
 
-    private void OnUserAdd(User user)
+    private async Task OnUserAdd(User user)
     {
+        await userService.AddUserAsync(user);
         UserList.Add(user);
     }
 

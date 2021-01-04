@@ -1,8 +1,7 @@
 ﻿@using HotelServiceSystem.Interfaces.Services
 @using HotelServiceSystem.Entities
-@inject IAdditionalServiceService additionalServiceService
 
-    <EditForm Model="@AdditionalServiceModel" OnValidSubmit="@SaveAdditionalService">
+<EditForm Model="@AdditionalServiceModel" OnValidSubmit="@Submit">
         <HssInputCustom Caption="Name" @bind-Value="AdditionalServiceModel.Name"/>
         <HssInputCustom Caption="Price" @bind-Value="AdditionalServiceModel.Price" />
         <div class="col-12 row">
@@ -12,10 +11,12 @@
     </EditForm>
 
 @code {
-    private AdditionalService AdditionalServiceModel { get; set; }
     
     [Parameter]
-    public EventCallback<AdditionalService> OnAdditionalServiceAdd { get; set; }
+    public AdditionalService AdditionalServiceModel { get; set; }
+    
+    [Parameter]
+    public EventCallback<AdditionalService> OnSubmit { get; set; }
     
     protected override async Task OnInitializedAsync()
     {
@@ -23,11 +24,10 @@
         await base.OnInitializedAsync();
     }
 
-    private async Task SaveAdditionalService()
+    private async Task Submit()
     {
-        await additionalServiceService.AddAdditionalServiceAsync(AdditionalServiceModel);
-        await OnAdditionalServiceAdd.InvokeAsync(AdditionalServiceModel);
-        AdditionalServiceModel = new AdditionalService();
+        await OnSubmit.InvokeAsync(AdditionalServiceModel);
     }
+    
     
 }

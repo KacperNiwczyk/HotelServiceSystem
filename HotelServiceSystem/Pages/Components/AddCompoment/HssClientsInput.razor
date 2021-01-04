@@ -1,8 +1,7 @@
 ﻿@using HotelServiceSystem.Entities
 @using HotelServiceSystem.Interfaces.Services
-@inject IClientService clientService
 
-    <EditForm Model="@ClientModel" OnValidSubmit="@SaveClient">
+<EditForm Model="@ClientModel" OnValidSubmit="@Submit">
         <HssInputCustom Caption="First name" @bind-Value="ClientModel.FirstName"/>
         <HssInputCustom Caption="Last name" @bind-Value="ClientModel.LastName" />
         <HssInputCustom Caption="Company name" @bind-Value="ClientModel.CompanyName"/>
@@ -15,22 +14,15 @@
         </div>
     </EditForm>
 
-    @code {
-        private Client ClientModel { get; set; }
-        
-        [Parameter]
-        public EventCallback<Client> OnClientAdd { get; set; }
-
-        protected override async Task OnInitializedAsync()
-        {
-            ClientModel = new Client();
-            await base.OnInitializedAsync();
-        }
-
-        private async Task SaveClient()
-        {
-            await clientService.AddClientAsync(ClientModel);
-            await OnClientAdd.InvokeAsync(ClientModel);
-            ClientModel = new Client();
-        }
+@code {
+    [Parameter]
+    public Client ClientModel { get; set; }
+    
+    [Parameter]
+    public EventCallback<Client> OnSubmit { get; set; }
+    
+    private async Task Submit()
+    {
+        await OnSubmit.InvokeAsync(ClientModel);
     }
+}

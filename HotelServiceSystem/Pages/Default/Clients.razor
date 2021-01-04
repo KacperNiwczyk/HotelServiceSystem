@@ -14,7 +14,7 @@
                 </MatExpansionPanelHeader>
             </MatExpansionPanelSummary>
             <MatExpansionPanelDetails>
-                <HssClientsAdd OnClientAdd="@OnClientAdd" />
+                <HssClientsInput ClientModel="@(new Client())" OnSubmit="@OnClientAdd" />
             </MatExpansionPanelDetails>
         </MatExpansionPanel>
     </MatAccordion>
@@ -65,8 +65,9 @@
         await base.OnInitializedAsync();
     }
 
-    private void OnClientAdd(Client client)
+    private async Task OnClientAdd(Client client)
     {
+        await clientService.AddClientAsync(client);
         ClientList.Add(client);
     }
 }

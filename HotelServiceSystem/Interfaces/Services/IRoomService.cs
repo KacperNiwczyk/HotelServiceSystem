@@ -10,6 +10,7 @@ namespace HotelServiceSystem.Interfaces.Services
     {
         List<Room> GetAllRoomsAsync();
         List<Room> GetAllRoomsWithRelations(params Expression<Func<Room, object>>[] navigationProperties);
+        Room GetRoomById(int id);
         Task<Room> AddRoomAsync(Room room);
         Task<Room> UpdateRoomAsync(Room room);
         Task RemoveRoomAsync(Room room);

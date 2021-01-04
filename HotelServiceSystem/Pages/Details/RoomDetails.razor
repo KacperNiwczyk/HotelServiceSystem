@@ -1,0 +1,27 @@
+﻿@page "/RoomDetails/{Id:int}"
+@using HotelServiceSystem.Interfaces.Services
+@using HotelServiceSystem.Entities
+@inject IRoomService roomService;
+@inject NavigationManager navigationManager
+
+<h3>RoomsDetails</h3>
+<HssRoomInput ModelRoom="@ModelRoom" OnSubmit="@SaveRoom"/>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    
+    private Room ModelRoom { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ModelRoom = roomService.GetRoomById(Id);
+        await base.OnInitializedAsync();
+    }
+    
+    private async Task SaveRoom(Room room)
+    {
+        await roomService.UpdateRoomAsync(ModelRoom);
+        navigationManager.NavigateTo("/rooms");
+    }
+}

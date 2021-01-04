@@ -1,9 +1,8 @@
 ﻿@using HotelServiceSystem.Interfaces.Services
 @using HotelServiceSystem.Entities
 @using HotelServiceSystem.Features.Enums
-@inject IUserService userService
-     
-<EditForm Model="@UserModel" OnValidSubmit="@SaveUser">
+
+<EditForm Model="@UserModel" OnValidSubmit="@Submit">
         <HssInputCustom Caption="Name" @bind-Value="UserModel.UserName"/>
         <HssInputCustom Caption="Password" @bind-Value="UserModel.Password" />
         <HssSelectCustom Label="Role" @bind-Value="SelectedRole" ValidationFor="@(() => SelectedRole)">
@@ -19,11 +18,14 @@
     </EditForm>
 
 @code {
-    private User UserModel { get; set; }
+    
+    [Parameter]
+    public User UserModel { get; set; }
+    
     private UserRole SelectedRole { get; set; }
     
     [Parameter]
-    public EventCallback<User> OnUserAdd { get; set; }
+    public EventCallback<User> OnSubmit { get; set; }
     
     private List<UserRole> AvailableRoles { get; set; }
     
@@ -31,7 +33,6 @@
     {
         
         AvailableRoles = GetAvailableRoles();
-        UserModel = new User();
         await base.OnInitializedAsync();
     }
 
@@ -40,11 +41,9 @@
         return new List<UserRole> {UserRole.Standard, UserRole.Manager, UserRole.Admin};
     }
 
-    private async Task SaveUser()
+    private async Task Submit()
     {
         UserModel.UserRole = SelectedRole;
-        await userService.AddUserAsync(UserModel);
-        await OnUserAdd.InvokeAsync(UserModel);
-        UserModel = new User();
+        await OnSubmit.InvokeAsync(UserModel);
     }
 }
