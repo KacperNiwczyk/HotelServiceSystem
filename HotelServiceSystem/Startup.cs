@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HotelServiceSystem.Core;
+using HotelServiceSystem.Core.Helpers;
 using HotelServiceSystem.Core.Repositories;
 using HotelServiceSystem.Core.Service;
 using HotelServiceSystem.Entities;
+using HotelServiceSystem.Interfaces.Helpers;
 using HotelServiceSystem.Interfaces.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
@@ -43,6 +45,7 @@ namespace HotelServiceSystem
             
             services.AddTransient<IRoomRepository, RoomRepository>();
             services.AddTransient<IRoomService, RoomService>();
+            services.AddTransient<IRoomHelper, RoomHelper>();
             
             services.AddTransient<IClientRepository, ClientRepository>();
             services.AddTransient<IClientService, ClientService>();

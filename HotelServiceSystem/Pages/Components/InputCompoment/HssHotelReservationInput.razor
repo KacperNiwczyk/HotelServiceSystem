@@ -3,6 +3,8 @@
 @using HotelServiceSystem.Interfaces.Services
 @using HotelServiceSystem.Core
 @using System.Collections
+@using Microsoft.Extensions.Logging
+@using TimeSpan = HotelServiceSystem.Core.TimeSpan
 @inject IHotelReservationService hotelReservationService
 @inject IClientService clientService
 @inject IRoomService roomService
@@ -117,19 +119,21 @@
     {
         if (ReservationModel.DateFrom != default && ReservationModel.DateTo != default)
         {
-           
+            var timeSpan = new TimeSpan(ReservationModel.DateFrom, ReservationModel.DateTo);
+            RoomList = roomService.GetAvailableRooms(timeSpan);
+            _notSelected = RoomList.Select(GetMultiSelectorValue).ToList();
         }
     }
 
     private void SetDateFrom(DateTime dateTime)
     {
-        ReservationModel.DateFrom = dateTime;
+        ReservationModel.DateFrom = dateTime.ToLocalTime();
         FillAvailableRoomsList();
     }
     
     private void SetDateTo(DateTime dateTime)
     {
-        ReservationModel.DateTo = dateTime;
+        ReservationModel.DateTo = dateTime.ToLocalTime();
         FillAvailableRoomsList();
     }
 }

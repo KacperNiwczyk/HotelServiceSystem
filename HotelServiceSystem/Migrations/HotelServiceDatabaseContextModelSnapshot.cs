@@ -153,7 +153,7 @@ namespace HotelServiceSystem.Migrations
                     b.Property<int>("Floor")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsFree")
+                    b.Property<bool>("IsFreeNow")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsOutOfService")
@@ -181,12 +181,7 @@ namespace HotelServiceSystem.Migrations
                     b.Property<int>("ReservationId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("EventReservationId")
-                        .HasColumnType("int");
-
                     b.HasKey("RoomId", "ReservationId");
-
-                    b.HasIndex("EventReservationId");
 
                     b.HasIndex("ReservationId");
 
@@ -276,11 +271,7 @@ namespace HotelServiceSystem.Migrations
 
             modelBuilder.Entity("HotelServiceSystem.Entities.RoomReservation", b =>
                 {
-                    b.HasOne("HotelServiceSystem.Entities.EventReservation", null)
-                        .WithMany("RoomReservations")
-                        .HasForeignKey("EventReservationId");
-
-                    b.HasOne("HotelServiceSystem.Entities.HotelReservation", "HotelReservation")
+                    b.HasOne("HotelServiceSystem.Entities.Reservation", "Reservation")
                         .WithMany("RoomReservations")
                         .HasForeignKey("ReservationId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -292,7 +283,7 @@ namespace HotelServiceSystem.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("HotelReservation");
+                    b.Navigation("Reservation");
 
                     b.Navigation("Room");
                 });
@@ -310,22 +301,14 @@ namespace HotelServiceSystem.Migrations
             modelBuilder.Entity("HotelServiceSystem.Entities.Reservation", b =>
                 {
                     b.Navigation("AdditionalServiceReservations");
+
+                    b.Navigation("RoomReservations");
                 });
 
             modelBuilder.Entity("HotelServiceSystem.Entities.Room", b =>
                 {
                     b.Navigation("Beds");
 
-                    b.Navigation("RoomReservations");
-                });
-
-            modelBuilder.Entity("HotelServiceSystem.Entities.EventReservation", b =>
-                {
-                    b.Navigation("RoomReservations");
-                });
-
-            modelBuilder.Entity("HotelServiceSystem.Entities.HotelReservation", b =>
-                {
                     b.Navigation("RoomReservations");
                 });
 #pragma warning restore 612, 618

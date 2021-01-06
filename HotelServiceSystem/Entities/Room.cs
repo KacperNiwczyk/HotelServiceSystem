@@ -32,21 +32,5 @@ namespace HotelServiceSystem.Entities
             Beds = new HashSet<Bed>();
             RoomReservations = new HashSet<RoomReservation>();
         }
-
-        public bool IsFree(TimeSpan timeSpan)
-        {
-            foreach (var roomReservation in RoomReservations)
-            {
-                if (roomReservation?.Reservation is Reservation reservation)
-                {
-                    if (reservation.DateFrom >= timeSpan.DateFrom || reservation.DateTo <= timeSpan.DateTo)
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
-        }
     }
 }

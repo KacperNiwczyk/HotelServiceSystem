@@ -33,8 +33,9 @@
                 <th>ID</th>
                 <th>Client</th>
                 <th>Room list</th>
+                <th>Date from</th>
+                <th>Date to</th>
                 <th>Price</th>
-                <th>Discount</th>
                 <th>Date of submission</th>
                 <th>Number of guests</th>
             </tr>
@@ -50,8 +51,9 @@
                             <td>@reservation.Id</td>
                             <td>@GetFirstNameLastName(reservation.Client)</td>
                             <td>@GetReservedRoomsList(reservation.RoomReservations)</td>
+                            <td>@reservation.DateFrom</td>
+                            <td>@reservation.DateTo</td>
                             <td>@reservation.Price</td>
-                            <td>@reservation.Discount</td>
                             <td>@reservation.DateOfSubmission</td>
                             <td>@reservation.NumberOfGuests</td>
                             <td><MatButton Type="Button" OnClick="@(() => EditHotelReservation(reservation.Id))">Edit</MatButton></td>

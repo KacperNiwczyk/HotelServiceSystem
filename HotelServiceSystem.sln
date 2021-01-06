@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelServiceSystem", "HotelServiceSystem\HotelServiceSystem.csproj", "{28435AE5-F726-4113-B258-13125C4BDF63}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelServiceSystemUnitTests", "HotelServiceSystemUnitTests\HotelServiceSystemUnitTests.csproj", "{692A432E-B6F7-4479-A692-BDAF3A85F9FF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{28435AE5-F726-4113-B258-13125C4BDF63}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{28435AE5-F726-4113-B258-13125C4BDF63}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{28435AE5-F726-4113-B258-13125C4BDF63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{692A432E-B6F7-4479-A692-BDAF3A85F9FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{692A432E-B6F7-4479-A692-BDAF3A85F9FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{692A432E-B6F7-4479-A692-BDAF3A85F9FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{692A432E-B6F7-4479-A692-BDAF3A85F9FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
