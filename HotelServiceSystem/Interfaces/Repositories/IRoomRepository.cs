@@ -6,6 +6,6 @@ namespace HotelServiceSystem.Core
 {
     public interface IRoomRepository : IRepository<Room>
     {
-        Task<ICollection<Room>> GetFreeRooms(TimeSpan timeSpan);
+        List<Room> GetFreeRooms(TimeSpan timeSpan);
     }
 }

@@ -28,8 +28,4 @@
       <_ContentIncludedByDefault Remove="Core\Components\HssSelectCustom.razor" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Pages\Components\InputComponent" />
-    </ItemGroup>
-
 </Project>

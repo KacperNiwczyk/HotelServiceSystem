@@ -2,27 +2,13 @@
 @using HotelServiceSystem.Features
 @using HotelServiceSystem.Interfaces.Services
 @using HotelServiceSystem.Core
+@using System.Collections
 @inject IHotelReservationService hotelReservationService
 @inject IClientService clientService
 @inject IRoomService roomService
 
 <EditForm Model="@ReservationModel" OnValidSubmit="@Submit">
     <FluentValidationValidator/>
-    @*     @if (ClientList != null && ClientList.Any()) *@
-    @*     { *@
-    @*             <MatAutocompleteList Items="@ClientList.ToArray()" TItem="Client" CustomStringSelector="@(i => i.FirstName + " " + i.LastName)" Label="Choose client" @bind-Value="@ReservationModel.Client" FullWidth="@true" ShowClearButton="@true"> *@
-    @*                 <ItemTemplate Context="template"> *@
-    @*                     <div style="display: flex; flex-direction: row; width: 100%;"> *@
-    @*                         <div>@template.FirstName @template.LastName @template.PhoneNumber</div> *@
-    @*                     </div> *@
-    @*                 </ItemTemplate> *@
-    @*             </MatAutocompleteList> *@
-    @*     } *@
-    @*     else *@
-    @*     { *@
-    @*         <p>First u need to add clients</p> *@
-    @*     } *@
-
     @if (ClientList != null && ClientList.Any())
     {
         <BlazoredTypeahead SearchMethod="ClientSearch" @bind-Value="ReservationModel.Client" p>
@@ -40,16 +26,8 @@
     <br/>
     <ValidationMessage For="@(() => ReservationModel.Client.Id)"></ValidationMessage>
     <HssInputCustom Caption="Number of guests" @bind-Value="ReservationModel.NumberOfGuests"/>
-    <div class="col-12 row">
-        <label class="col-2">Date From</label>
-        <MatDatePicker class="form-control col-3" @bind-Value="ReservationModel.DateFrom"/>
-        <ValidationMessage For="@(() => ReservationModel.DateFrom)"></ValidationMessage>
-    </div>
-    <div class="col-12 row">
-        <label class="col-2">Date to</label>
-        <MatDatePicker class="form-control col-3" @bind-Value="ReservationModel.DateTo"/>
-        <ValidationMessage For="@(() => ReservationModel.DateTo)"></ValidationMessage>
-    </div>
+    <HssDatePicker Label="Date from" OnValueChanged="@SetDateFrom" ValidationFor="@(() => ReservationModel.DateFrom)"/>
+    <HssDatePicker Label="Date to" OnValueChanged="@SetDateTo" ValidationFor="@(() => ReservationModel.DateTo)"/>
     <div class="form-group">
         <HSSMultiSelector Selected="@_selected" NotSelected="@_notSelected"/>
     </div>
@@ -76,15 +54,14 @@
     
     protected override async Task OnInitializedAsync()
     {
-        RoomList = roomService.GetAllRoomsAsync();
+        RoomList = new List<Room>();
         ClientList = clientService.GetAllClients();
-        _notSelected = RoomList.Select(GetMultiSelectorValue).ToList();
+        _notSelected = new List<MultiSelector>();
         _selected = new List<MultiSelector>();
         
         var roomReservations = ReservationModel.RoomReservations;
         if (roomReservations != null && roomReservations.Count > 0)
         {
-            
             foreach (var roomReservation in roomReservations)
             {
                 var room = roomReservation.Room;
@@ -114,7 +91,7 @@
         
         await OnSubmit.InvokeAsync(ReservationModel);
         
-        _notSelected = RoomList.Select(GetMultiSelectorValue).ToList();
+        _notSelected = new List<MultiSelector>();
         _selected = new List<MultiSelector>();
     }
 
@@ -134,5 +111,25 @@
         return await Task.FromResult(ClientList.Where(x => x.FirstName.ToLower().Contains(search) ||
                                                             x.LastName.ToLower().Contains(search) ||
                                                             x.PhoneNumber.ToLower().Contains(search)).ToList());
-    } 
+    }
+
+    private void FillAvailableRoomsList()
+    {
+        if (ReservationModel.DateFrom != default && ReservationModel.DateTo != default)
+        {
+           
+        }
+    }
+
+    private void SetDateFrom(DateTime dateTime)
+    {
+        ReservationModel.DateFrom = dateTime;
+        FillAvailableRoomsList();
+    }
+    
+    private void SetDateTo(DateTime dateTime)
+    {
+        ReservationModel.DateTo = dateTime;
+        FillAvailableRoomsList();
+    }
 }

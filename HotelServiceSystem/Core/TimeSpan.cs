@@ -2,9 +2,15 @@
 
 namespace HotelServiceSystem.Core
 {
-    public class TimeSpan
+    public readonly struct TimeSpan
     {
-        public DateTime DateFrom { get; set; }
-        public DateTime DateTo { get; set; }
+        public DateTime DateFrom { get; }
+        public DateTime DateTo { get; }
+
+        public TimeSpan(DateTime dateFrom, DateTime dateTo)
+        {
+            DateFrom = dateFrom;
+            DateTo = dateTo;
+        }
     }
 }

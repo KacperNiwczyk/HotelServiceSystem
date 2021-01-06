@@ -25,6 +25,11 @@ namespace HotelServiceSystem.Core.Service
             return _roomRepository.GetAll().ToList();
         }
 
+        public List<Room> GetAvailableRooms(TimeSpan timeSpan)
+        {
+            return _roomRepository.GetFreeRooms(timeSpan);
+        }
+
         public Room GetRoomById(int id)
         {
             return _roomRepository.GetById(id);

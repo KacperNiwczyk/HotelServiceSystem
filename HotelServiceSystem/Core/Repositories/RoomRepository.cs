@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using HotelServiceSystem.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace HotelServiceSystem.Core.Repositories
 {
@@ -10,9 +12,11 @@ namespace HotelServiceSystem.Core.Repositories
         {
         }
 
-        public Task<ICollection<Room>> GetFreeRooms(TimeSpan timeSpan)
+        public List<Room> GetFreeRooms(TimeSpan timeSpan)
         {
-            throw new System.NotImplementedException();
+            return HotelServiceDatabaseContext.Set<Room>()
+                .Include(x => x.RoomReservations)
+                .Where(x => x.IsFree(timeSpan)).ToList();
         }
     }
 }

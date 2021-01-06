@@ -1,0 +1,36 @@
+﻿@using System.Linq.Expressions
+<div class="col-12 row">
+    @if (Label != null)
+    {
+        <label class="col-2">@Label</label>    
+    }
+    <MatDatePicker class="form-control col-3" @bind-Value="ChoosenDate"/>
+    <ValidationMessage For="@ValidationFor"/>
+</div>
+
+
+@code {
+
+    private DateTime _choosenDate;
+    
+    [Parameter]
+    public string Label { get; set; }
+    
+    
+    private DateTime ChoosenDate
+    {
+        get => _choosenDate;
+        set
+        {
+            _choosenDate = value;
+            OnValueChanged.InvokeAsync(ChoosenDate);
+        }
+
+    }
+    
+    [Parameter]
+    public EventCallback<DateTime> OnValueChanged { get; set; }
+    
+    [Parameter]
+    public Expression<Func<DateTime>> ValidationFor { get; set; }
+}
