@@ -2,6 +2,7 @@
 @using HotelServiceSystem.Features
 @using HotelServiceSystem.Interfaces.Services
 @using HotelServiceSystem.Core
+@using HotelServiceSystem.Core.Helpers
 @using System.Collections
 @using Microsoft.Extensions.Logging
 @using TimeSpan = HotelServiceSystem.Core.TimeSpan
@@ -13,12 +14,12 @@
     <FluentValidationValidator/>
     @if (ClientList != null && ClientList.Any())
     {
-        <BlazoredTypeahead SearchMethod="ClientSearch" @bind-Value="ReservationModel.Client" p>
+        <BlazoredTypeahead SearchMethod="ClientSearch" @bind-Value="@_selectedClient" ShowDropDownOnFocus="@true">
             <SelectedTemplate Context="template">
-                @template.FirstName @template.LastName - @template.PhoneNumber
+                @template.GetAutocompleteValue()
             </SelectedTemplate>
             <ResultTemplate Context="template">
-                @template.FirstName @template.LastName - @template.PhoneNumber
+                @template.GetAutocompleteValue()
             </ResultTemplate>
             <NotFoundTemplate>
                 Client not found
@@ -26,7 +27,7 @@
         </BlazoredTypeahead>
     }
     <br/>
-    <ValidationMessage For="@(() => ReservationModel.Client.Id)"></ValidationMessage>
+    <ValidationMessage For="@(() => _selectedClient.Id)"></ValidationMessage>
     <HssInputCustom Caption="Number of guests" @bind-Value="ReservationModel.NumberOfGuests"/>
     <HssDatePicker Label="Date from" OnValueChanged="@SetDateFrom" ValidationFor="@(() => ReservationModel.DateFrom)"/>
     <HssDatePicker Label="Date to" OnValueChanged="@SetDateTo" ValidationFor="@(() => ReservationModel.DateTo)"/>
@@ -45,7 +46,31 @@
 @code {
     [Parameter]
     public HotelReservation ReservationModel { get; set; }
+
+    private Client sClient;
     
+    private Client _selectedClient
+    {
+        get
+        {
+            if (sClient == null)
+            {
+                return new Client()
+                {
+                    CompanyName = "",
+                    Email = "",
+                    FirstName = "",
+                    LastName = "",
+                    PhoneNumber = ""
+                };
+            }
+
+            return sClient;
+
+        }
+        set => sClient = value;
+    }
+
     [Parameter]
     public EventCallback<HotelReservation> OnSubmit { get; set; }
 
@@ -56,6 +81,7 @@
     
     protected override async Task OnInitializedAsync()
     {
+        sClient = new Client();
         RoomList = new List<Room>();
         ClientList = clientService.GetAllClients();
         _notSelected = new List<MultiSelector>();
