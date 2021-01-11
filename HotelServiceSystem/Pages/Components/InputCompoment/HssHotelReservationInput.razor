@@ -4,6 +4,7 @@
 @using HotelServiceSystem.Core
 @using HotelServiceSystem.Core.Helpers
 @using System.Collections
+@using System.ComponentModel
 @using Microsoft.Extensions.Logging
 @using TimeSpan = HotelServiceSystem.Core.TimeSpan
 @inject IHotelReservationService hotelReservationService
@@ -11,7 +12,7 @@
 @inject IRoomService roomService
 
 <EditForm Model="@ReservationModel" OnValidSubmit="@Submit">
-    <FluentValidationValidator/>
+    <FluentValidationValidator />
     @if (ClientList != null && ClientList.Any())
     {
         <BlazoredTypeahead SearchMethod="ClientSearch" @bind-Value="@_selectedClient" ShowDropDownOnFocus="@true">
@@ -23,9 +24,20 @@
             </ResultTemplate>
             <NotFoundTemplate>
                 Client not found
+                <MatButton Type="Button" OnClick="@(() => AddClient())">Add new +</MatButton>
             </NotFoundTemplate>
         </BlazoredTypeahead>
     }
+    @if (EnableClientAdd)
+    {
+        <br/>
+        <div class="card">
+            <div class="card-body">
+                <HssClientsInput ClientModel="@(new Client())" OnSubmit="DisableClientAdd"/>
+            </div>
+        </div>
+    }
+    
     <br/>
     <ValidationMessage For="@(() => _selectedClient.Id)"></ValidationMessage>
     <HssInputCustom Caption="Number of guests" @bind-Value="ReservationModel.NumberOfGuests"/>
@@ -46,29 +58,30 @@
 @code {
     [Parameter]
     public HotelReservation ReservationModel { get; set; }
-
-    private Client sClient;
+    
+    private bool EnableClientAdd { get; set; }
     
     private Client _selectedClient
     {
         get
         {
-            if (sClient == null)
+            if (ReservationModel.Client == null)
             {
-                return new Client()
+                ReservationModel.Client = new Client()
                 {
                     CompanyName = "",
                     Email = "",
                     FirstName = "",
                     LastName = "",
-                    PhoneNumber = ""
+                    PhoneNumber = "",
+                    Id = 0
                 };
             }
 
-            return sClient;
+            return ReservationModel.Client;
 
         }
-        set => sClient = value;
+        set => ReservationModel.Client = value;
     }
 
     [Parameter]
@@ -81,7 +94,6 @@
     
     protected override async Task OnInitializedAsync()
     {
-        sClient = new Client();
         RoomList = new List<Room>();
         ClientList = clientService.GetAllClients();
         _notSelected = new List<MultiSelector>();
@@ -109,7 +121,7 @@
     private async Task Submit()
     {
         var selectedRooms = RoomList.Where(x => _selected.Any(y => y.Key == x.Id.ToString())).ToList();
-        
+
         ReservationModel.RoomReservations.Clear();
         selectedRooms.ForEach( x=> ReservationModel.RoomReservations.Add(new RoomReservation
         {
@@ -161,5 +173,18 @@
     {
         ReservationModel.DateTo = dateTime.ToLocalTime();
         FillAvailableRoomsList();
+    }
+
+    private void AddClient()
+    {
+        EnableClientAdd = true;
+    }
+
+    private void DisableClientAdd(Client client)
+    {
+        clientService.AddClientAsync(client);
+        ClientList.Add(client);
+        ReservationModel.Client = client;
+        EnableClientAdd = false;
     }
 }
