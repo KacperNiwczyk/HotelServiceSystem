@@ -3,9 +3,9 @@ using HotelServiceSystem.Entities;
 
 namespace HotelServiceSystem.Core.Validations
 {
-	public class ReservationValidator : AbstractValidator<HotelReservation>
+	public class HotelReservationValidator : AbstractValidator<HotelReservation>
 	{
-		public ReservationValidator()
+		public HotelReservationValidator()
 		{
 			RuleFor(x => x.Client).NotNull();
 			RuleFor(x => x.Client.Id).NotEmpty().When(x => x.Client != null);

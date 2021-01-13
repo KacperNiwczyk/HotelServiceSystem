@@ -8,7 +8,11 @@ namespace HotelServiceSystem.Core.Validations
 		public ClientValidator()
 		{
 			RuleFor(x => x).NotNull();
-			RuleFor(x => x.Id).NotEmpty();
+			RuleFor(x => x.FirstName).MaximumLength(25).NotEmpty();
+			RuleFor(x => x.LastName).MaximumLength(25).NotEmpty();
+			RuleFor(x => x.Email).NotEmpty();
+			RuleFor(x => x.Email).EmailAddress();
+			RuleFor(x => x.PhoneNumber).NotEmpty();
 		}
 	}
 }

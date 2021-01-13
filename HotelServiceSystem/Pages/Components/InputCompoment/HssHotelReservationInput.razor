@@ -180,9 +180,9 @@
         EnableClientAdd = true;
     }
 
-    private void DisableClientAdd(Client client)
+    private async Task DisableClientAdd(Client client)
     {
-        clientService.AddClientAsync(client);
+        await clientService.AddClientAsync(client);
         ClientList.Add(client);
         ReservationModel.Client = client;
         EnableClientAdd = false;
