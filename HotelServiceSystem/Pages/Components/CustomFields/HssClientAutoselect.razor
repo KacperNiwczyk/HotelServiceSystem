@@ -1,0 +1,86 @@
+﻿@using HotelServiceSystem.Entities
+@using HotelServiceSystem.Core.Helpers
+@using System.Linq.Expressions
+@if (ClientList != null && ClientList.Any())
+    {
+        <BlazoredTypeahead SearchMethod="ClientSearch" @bind-Value="@ClientValue" ShowDropDownOnFocus="@true">
+            <SelectedTemplate Context="template">
+                @template.GetAutocompleteValue()
+            </SelectedTemplate>
+            <ResultTemplate Context="template">
+                @template.GetAutocompleteValue()
+            </ResultTemplate>
+            <NotFoundTemplate>
+                Client not found
+                <MatButton Type="Button" OnClick="@(() => { EnableClientAdd = true;})">Add new +</MatButton>
+            </NotFoundTemplate>
+        </BlazoredTypeahead>
+    }
+    @if (EnableClientAdd)
+    {
+        <br/>
+        <div class="card">
+            <div class="card-body">
+                <HssClientsInput ClientModel="@(new Client())" OnSubmit="AddClient"/>
+            </div>
+        </div>
+    }
+    <br/>
+    <ValidationMessage For="@(() => ClientValue.Id)"></ValidationMessage>
+
+@code {
+
+    [Parameter]
+    public Client ClientModel { get; set; }
+
+    private Client ClientValue
+    {
+        get => ClientModel ??= new Client()
+        {
+            FirstName = "",
+            LastName = "",
+            CompanyName = "",
+            Email = "",
+            Id = 0,
+            PhoneNumber = "",
+            TaxId = "" 
+        };
+        set
+        {
+            ClientModel = value;
+            ClientValueChanged.InvokeAsync(value);
+        } 
+    }
+    
+    [Parameter]
+    public List<Client> ClientList { get; set; }
+    
+    [Parameter]
+    public EventCallback<Client> OnClientAdd { get; set; }
+    
+    [Parameter]
+    public EventCallback<Client> ClientValueChanged { get; set; }
+
+    private bool EnableClientAdd { get; set; }
+
+    private async Task AddClient(Client client)
+    {
+        await OnClientAdd.InvokeAsync(client);
+        ClientList.Add(client);
+        ClientValue = client;
+        EnableClientAdd = false;
+    }
+    
+    private async Task<IEnumerable<Client>> ClientSearch(string searchClient)
+    {
+        if (string.IsNullOrEmpty(searchClient))
+        {
+            return await Task.FromResult(ClientList);
+        }
+        
+        var search = searchClient.ToLower();
+        return await Task.FromResult(ClientList.Where(x => x.FirstName.ToLower().Contains(search) ||
+                                                           x.LastName.ToLower().Contains(search) ||
+                                                           x.PhoneNumber.ToLower().Contains(search)).ToList());
+    }
+}

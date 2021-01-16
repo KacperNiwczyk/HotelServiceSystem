@@ -13,33 +13,8 @@
 
 <EditForm Model="@ReservationModel" OnValidSubmit="@Submit">
     <FluentValidationValidator />
-    @if (ClientList != null && ClientList.Any())
-    {
-        <BlazoredTypeahead SearchMethod="ClientSearch" @bind-Value="@_selectedClient" ShowDropDownOnFocus="@true">
-            <SelectedTemplate Context="template">
-                @template.GetAutocompleteValue()
-            </SelectedTemplate>
-            <ResultTemplate Context="template">
-                @template.GetAutocompleteValue()
-            </ResultTemplate>
-            <NotFoundTemplate>
-                Client not found
-                <MatButton Type="Button" OnClick="@(() => AddClient())">Add new +</MatButton>
-            </NotFoundTemplate>
-        </BlazoredTypeahead>
-    }
-    @if (EnableClientAdd)
-    {
-        <br/>
-        <div class="card">
-            <div class="card-body">
-                <HssClientsInput ClientModel="@(new Client())" OnSubmit="DisableClientAdd"/>
-            </div>
-        </div>
-    }
-    
+    <HssClientAutoselect ClientModel="@ReservationModel.Client" ClientList="@ClientList" OnClientAdd="@AddClient" ClientValueChanged="@SetClient"/>
     <br/>
-    <ValidationMessage For="@(() => _selectedClient.Id)"></ValidationMessage>
     <HssInputCustom Caption="Number of guests" @bind-Value="ReservationModel.NumberOfGuests"/>
     <HssDatePicker Label="Date from" OnValueChanged="@SetDateFrom" ValidationFor="@(() => ReservationModel.DateFrom)"/>
     <HssDatePicker Label="Date to" OnValueChanged="@SetDateTo" ValidationFor="@(() => ReservationModel.DateTo)"/>
@@ -175,9 +150,15 @@
         FillAvailableRoomsList();
     }
 
-    private void AddClient()
+    private async Task AddClient(Client client)
     {
-        EnableClientAdd = true;
+        await clientService.AddClientAsync(client);
+        ClientList.Add(client);
+    }
+
+    private void SetClient(Client client)
+    {
+        ReservationModel.Client = client;
     }
 
     private async Task DisableClientAdd(Client client)
