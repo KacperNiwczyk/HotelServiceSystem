@@ -1,13 +1,7 @@
 ﻿@using System.Linq.Expressions
-<div class="col-12 row">
-    @if (Label != null)
-    {
-        <label class="col-2">@Label</label>    
-    }
-    <MatDatePicker class="form-control col-3" @bind-Value="ChoosenDate"/>
-    <ValidationMessage For="@ValidationFor"/>
-</div>
 
+<MatDatePicker class="form-control col-3" @bind-Value="@ChoosenDate" Label="@Label"  Style="margin-right: 30px" Minimum="@MinimalDate"/>
+<ValidationMessage For="@ValidationFor"/>
 
 @code {
 
@@ -16,8 +10,11 @@
     [Parameter]
     public string Label { get; set; }
     
+    [Parameter]
+    public DateTime MinimalDate { get; set; } = DateTime.Today.ToLocalTime().AddDays(-1);
     
-    private DateTime ChoosenDate
+    [Parameter]
+    public DateTime ChoosenDate
     {
         get => _choosenDate;
         set

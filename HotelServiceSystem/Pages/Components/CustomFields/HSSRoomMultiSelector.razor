@@ -1,0 +1,57 @@
+﻿@using HotelServiceSystem.Features
+@using HotelServiceSystem.Entities
+@using HotelServiceSystem.Core
+
+<div class="multi-select">
+    <ul>
+        <li style="list-style-type: none">@NotSelectedLabel</li>
+        <ul class="selectable-ul" style="margin-right: 30px">
+            @foreach (var item in NotSelected)
+            {
+                <li @onclick="@(() => Select(item))">@GetRoomTextValue(item)</li>
+            }
+        </ul>
+    </ul>
+    <ul>
+        <li style="list-style-type: none">@SelectedLabel</li>
+        <ul class="selectable-ul">
+            @foreach (var item in Selected)
+            {
+                <li @onclick="@(() => Deselect(item))">@GetRoomTextValue(item)</li>
+            }
+        </ul>
+    </ul>
+</div>
+
+
+
+@code {
+    [Parameter]
+    public List<Room> NotSelected { get; set; } = new List<Room>();
+    
+    [Parameter]
+    public string NotSelectedLabel { get; set; }
+    
+    [Parameter]
+    public List<Room> Selected { get; set; } = new List<Room>();
+    
+    [Parameter]
+    public string SelectedLabel { get; set; }
+
+    private void Select(Room room)
+    {
+        NotSelected.Remove(room);
+        Selected.Add(room);
+    }
+
+    private void Deselect(Room room)
+    {
+        Selected.Remove(room);
+        NotSelected.Add(room);
+    }
+
+    private string GetRoomTextValue(Room room)
+    {
+        return room == null ? string.Empty : $"Number: {room.RoomIdentifier} Single beds: {room.Beds.Count(x => x.BedType == BedType.SingleBed)} Double beds: {room.Beds.Count(x => x.BedType == BedType.DoubleBed)} Floor: {room.Floor}";
+    }
+}

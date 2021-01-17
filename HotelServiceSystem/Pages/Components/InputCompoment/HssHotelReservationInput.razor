@@ -5,6 +5,7 @@
 @using HotelServiceSystem.Core.Helpers
 @using System.Collections
 @using System.ComponentModel
+@using System.Reflection.Emit
 @using Microsoft.Extensions.Logging
 @using TimeSpan = HotelServiceSystem.Core.TimeSpan
 @inject IHotelReservationService hotelReservationService
@@ -16,12 +17,15 @@
     <HssClientAutoselect ClientModel="@ReservationModel.Client" ClientList="@ClientList" OnClientAdd="@AddClient" ClientValueChanged="@SetClient"/>
     <br/>
     <HssInputCustom Caption="Number of guests" @bind-Value="ReservationModel.NumberOfGuests"/>
-    <HssDatePicker Label="Date from" OnValueChanged="@SetDateFrom" ValidationFor="@(() => ReservationModel.DateFrom)"/>
-    <HssDatePicker Label="Date to" OnValueChanged="@SetDateTo" ValidationFor="@(() => ReservationModel.DateTo)"/>
-    <div class="form-group">
-        <HSSMultiSelector Selected="@_selected" NotSelected="@_notSelected"/>
+    <div class="col-12 row">
+        <HssDatePicker Label="Arrival" OnValueChanged="@SetDateFrom" ValidationFor="@(() => ReservationModel.DateFrom)"/>
+        <HssDatePicker Label="Departure" OnValueChanged="@SetDateTo" ValidationFor="@(() => ReservationModel.DateTo)" MinimalDate="@GetMinimalDepartureDate()"/>
     </div>
-    <ValidationMessage For="@(() => _selected)"></ValidationMessage>
+    <br/>
+    <div class="form-group">
+        <HSSRoomMultiSelector NotSelected="@RoomList" NotSelectedLabel="Available Rooms" Selected="@SelectedRoomList" SelectedLabel="Selected Rooms"/>
+    </div>
+    <ValidationMessage For="@(() => ReservationModel.RoomReservations)"></ValidationMessage>
     <HssInputCustom Caption="Price" @bind-Value="ReservationModel.Price"/>
     <HssInputCustom Caption="Discount" @bind-Value="ReservationModel.Discount"/>
     <div class="col-12 row">
@@ -62,18 +66,16 @@
     [Parameter]
     public EventCallback<HotelReservation> OnSubmit { get; set; }
 
-    private List<MultiSelector> _selected;
-    private List<MultiSelector> _notSelected;
     private List<Room> RoomList { get; set; }
+    private List<Room> SelectedRoomList { get; set; }
     private List<Client> ClientList { get; set; }
     
     protected override async Task OnInitializedAsync()
     {
         RoomList = new List<Room>();
+        SelectedRoomList = new List<Room>();
         ClientList = clientService.GetAllClients();
-        _notSelected = new List<MultiSelector>();
-        _selected = new List<MultiSelector>();
-        
+
         var roomReservations = ReservationModel.RoomReservations;
         if (roomReservations != null && roomReservations.Count > 0)
         {
@@ -82,11 +84,11 @@
                 var room = roomReservation.Room;
                 if (room != null)
                 {
-                    _selected.Add(GetMultiSelectorValue(room));
+                    SelectedRoomList.Add(room);
                 }
                 
             }
-            _notSelected.RemoveAll(x => _selected.Any(y => y.Key == x.Key));
+            RoomList.RemoveAll(x => SelectedRoomList.Any(y => y.Equals(x)));
         }
         
         await base.OnInitializedAsync();
@@ -95,26 +97,16 @@
 
     private async Task Submit()
     {
-        var selectedRooms = RoomList.Where(x => _selected.Any(y => y.Key == x.Id.ToString())).ToList();
-
         ReservationModel.RoomReservations.Clear();
-        selectedRooms.ForEach( x=> ReservationModel.RoomReservations.Add(new RoomReservation
+        SelectedRoomList.ForEach( x=> ReservationModel.RoomReservations.Add(new RoomReservation
         {
             Reservation = ReservationModel,
             Room = x
         }));
         
         await OnSubmit.InvokeAsync(ReservationModel);
-        
-        _notSelected = new List<MultiSelector>();
-        _selected = new List<MultiSelector>();
     }
-
-    private MultiSelector GetMultiSelectorValue(Room room)
-    {
-        return new MultiSelector(room.Id.ToString(), $"Room Number : {room.RoomIdentifier}");
-    }
-
+    
     private async Task<IEnumerable<Client>> ClientSearch(string searchClient)
     {
         if (string.IsNullOrEmpty(searchClient))
@@ -134,7 +126,6 @@
         {
             var timeSpan = new TimeSpan(ReservationModel.DateFrom, ReservationModel.DateTo);
             RoomList = roomService.GetAvailableRooms(timeSpan);
-            _notSelected = RoomList.Select(GetMultiSelectorValue).ToList();
         }
     }
 
@@ -168,4 +159,10 @@
         ReservationModel.Client = client;
         EnableClientAdd = false;
     }
+
+    private DateTime GetMinimalDepartureDate()
+    {
+        return ReservationModel.DateFrom != default ? ReservationModel.DateFrom : DateTime.Now.ToLocalTime().AddDays(-1);
+    }
+
 }
