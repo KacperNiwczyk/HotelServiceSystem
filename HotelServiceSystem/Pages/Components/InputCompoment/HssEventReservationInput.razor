@@ -7,21 +7,7 @@
 
 <EditForm Model="@EventReservationModel" OnValidSubmit="@Submit">
     <FluentValidationValidator/>
-    @if (ClientList != null && ClientList.Any())
-    {
-            <MatAutocompleteList Items="@ClientList.ToArray()" TItem="Client" CustomStringSelector="@(i => i.FirstName + " " + i.LastName)" Label="Choose client" @bind-Value="@EventReservationModel.Client" FullWidth="@true" ShowClearButton="@true">
-                <ItemTemplate Context="template">
-                    <div style="display: flex; flex-direction: row; width: 100%;">
-                        <div>@template.FirstName @template.LastName @template.PhoneNumber</div>
-                    </div>
-                </ItemTemplate>
-            </MatAutocompleteList>
-    }
-    else
-    {
-        <p>First u need to add clients</p>
-    }
-    <ValidationMessage For="@(()=> EventReservationModel.Client.Id)"></ValidationMessage>
+    <HssClientAutoselect ClientList="@ClientList" ClientModel="@EventReservationModel.Client" OnClientAdd="@AddClient" ClientValueChanged="@SetClient"/>
     <HssInputCustom Caption="Number of guests" @bind-Value="EventReservationModel.NumberOfGuests"/>
     
     @* Dodać kontrolkę czy to wydarzenie jedno, czy dwu dniowe*@
@@ -95,5 +81,16 @@
         {
             Client = new Client()
         };
+    }
+    
+    private async Task AddClient(Client client)
+    {
+        await clientService.AddClientAsync(client);
+        ClientList.Add(client);
+    }
+    
+    private void SetClient(Client client)
+    {
+        EventReservationModel.Client = client;
     }
 }
