@@ -30,14 +30,19 @@ namespace HotelServiceSystem.Core.Helpers
 			if (room?.RoomReservations != null)
 			{
 				var roomReservations = room.RoomReservations;
-				var localTime = DateTime.Now;
+				var localTime = DateTime.Today;
 				var futureReservations = roomReservations.Where(x => x?.Reservation?.DateFrom >= localTime)
 					.Select(x => x.Reservation)
 					.ToArray();
+
+				if (futureReservations.Length == 0)
+				{
+					return;
+				}
 				
 				if (room.IsFreeNow)
 				{
-					if (futureReservations.Any(x => x.DateFrom >= localTime && x.DateTo <= DateTime.Now.ToLocalTime()))
+					if (futureReservations.Any(x => x.DateFrom <= localTime && x.DateTo >= localTime))
 					{
 						room.IsFreeNow = false;
 					}

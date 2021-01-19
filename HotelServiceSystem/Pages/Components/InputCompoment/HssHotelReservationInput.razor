@@ -105,6 +105,9 @@
             Room = x
         }));
         
+        SelectedRoomList = new List<Room>();
+        RoomList = new List<Room>();
+        
         await OnSubmit.InvokeAsync(ReservationModel);
     }
     
