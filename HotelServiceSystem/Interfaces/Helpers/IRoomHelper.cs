@@ -6,5 +6,7 @@ namespace HotelServiceSystem.Interfaces.Helpers
 	public interface IRoomHelper
 	{
 		bool IsFree(Room room, TimeSpan timeSpan);
+
+		void UpdateStatus(Room room);
 	}
 }

@@ -22,7 +22,10 @@ namespace HotelServiceSystem.Core.Service
 
         public List<Room> GetAllRoomsAsync()
         {
-            return _roomRepository.GetAll().ToList();
+            return _roomRepository.GetAll().Include(x => x.Beds)
+                .Include(x => x.RoomReservations)
+                .ThenInclude(x => x.Reservation)
+                .ToList();
         }
 
         public List<Room> GetAvailableRooms(TimeSpan timeSpan)

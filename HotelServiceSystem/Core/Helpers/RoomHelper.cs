@@ -1,4 +1,7 @@
-﻿using HotelServiceSystem.Entities;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using HotelServiceSystem.Entities;
 using HotelServiceSystem.Interfaces.Helpers;
 
 namespace HotelServiceSystem.Core.Helpers
@@ -20,6 +23,35 @@ namespace HotelServiceSystem.Core.Helpers
 			}
 
 			return true;
+		}
+
+		public void UpdateStatus(Room room)
+		{
+			if (room?.RoomReservations != null)
+			{
+				var roomReservations = room.RoomReservations;
+				var localTime = DateTime.Now;
+				var futureReservations = roomReservations.Where(x => x?.Reservation?.DateFrom >= localTime)
+					.Select(x => x.Reservation)
+					.ToArray();
+				
+				if (room.IsFreeNow)
+				{
+					if (futureReservations.Any(x => x.DateFrom >= localTime && x.DateTo <= DateTime.Now.ToLocalTime()))
+					{
+						room.IsFreeNow = false;
+					}
+				}
+
+				if (!room.ShouldBeCleaned)
+				{
+					if (futureReservations.Any(x => x.DateTo <= localTime))
+					{
+						room.ShouldBeCleaned = true;
+						room.IsFreeNow = true;
+					}
+				}
+			}
 		}
 	}
 }

@@ -1,0 +1,25 @@
+﻿@using HotelServiceSystem.Entities
+@if (RoomModel != null)
+{
+    if (!RoomModel.IsFreeNow)
+    {
+        <p style="color: darkred">Occupied</p>
+    }
+    else if(RoomModel.IsOutOfService)
+    {
+        <p style="color: red">Out of service</p>
+    }
+    else if(RoomModel.ShouldBeCleaned)
+    {
+        <p style="color: yellow">Needs cleaning</p>
+    }
+    else
+    {
+        <p style="color: green">Available</p>
+    }
+}
+
+@code {
+    [Parameter]
+    public Room RoomModel { get; set; }
+}
