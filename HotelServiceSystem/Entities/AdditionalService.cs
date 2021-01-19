@@ -12,11 +12,6 @@ namespace HotelServiceSystem.Entities
 
         public double Price { get; set; }
         
-        public ICollection<AdditionalServiceReservation> AdditionalServiceReservations { get; set; }
 
-        public AdditionalService()
-        {
-            AdditionalServiceReservations = new HashSet<AdditionalServiceReservation>();
-        }
     }
 }

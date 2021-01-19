@@ -26,11 +26,14 @@ namespace HotelServiceSystem.Entities
         public bool ShouldBeCleaned { get; set; }
         
         public virtual ICollection<RoomReservation> RoomReservations { get; }
+        
+        public virtual ICollection<AdditionalServiceRoom> AdditionalServiceRooms { get;  }
 
         public Room()
         {
             Beds = new HashSet<Bed>();
             RoomReservations = new HashSet<RoomReservation>();
+            AdditionalServiceRooms = new HashSet<AdditionalServiceRoom>();
         }
     }
 }

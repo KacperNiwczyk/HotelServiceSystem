@@ -14,6 +14,8 @@ namespace HotelServiceSystem.Core
         public DbSet<HotelReservation> HotelReservations { get; set; }
         public DbSet<EventReservation> EventReservations { get; set; }
         public DbSet<RoomReservation> RoomReservations { get; set; }
+        public DbSet<AdditionalServiceReservation> AdditionalServiceReservations { get; set; }
+        public DbSet<AdditionalServiceRoom> AdditionalServiceRooms { get; set; }
         public DbSet<AdditionalService> AdditionalServices { get; set; }
 
         public HotelServiceDatabaseContext(DbContextOptions<HotelServiceDatabaseContext> options) : base (options)
@@ -57,6 +59,22 @@ namespace HotelServiceSystem.Core
                 .HasOne(x => x.Reservation)
                 .WithMany(x => x.AdditionalServiceReservations)
                 .HasForeignKey(x => x.ReservationId);
+
+            modelBuilder.Entity<AdditionalService>()
+                .HasDiscriminator<string>("AdditionalService_Type")
+                .HasValue<ReservationAdditional>("Reservation")
+                .HasValue<RoomAdditional>("Room");
+
+            modelBuilder.Entity<AdditionalServiceRoom>()
+                .HasKey(x => new {x.AdditionalServiceId, x.RoomId});
+            modelBuilder.Entity<AdditionalServiceRoom>()
+                .HasOne(x => x.AdditionalService)
+                .WithMany(x => x.AdditionalRoomServiceReservations)
+                .HasForeignKey(x => x.AdditionalServiceId);
+            modelBuilder.Entity<AdditionalServiceRoom>()
+                .HasOne(x => x.Room)
+                .WithMany(x => x.AdditionalServiceRooms)
+                .HasForeignKey(x => x.RoomId);
         }
     }
 }
