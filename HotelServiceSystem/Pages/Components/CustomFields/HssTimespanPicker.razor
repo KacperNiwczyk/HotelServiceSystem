@@ -2,7 +2,10 @@
 @using TimeSpan = HotelServiceSystem.Core.TimeSpan
     <div class="col-12 row">
         <HssDatePicker Label="Arrival" OnValueChanged="@SetDateFrom" ValidationFor="@(() => ReservationModel.DateFrom)"/>
-        <HssDatePicker Label="Departure" OnValueChanged="@SetDateTo" ValidationFor="@(() => ReservationModel.DateTo)" MinimalDate="@GetMinimalDepartureDate()"/>
+        @if (!IsOneDay)
+        {
+            <HssDatePicker Label="Departure" OnValueChanged="@SetDateTo" ValidationFor="@(() => ReservationModel.DateTo)" MinimalDate="@GetMinimalDepartureDate()"/>  
+        }
     </div>
 
 @code {
@@ -23,6 +26,9 @@
             OnReservationModelChange.InvokeAsync(value);
         } 
     }
+
+    [Parameter]
+    public bool IsOneDay { get; set; } = false;
     
     [Parameter]
     public EventCallback<Reservation> OnReservationModelChange { get; set; }
@@ -50,6 +56,7 @@
     private void SetDateTo(DateTime dateTime)
     {
         ReservationModel.DateTo = dateTime.ToLocalTime();
+        CheckDatesSelected();
     }
     
     private DateTime GetMinimalDepartureDate()

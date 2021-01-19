@@ -16,7 +16,7 @@
                         </MatExpansionPanelHeader>
                     </MatExpansionPanelSummary>
                     <MatExpansionPanelDetails>
-                        <HssEventReservationInput OnSubmit="@OnEventReservationAdd"/>
+                        <HssEventReservationInput EventReservationModel="@SetNewEventReservation()" OnSubmit="@OnEventReservationAdd"/>
                     </MatExpansionPanelDetails>
                 </MatExpansionPanel>
             </MatAccordion>
@@ -114,5 +114,18 @@
     private string GetFirstNameLastName(Client client)
     {
         return client == null ? string.Empty : $"{client.FirstName} {client.LastName}";
+    }
+    
+    private EventReservation SetNewEventReservation()
+    {
+        return new EventReservation
+        {
+            AdditionalServiceReservations = new List<AdditionalServiceReservation>(),
+            RoomReservations = new List<RoomReservation>(),
+            Client = new Client()
+            {
+                Id = 0
+            }
+        };
     }
 }

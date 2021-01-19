@@ -11,11 +11,11 @@
     <HssInputCustom Caption="Number of guests" @bind-Value="EventReservationModel.NumberOfGuests"/>
     
     @* Dodać kontrolkę czy to wydarzenie jedno, czy dwu dniowe*@
-    <HssTimespanPicker ReservationModel="@EventReservationModel" OnDatesSelected="F"/>
+    <HssTimespanPicker ReservationModel="@EventReservationModel" OnDatesSelected="@FillAvailableRoomsList"/>
     
     @*Dodać kontrolkę czy to jest  *@
     <div class="form-group">
-        <HSSRoomMultiSelector/>
+        <HSSRoomMultiSelector NotSelected="@RoomList" NotSelectedLabel="Available Rooms" Selected="@SelectedRoomList" SelectedLabel="Selected Rooms"/>
     </div>
     
     @*EventRoom*@
@@ -33,9 +33,7 @@
     [Parameter]
     public EventReservation EventReservationModel { get; set; }
     
-    private List<MultiSelector> _selected = new List<MultiSelector>();
-    private List<MultiSelector> _notSelected = new List<MultiSelector>();
-    private List<Room> _selectedRooms = new List<Room>();
+    private List<Room> SelectedRoomList { get; set; }
     private List<Room> RoomList { get; set; }
     private List<Client> ClientList { get; set; }
 
@@ -44,7 +42,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        RoomList = roomService.GetAllRoomsAsync();
+        RoomList = new List<Room>();
+        SelectedRoomList = new List<Room>();
         ClientList = clientService.GetAllClients();
         
         EventReservationModel = new EventReservation
@@ -52,23 +51,23 @@
             Client = new Client()
         };
         
-        _notSelected = RoomList.Select(x => new MultiSelector(x.Id.ToString(), $"Room Number : {x.RoomIdentifier}")).ToList();
+        RoomList.Select(x => new MultiSelector(x.Id.ToString(), $"Room Number : {x.RoomIdentifier}")).ToList();
         await base.OnInitializedAsync();
     }
     
 
     private async Task Submit()
     {
-        _selectedRooms = RoomList.Where(x => _selected.Any(y => y.Key == x.Id.ToString())).ToList();
-
-        _selectedRooms.ForEach( x=> EventReservationModel.RoomReservations.Add(new RoomReservation
+        EventReservationModel.RoomReservations.Clear();
+        SelectedRoomList.ForEach( x=> EventReservationModel.RoomReservations.Add(new RoomReservation
         {
             Reservation = EventReservationModel,
             Room = x
         }));
-
-        await eventReservationService.AddEventAsync(EventReservationModel);
+        
         await OnSubmit.InvokeAsync(EventReservationModel);
+        await OnSubmit.InvokeAsync(EventReservationModel);
+        
         EventReservationModel = new EventReservation
         {
             Client = new Client()

@@ -21,7 +21,7 @@
     @*     <HssDatePicker Label="Arrival" OnValueChanged="@SetDateFrom" ValidationFor="@(() => ReservationModel.DateFrom)"/> *@
     @*     <HssDatePicker Label="Departure" OnValueChanged="@SetDateTo" ValidationFor="@(() => ReservationModel.DateTo)" MinimalDate="@GetMinimalDepartureDate()"/> *@
     @* </div> *@
-    <HssTimespanPicker ReservationModel="@ReservationModel" OnDatesSelected=""/>
+    <HssTimespanPicker ReservationModel="@ReservationModel" OnDatesSelected="@FillAvailableRoomsList"/>
     <br/>
     <div class="form-group">
         <HSSRoomMultiSelector NotSelected="@RoomList" NotSelectedLabel="Available Rooms" Selected="@SelectedRoomList" SelectedLabel="Selected Rooms"/>
@@ -121,25 +121,9 @@
                                                             x.PhoneNumber.ToLower().Contains(search)).ToList());
     }
 
-    private void FillAvailableRoomsList()
+    private void FillAvailableRoomsList(TimeSpan timeSpan)
     {
-        if (ReservationModel.DateFrom != default && ReservationModel.DateTo != default)
-        {
-            var timeSpan = new TimeSpan(ReservationModel.DateFrom, ReservationModel.DateTo);
-            RoomList = roomService.GetAvailableRooms(timeSpan);
-        }
-    }
-
-    private void SetDateFrom(DateTime dateTime)
-    {
-        ReservationModel.DateFrom = dateTime.ToLocalTime();
-        FillAvailableRoomsList();
-    }
-    
-    private void SetDateTo(DateTime dateTime)
-    {
-        ReservationModel.DateTo = dateTime.ToLocalTime();
-        FillAvailableRoomsList();
+        RoomList = roomService.GetAvailableRooms(timeSpan);
     }
 
     private async Task AddClient(Client client)
