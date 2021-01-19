@@ -1,0 +1,59 @@
+﻿@using HotelServiceSystem.Entities
+@using TimeSpan = HotelServiceSystem.Core.TimeSpan
+    <div class="col-12 row">
+        <HssDatePicker Label="Arrival" OnValueChanged="@SetDateFrom" ValidationFor="@(() => ReservationModel.DateFrom)"/>
+        <HssDatePicker Label="Departure" OnValueChanged="@SetDateTo" ValidationFor="@(() => ReservationModel.DateTo)" MinimalDate="@GetMinimalDepartureDate()"/>
+    </div>
+
+@code {
+
+    [Parameter]
+    public string ArrivalDateLabel { get; set; } = "Arrival";
+
+    [Parameter]
+    public string DepartureDateLabel { get; set; } = "Departure";
+    
+    [Parameter]
+    public Reservation ReservationModel
+    {
+        get => _reservation;
+        set
+        {
+            _reservation = value;
+            OnReservationModelChange.InvokeAsync(value);
+        } 
+    }
+    
+    [Parameter]
+    public EventCallback<Reservation> OnReservationModelChange { get; set; }
+    
+    [Parameter]
+    public EventCallback<TimeSpan> OnDatesSelected { get; set; }
+    
+    private Reservation _reservation { get; set; }
+
+    private void SetDateFrom(DateTime dateTime)
+    {
+        ReservationModel.DateFrom = dateTime.ToLocalTime();
+        CheckDatesSelected();
+    }
+
+    private void CheckDatesSelected()
+    {
+        if (ReservationModel.DateFrom != default && ReservationModel.DateTo != default)
+        {
+            var timeSpan = new TimeSpan(ReservationModel.DateFrom, ReservationModel.DateTo);
+            OnDatesSelected.InvokeAsync(timeSpan);
+        }
+    }
+
+    private void SetDateTo(DateTime dateTime)
+    {
+        ReservationModel.DateTo = dateTime.ToLocalTime();
+    }
+    
+    private DateTime GetMinimalDepartureDate()
+    {
+        return ReservationModel.DateFrom != default ? ReservationModel.DateFrom : DateTime.Now.ToLocalTime().AddDays(-1);
+    }
+}

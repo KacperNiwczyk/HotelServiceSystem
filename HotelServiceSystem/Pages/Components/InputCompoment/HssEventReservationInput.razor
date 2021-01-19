@@ -11,19 +11,11 @@
     <HssInputCustom Caption="Number of guests" @bind-Value="EventReservationModel.NumberOfGuests"/>
     
     @* Dodać kontrolkę czy to wydarzenie jedno, czy dwu dniowe*@
-    <div class="col-12 row">
-        <label class="col-3">Date From</label>
-        <MatDatePicker class="form-control col-3" @bind-Value="EventReservationModel.DateFrom"/>
-    </div>
-    <div class="col-12 row">
-        <label class="col-3">Date to</label>
-        <MatDatePicker class="form-control col-3" @bind-Value="EventReservationModel.DateTo"/>
-        <ValidationMessage For="@(() => EventReservationModel.DateTo)"></ValidationMessage>
-    </div>
+    <HssTimespanPicker ReservationModel="@EventReservationModel" OnDatesSelected="F"/>
     
     @*Dodać kontrolkę czy to jest  *@
     <div class="form-group">
-        <HSSMultiSelector Selected="@_selected" NotSelected="@_notSelected"/>
+        <HSSRoomMultiSelector/>
     </div>
     
     @*EventRoom*@
@@ -81,6 +73,11 @@
         {
             Client = new Client()
         };
+    }
+    
+    private void FillAvailableRoomsList(Core.TimeSpan timeSpan)
+    {
+        RoomList = roomService.GetAvailableRooms(timeSpan);
     }
     
     private async Task AddClient(Client client)
