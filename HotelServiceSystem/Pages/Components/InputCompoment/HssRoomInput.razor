@@ -1,15 +1,19 @@
 ﻿@using HotelServiceSystem.Core
 @using HotelServiceSystem.Entities
+@using HotelServiceSystem.Interfaces.Services
+@using HotelServiceSystem.Pages.Default
+@inject IAdditionalServiceService additionalServiceService
 
 <EditForm Model="@ModelRoom" OnValidSubmit="@Submit">
     <HssInputCustom Caption="Room identifier" @bind-Value="ModelRoom.RoomIdentifier"/>
-    <HssInputCustom Caption="Floor" @bind-Value="ModelRoom.Floor" />
+    <HssInputCustom Caption="Floor" @bind-Value="ModelRoom.Floor"/>
     <HssInputCustom Caption="Price" @bind-Value="ModelRoom.Price"/>
     <div class="col-12 row">
-        <MatButton Unelevated="true" Type="Button" Class="form-control col-2" Style="margin-right: 10px" OnClick="@( s => AddBed(BedType.SingleBed))">X @BedCount(BedType.SingleBed) Single Beds</MatButton>
-        <MatButton Unelevated="true" Type="Button" Class="form-control col-2" OnClick="@( s => AddBed(BedType.DoubleBed))">X @BedCount(BedType.DoubleBed) Double Beds</MatButton>
+        <MatButton Unelevated="true" Type="Button" Class="form-control col-2" Style="margin-right: 10px" OnClick="@(s => AddBed(BedType.SingleBed))">X @BedCount(BedType.SingleBed) Single Beds</MatButton>
+        <MatButton Unelevated="true" Type="Button" Class="form-control col-2" OnClick="@(s => AddBed(BedType.DoubleBed))">X @BedCount(BedType.DoubleBed) Double Beds</MatButton>
     </div>
     <br/>
+    <HssAdditionalServiceSelect AdditionalServicesModel="@AdditionalServices" @bind-SelectedServices="@SelectedServices" ServiceTypes="@(new List<ServiceType> { ServiceType.Room })"/>
     <div class="col-12 row">
         <span class="col-2"></span>
         <input type="submit" class="form-control col-2 btn btn-primary" value="Submit"/>
@@ -23,6 +27,19 @@
     [Parameter]
     public EventCallback<Room> OnSubmit { get; set; }
     
+    private MatChip[] SelectedChips { get; set; }
+    
+    private List<AdditionalService> AdditionalServices { get; set; }
+    
+    private List<AdditionalService> SelectedServices { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        SelectedServices = new List<AdditionalService>();
+        AdditionalServices = additionalServiceService.GetAllAdditionalServices(x => x.ServiceType.Equals(ServiceType.Room));
+        await base.OnInitializedAsync();
+    }
+
     private void AddBed(BedType bedType)
     {
         ModelRoom.Beds.Add(new Bed() {BedType = bedType});
@@ -35,6 +52,14 @@
 
     private async Task Submit()
     {
+        SelectedServices.ForEach(x =>
+        {
+            ModelRoom.AdditionalServiceRooms.Add(new AdditionalServiceRoom
+            {
+                AdditionalService = x
+            });
+        });
+
         await OnSubmit.InvokeAsync(ModelRoom);
     }
 }

@@ -18,9 +18,9 @@ namespace HotelServiceSystem.Core.Service
 			_additionalServiceRepository = additionalServiceRepository;
 		}
 
-		public List<AdditionalService> GetAllAdditionalServices()
+		public List<AdditionalService> GetAllAdditionalServices(Func<AdditionalService, bool> filter = null)
 		{
-			return _additionalServiceRepository.GetAll().ToList();
+			return filter != null ? _additionalServiceRepository.GetAll().AsEnumerable().Where(filter).ToList() : _additionalServiceRepository.GetAll().ToList();
 		}
 
 		public AdditionalService GetById(int id)

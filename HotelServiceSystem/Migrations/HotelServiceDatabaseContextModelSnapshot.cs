@@ -32,6 +32,9 @@ namespace HotelServiceSystem.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
+                    b.Property<int>("ServiceType")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("AdditionalServices");
@@ -49,7 +52,22 @@ namespace HotelServiceSystem.Migrations
 
                     b.HasIndex("ReservationId");
 
-                    b.ToTable("AdditionalServiceReservation");
+                    b.ToTable("AdditionalServiceReservations");
+                });
+
+            modelBuilder.Entity("HotelServiceSystem.Entities.AdditionalServiceRoom", b =>
+                {
+                    b.Property<int>("AdditionalServiceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AdditionalServiceId", "RoomId");
+
+                    b.HasIndex("RoomId");
+
+                    b.ToTable("AdditionalServiceRooms");
                 });
 
             modelBuilder.Entity("HotelServiceSystem.Entities.Bed", b =>
@@ -251,6 +269,25 @@ namespace HotelServiceSystem.Migrations
                     b.Navigation("Reservation");
                 });
 
+            modelBuilder.Entity("HotelServiceSystem.Entities.AdditionalServiceRoom", b =>
+                {
+                    b.HasOne("HotelServiceSystem.Entities.AdditionalService", "AdditionalService")
+                        .WithMany("AdditionalServiceRooms")
+                        .HasForeignKey("AdditionalServiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HotelServiceSystem.Entities.Room", "Room")
+                        .WithMany("AdditionalServiceRooms")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AdditionalService");
+
+                    b.Navigation("Room");
+                });
+
             modelBuilder.Entity("HotelServiceSystem.Entities.Bed", b =>
                 {
                     b.HasOne("HotelServiceSystem.Entities.Room", "Room")
@@ -291,6 +328,8 @@ namespace HotelServiceSystem.Migrations
             modelBuilder.Entity("HotelServiceSystem.Entities.AdditionalService", b =>
                 {
                     b.Navigation("AdditionalServiceReservations");
+
+                    b.Navigation("AdditionalServiceRooms");
                 });
 
             modelBuilder.Entity("HotelServiceSystem.Entities.Client", b =>
@@ -307,6 +346,8 @@ namespace HotelServiceSystem.Migrations
 
             modelBuilder.Entity("HotelServiceSystem.Entities.Room", b =>
                 {
+                    b.Navigation("AdditionalServiceRooms");
+
                     b.Navigation("Beds");
 
                     b.Navigation("RoomReservations");

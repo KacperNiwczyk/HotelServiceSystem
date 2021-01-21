@@ -1,4 +1,4 @@
-﻿namespace HotelServiceSystem.Entities
+﻿﻿namespace HotelServiceSystem.Entities
 {
     public class RoomReservation
     {

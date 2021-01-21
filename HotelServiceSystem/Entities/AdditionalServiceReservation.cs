@@ -6,7 +6,7 @@ namespace HotelServiceSystem.Entities
     {
         public int AdditionalServiceId { get; set; }
         
-        public ReservationAdditional AdditionalService { get; set; }
+        public AdditionalService AdditionalService { get; set; }
         
         public int ReservationId { get; set; }
         

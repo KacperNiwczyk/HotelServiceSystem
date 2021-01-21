@@ -8,7 +8,7 @@ namespace HotelServiceSystem.Interfaces.Services
 {
 	public interface IAdditionalServiceService
 	{
-		List<AdditionalService> GetAllAdditionalServices();
+		List<AdditionalService> GetAllAdditionalServices(Func<AdditionalService, bool> filter = null);
 
 		AdditionalService GetById(int id);
 		List<AdditionalService> GetAllAdditionalServicesWithRelations(

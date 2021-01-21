@@ -1,6 +1,7 @@
 ﻿@page "/additionalServices"
 @using HotelServiceSystem.Entities
 @using HotelServiceSystem.Interfaces.Services
+@using HotelServiceSystem.Core
 @inject IAdditionalServiceService additionalServiceService
 @inject NavigationManager navigationManager
 
@@ -15,7 +16,7 @@
                     </MatExpansionPanelHeader>
                 </MatExpansionPanelSummary>
                 <MatExpansionPanelDetails>
-                    <HssAdditionalServiceInput AdditionalServiceModel="@(new AdditionalService())" OnSubmit="@OnAdditionalServiceAdd" /> 
+                    <HssAdditionalServiceInput AdditionalServiceModel="@(new AdditionalService())" OnSubmit="@OnAdditionalServiceAdd" AvailableServiceTypes="@_serviceTypes"/> 
                 </MatExpansionPanelDetails>
             </MatExpansionPanel>
         </MatAccordion>
@@ -51,6 +52,8 @@
 
 @code {
     private List<AdditionalService> AdditionalServiceList { get; set; }
+
+    private readonly List<ServiceType> _serviceTypes = new List<ServiceType> {ServiceType.Reservation, ServiceType.Room};
 
     protected override async Task OnInitializedAsync()
     {

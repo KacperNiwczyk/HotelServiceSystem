@@ -59,17 +59,11 @@ namespace HotelServiceSystem.Core
                 .HasOne(x => x.Reservation)
                 .WithMany(x => x.AdditionalServiceReservations)
                 .HasForeignKey(x => x.ReservationId);
-
-            modelBuilder.Entity<AdditionalService>()
-                .HasDiscriminator<string>("AdditionalService_Type")
-                .HasValue<ReservationAdditional>("Reservation")
-                .HasValue<RoomAdditional>("Room");
-
             modelBuilder.Entity<AdditionalServiceRoom>()
                 .HasKey(x => new {x.AdditionalServiceId, x.RoomId});
             modelBuilder.Entity<AdditionalServiceRoom>()
                 .HasOne(x => x.AdditionalService)
-                .WithMany(x => x.AdditionalRoomServiceReservations)
+                .WithMany(x => x.AdditionalServiceRooms)
                 .HasForeignKey(x => x.AdditionalServiceId);
             modelBuilder.Entity<AdditionalServiceRoom>()
                 .HasOne(x => x.Room)

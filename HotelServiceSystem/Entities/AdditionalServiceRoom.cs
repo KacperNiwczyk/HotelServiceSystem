@@ -4,7 +4,7 @@
 	{
 		public int AdditionalServiceId { get; set; }
         
-		public RoomAdditional AdditionalService { get; set; }
+		public AdditionalService AdditionalService { get; set; }
         
 		public int RoomId { get; set; }
         

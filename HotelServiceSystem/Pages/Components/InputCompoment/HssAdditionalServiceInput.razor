@@ -1,9 +1,16 @@
 ﻿@using HotelServiceSystem.Interfaces.Services
 @using HotelServiceSystem.Entities
+@using HotelServiceSystem.Core
 
 <EditForm Model="@AdditionalServiceModel" OnValidSubmit="@Submit">
         <HssInputCustom Caption="Name" @bind-Value="AdditionalServiceModel.Name"/>
-        <HssInputCustom Caption="Price" @bind-Value="AdditionalServiceModel.Price" />
+        <HssInputCustom Caption="Price" @bind-Value="AdditionalServiceModel.Price"/>
+         <HssSelectCustom Label="Service Type" @bind-Value="AdditionalServiceModel.ServiceType" ValidationFor="@(() => AdditionalServiceModel.ServiceType)">
+                    @foreach (var service in AvailableServiceTypes)
+                    {
+                        <option value="@service">@service.ToString()</option>
+                    }
+                </HssSelectCustom>
         <div class="col-12 row">
             <span class="col-2"></span>
             <input type="submit" class="form-control col-2 btn btn-primary" value="Submit"/>
@@ -13,11 +20,16 @@
 @code {
     
     [Parameter]
+    public List<ServiceType> AvailableServiceTypes { get; set; }
+    
+    private ServiceType SelectedType { get; set; }
+    
+    [Parameter]
     public AdditionalService AdditionalServiceModel { get; set; }
     
     [Parameter]
     public EventCallback<AdditionalService> OnSubmit { get; set; }
-    
+
     protected override async Task OnInitializedAsync()
     {
         AdditionalServiceModel = new AdditionalService();
@@ -28,6 +40,4 @@
     {
         await OnSubmit.InvokeAsync(AdditionalServiceModel);
     }
-    
-    
 }

@@ -25,9 +25,9 @@ namespace HotelServiceSystem.Entities
         
         public bool ShouldBeCleaned { get; set; }
         
-        public virtual ICollection<RoomReservation> RoomReservations { get; }
+        public virtual ICollection<RoomReservation> RoomReservations { get; set; }
         
-        public virtual ICollection<AdditionalServiceRoom> AdditionalServiceRooms { get;  }
+        public virtual ICollection<AdditionalServiceRoom> AdditionalServiceRooms { get; set; }
 
         public Room()
         {

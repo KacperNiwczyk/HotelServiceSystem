@@ -1,0 +1,70 @@
+﻿@using HotelServiceSystem.Interfaces.Services
+@using HotelServiceSystem.Entities
+@using HotelServiceSystem.Core
+@using System.Linq.Expressions
+
+<div class="card">
+    <div class="card-body" style="display: flex">
+        <MatChipSet Filter="@true" @bind-SelectedChips="@_selectedChips">
+            @foreach (var additionalService in AdditionalServicesModel)
+            {
+                <MatChip Label="@additionalService.Name" IsCheckable="true" Attributes="@(new Dictionary<string, object>{{IdAttribute, additionalService.Id}})"/>
+            }
+        </MatChipSet>
+    </div>
+</div>
+
+
+@code {
+        
+    private const string IdAttribute = "Id";
+    
+    [Parameter]
+    public List<AdditionalService> AdditionalServicesModel { get; set; }
+    
+    [Parameter]
+    public EventCallback<List<AdditionalService>> OnAdditionalServicesModelChange { get; set; }
+    
+    [Parameter]
+    public List<ServiceType> ServiceTypes { get; set; }
+
+    private List<AdditionalService> AdditionalServiceList { get; set; }
+
+    private MatChip[] _selectedChips { get; set; } = null;
+    
+    [Parameter]
+    public List<AdditionalService> SelectedServices
+    {
+        get
+        {
+            foreach (var chip in _selectedChips)
+            {
+                _selectedServices.Add(AdditionalServicesModel.FirstOrDefault(x => x.Id.Equals(chip.Attributes[IdAttribute])));
+            }
+
+            return _selectedServices;
+        }
+        set
+        {
+            _selectedServices = value;
+            foreach (var chip in _selectedChips)
+            {
+                _selectedServices.Add(AdditionalServicesModel.FirstOrDefault(x => x.Id.Equals(chip.Attributes[IdAttribute])));
+            }
+            
+            SelectedServicesChanged.InvokeAsync(value);
+        } 
+    }
+    
+    private List<AdditionalService> _selectedServices { get; set; }
+    
+    [Parameter]
+    public EventCallback<List<AdditionalService>> SelectedServicesChanged { get; set; }
+    
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     AdditionalServicesModel = new List<AdditionalService>();
+    //     AdditionalServiceList = additionalServiceService.GetAllAdditionalServices(service => ServiceTypes.Any(x => x.Equals(service.ServiceType)));
+    //     await base.OnInitializedAsync();
+    // }
+}
