@@ -40,6 +40,7 @@ namespace HotelServiceSystem
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddMatBlazor();
+            services.AddTransient<HotelServiceDatabaseContext>();
             services.AddScoped<AuthenticationStateProvider, HotelServiceAuthenticationStateProvider>();
             services.AddTransient(typeof(IRepository<>), typeof(BaseRepository<>));
             
