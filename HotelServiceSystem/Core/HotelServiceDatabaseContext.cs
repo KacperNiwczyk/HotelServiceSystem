@@ -20,6 +20,7 @@ namespace HotelServiceSystem.Core
 
         public HotelServiceDatabaseContext(DbContextOptions<HotelServiceDatabaseContext> options) : base (options)
         {
+            
         }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)

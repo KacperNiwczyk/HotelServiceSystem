@@ -6,7 +6,7 @@
 
 <div class="card">
     <div class="card-body" style="display: flex">
-        <MatChipSet Filter="@true" @bind-SelectedChips="@_selectedChips">
+        <MatChipSet Filter="@true" @bind-SelectedChips="@_selectedChips" SelectedChipChanged="@OnChipChanged">
             @foreach (var additionalService in AdditionalServiceList)
             {
                 <MatChip Label="@additionalService.Name" IsCheckable="true" Attributes="@(new Dictionary<string, object>{{IdAttribute, additionalService.Id}})"/>
@@ -35,13 +35,14 @@
 
     private void OnChipChanged(MatChip chip)
     {
-        
+        chip.Style = "background-color: green";
     }
 
     protected override async Task OnInitializedAsync()
     {
         AdditionalServicesModel = new List<AdditionalService>();
-        AdditionalServiceList = additionalServiceService.GetAllAdditionalServices().Where(x => x.ServiceType == ServiceType.Room).ToList();
+        AdditionalServiceList = additionalServiceService.GetAllAdditionalServices();
+        AdditionalServiceList = AdditionalServiceList.Where(x => x.ServiceType == ServiceType.Room).ToList();
         await base.OnInitializedAsync();
     }
 }

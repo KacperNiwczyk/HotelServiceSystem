@@ -2,7 +2,6 @@
 @using HotelServiceSystem.Entities
 @using HotelServiceSystem.Interfaces.Services
 @using HotelServiceSystem.Pages.Default
-@inject IAdditionalServiceService additionalServiceService
 
 <EditForm Model="@ModelRoom" OnValidSubmit="@Submit">
     <HssInputCustom Caption="Room identifier" @bind-Value="ModelRoom.RoomIdentifier"/>

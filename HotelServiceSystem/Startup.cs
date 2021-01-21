@@ -40,7 +40,6 @@ namespace HotelServiceSystem
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddMatBlazor();
-            services.AddTransient<HotelServiceDatabaseContext>();
             services.AddScoped<AuthenticationStateProvider, HotelServiceAuthenticationStateProvider>();
             services.AddTransient(typeof(IRepository<>), typeof(BaseRepository<>));
             
@@ -62,9 +61,11 @@ namespace HotelServiceSystem
 
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IUserService, UserService>();
-            
+
             services.AddDbContext<HotelServiceDatabaseContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
