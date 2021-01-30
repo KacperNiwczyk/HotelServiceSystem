@@ -1,8 +1,10 @@
 ﻿@using HotelServiceSystem.Core
 @using HotelServiceSystem.Entities
+@using HotelServiceSystem.Interfaces.Helpers
 @using HotelServiceSystem.Interfaces.Services
 @using HotelServiceSystem.Pages.Default
 @inject IAdditionalServiceService additionalServiceService
+@inject IAdditionalServiceHelper additionalServiceHelper
 
 <EditForm Model="@ModelRoom" OnValidSubmit="@Submit">
     <HssInputCustom Caption="Room identifier" @bind-Value="ModelRoom.RoomIdentifier"/>
@@ -43,15 +45,7 @@
 
     private async Task Submit()
     {
-        var selectedServices = new List<AdditionalService>();
-        if (_selectedAdditionalServices != null && _selectedAdditionalServices.Length > 0)
-        {
-            foreach (var chip in _selectedAdditionalServices)
-            {
-                var addService = AdditionalServiceList.FirstOrDefault(x => x.Id.Equals(chip.Attributes["Id"]));
-                selectedServices.Add(addService);
-            }
-        }
+        var selectedServices = additionalServiceHelper.GetSelectedAdditionalServices(_selectedAdditionalServices, AdditionalServiceList);
         
         selectedServices.ForEach(x =>
         {

@@ -62,6 +62,7 @@ namespace HotelServiceSystem
             
             services.AddTransient<IAdditionalServiceRepository, AdditionalServiceRepository>();
             services.AddTransient<IAdditionalServiceService, AdditionalServiceService>();
+            services.AddTransient<IAdditionalServiceHelper, AdditionalServiceHelper>();
 
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IUserService, UserService>();
