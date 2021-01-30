@@ -2,6 +2,7 @@
 @using HotelServiceSystem.Entities
 @using HotelServiceSystem.Interfaces.Services
 @using HotelServiceSystem.Pages.Default
+@inject IAdditionalServiceService additionalServiceService
 
 <EditForm Model="@ModelRoom" OnValidSubmit="@Submit">
     <HssInputCustom Caption="Room identifier" @bind-Value="ModelRoom.RoomIdentifier"/>
@@ -12,7 +13,7 @@
         <MatButton Unelevated="true" Type="Button" Class="form-control col-2" OnClick="@(s => AddBed(BedType.DoubleBed))">X @BedCount(BedType.DoubleBed) Double Beds</MatButton>
     </div>
     <br/>
-    <HssAdditionalServiceSelect AdditionalServicesModel="@AdditionalServices" ServiceTypes="@(new List<ServiceType> { ServiceType.Room })"/>
+    <HssAdditionalServiceSelect AdditionalServiceList="@AdditionalServiceList"/>
     <div class="col-12 row">
         <span class="col-2"></span>
         <input type="submit" class="form-control col-2 btn btn-primary" value="Submit"/>
@@ -26,7 +27,7 @@
     [Parameter]
     public EventCallback<Room> OnSubmit { get; set; }
     
-    private List<AdditionalService> AdditionalServices { get; set; }
+    private List<AdditionalService> AdditionalServiceList { get; set; }
 
     private void AddBed(BedType bedType)
     {
@@ -50,4 +51,11 @@
 
         await OnSubmit.InvokeAsync(ModelRoom);
     }
+
+    protected override async Task OnInitializedAsync()
+    {
+        AdditionalServiceList = additionalServiceService.GetAllAdditionalServices(x => x.ServiceType.Equals(ServiceType.Room));
+        await base.OnInitializedAsync();
+    }
+
 }

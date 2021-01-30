@@ -17,10 +17,6 @@
     <HssClientAutoselect ClientModel="@ReservationModel.Client" ClientList="@ClientList" OnClientAdd="@AddClient" ClientValueChanged="@SetClient"/>
     <br/>
     <HssInputCustom Caption="Number of guests" @bind-Value="ReservationModel.NumberOfGuests"/>
-    @* <div class="col-12 row"> *@
-    @*     <HssDatePicker Label="Arrival" OnValueChanged="@SetDateFrom" ValidationFor="@(() => ReservationModel.DateFrom)"/> *@
-    @*     <HssDatePicker Label="Departure" OnValueChanged="@SetDateTo" ValidationFor="@(() => ReservationModel.DateTo)" MinimalDate="@GetMinimalDepartureDate()"/> *@
-    @* </div> *@
     <HssTimespanPicker ReservationModel="@ReservationModel" OnDatesSelected="@FillAvailableRoomsList"/>
     <br/>
     <div class="form-group">
