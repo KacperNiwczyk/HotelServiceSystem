@@ -6,7 +6,7 @@
 
 <div class="card">
     <div class="card-body" style="display: flex">
-        <MatChipSet Filter="@true" @bind-SelectedChips="@_selectedChips" SelectedChipChanged="@OnChipChanged">
+        <MatChipSet Filter="@true" @bind-SelectedChips="@SelectedChips">
             @foreach (var additionalService in AdditionalServiceList)
             {
                 <MatChip Label="@additionalService.Name" IsCheckable="@true" Attributes="@(new Dictionary<string, object>{{IdAttribute, additionalService.Id}})" />
@@ -24,15 +24,22 @@
     public List<AdditionalService> AdditionalServiceList { get; set; }
     
     [Parameter]
-    public List<MatChip> SelectedChips { get; set; }
+    public MatChip[] SelectedChips
+    {
+        get => _selectedChips;
+        set
+        {
+            if (_selectedChips == value)
+                return;
+
+            SelectedChipsChanged.InvokeAsync(value);
+            _selectedChips = value;
+        }
+    }
+    
     
     [Parameter]
-    public EventCallback<MatChip> SelectedChipsChanged { get; set; }
+    public EventCallback<MatChip[]> SelectedChipsChanged { get; set; }
 
     private MatChip[] _selectedChips = null;
-
-    private async Task OnChipChanged(MatChip chip)
-    {
-        await SelectedChipsChanged.InvokeAsync(chip);
-    }
 }

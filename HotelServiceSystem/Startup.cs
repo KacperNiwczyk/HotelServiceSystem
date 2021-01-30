@@ -21,6 +21,7 @@ using HotelServiceSystem.Interfaces.Services;
 using MatBlazor;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
+using MudBlazor.Services;
 
 namespace HotelServiceSystem
 {
@@ -40,6 +41,9 @@ namespace HotelServiceSystem
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddMatBlazor();
+            services.AddMudBlazorDialog();
+            services.AddMudBlazorSnackbar();
+            services.AddMudBlazorResizeListener();
             services.AddScoped<AuthenticationStateProvider, HotelServiceAuthenticationStateProvider>();
             services.AddTransient(typeof(IRepository<>), typeof(BaseRepository<>));
             

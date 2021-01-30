@@ -13,7 +13,7 @@
         <MatButton Unelevated="true" Type="Button" Class="form-control col-2" OnClick="@(s => AddBed(BedType.DoubleBed))">X @BedCount(BedType.DoubleBed) Double Beds</MatButton>
     </div>
     <br/>
-    <HssAdditionalServiceSelect AdditionalServiceList="@AdditionalServiceList"/>
+    <HssAdditionalServiceSelect AdditionalServiceList="@AdditionalServiceList" @bind-SelectedChips="@_selectedAdditionalServices"/>
     <div class="col-12 row">
         <span class="col-2"></span>
         <input type="submit" class="form-control col-2 btn btn-primary" value="Submit"/>
@@ -26,6 +26,8 @@
     
     [Parameter]
     public EventCallback<Room> OnSubmit { get; set; }
+
+    private MatChip[] _selectedAdditionalServices = null;
     
     private List<AdditionalService> AdditionalServiceList { get; set; }
 
@@ -41,13 +43,23 @@
 
     private async Task Submit()
     {
-        // AdditionalServices.ForEach(x =>
-        // {
-        //     ModelRoom.AdditionalServiceRooms.Add(new AdditionalServiceRoom
-        //     {
-        //         AdditionalService = x
-        //     });
-        // });
+        var selectedServices = new List<AdditionalService>();
+        if (_selectedAdditionalServices != null && _selectedAdditionalServices.Length > 0)
+        {
+            foreach (var chip in _selectedAdditionalServices)
+            {
+                var addService = AdditionalServiceList.FirstOrDefault(x => x.Id.Equals(chip.Attributes["Id"]));
+                selectedServices.Add(addService);
+            }
+        }
+        
+        selectedServices.ForEach(x =>
+        {
+            ModelRoom.AdditionalServiceRooms.Add(new AdditionalServiceRoom
+            {
+                AdditionalService = x
+            });
+        });
 
         await OnSubmit.InvokeAsync(ModelRoom);
     }
