@@ -27,6 +27,12 @@
       <_ContentIncludedByDefault Remove="Core\Components\HssInputCustom.razor" />
       <_ContentIncludedByDefault Remove="Core\Components\HSSMultiSelector.razor" />
       <_ContentIncludedByDefault Remove="Core\Components\HssSelectCustom.razor" />
+      <_ContentIncludedByDefault Remove="Pages\Components\DetailsComponent\HssRoomDetails.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Migrations" />
+      <Folder Include="Pages\Edit" />
     </ItemGroup>
 
 </Project>

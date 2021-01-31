@@ -2,14 +2,16 @@
 @using HotelServiceSystem.Entities
 @using HotelServiceSystem.Core
 @using System.Linq.Expressions
-@inject IAdditionalServiceService additionalServiceService
 
 <div class="card">
     <div class="card-body" style="display: flex">
         <MatChipSet Filter="@true" @bind-SelectedChips="@SelectedChips">
-            @foreach (var additionalService in AdditionalServiceList)
+            @if (AdditionalServiceList != null)
             {
-                <MatChip Label="@additionalService.Name" IsCheckable="@true" Attributes="@(new Dictionary<string, object>{{IdAttribute, additionalService.Id}})" />
+                foreach (var additionalService in AdditionalServiceList)
+                {
+                    <MatChip Label="@additionalService.Name" IsCheckable="@true" Attributes="@(new Dictionary<string, object> {{IdAttribute, additionalService.Id}})"/>
+                }
             }
         </MatChipSet>
     </div>
@@ -21,7 +23,7 @@
     private const string IdAttribute = "Id";
 
     [Parameter]
-    public List<AdditionalService> AdditionalServiceList { get; set; }
+    public List<AdditionalService> AdditionalServiceList { get; set; } = new List<AdditionalService>();
     
     [Parameter]
     public MatChip[] SelectedChips

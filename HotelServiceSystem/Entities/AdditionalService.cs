@@ -15,8 +15,8 @@ namespace HotelServiceSystem.Entities
         
         public ServiceType ServiceType { get; set; }
         
-        public ICollection<AdditionalServiceReservation> AdditionalServiceReservations { get; set; }
-        public ICollection<AdditionalServiceRoom> AdditionalServiceRooms { get; set; }
+        public virtual ICollection<AdditionalServiceReservation> AdditionalServiceReservations { get; set; }
+        public virtual ICollection<AdditionalServiceRoom> AdditionalServiceRooms { get; set; }
         
         public AdditionalService()
         {

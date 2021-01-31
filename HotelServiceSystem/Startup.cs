@@ -69,6 +69,7 @@ namespace HotelServiceSystem
 
             services.AddDbContext<HotelServiceDatabaseContext>(options =>
             {
+                
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
         }

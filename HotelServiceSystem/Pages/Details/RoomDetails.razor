@@ -1,11 +1,28 @@
 ﻿@page "/roomDetails/{Id:int}"
 @using HotelServiceSystem.Interfaces.Services
 @using HotelServiceSystem.Entities
+@using HotelServiceSystem.Core.Helpers
+@using HotelServiceSystem.Core
 @inject IRoomService roomService;
 @inject NavigationManager navigationManager
 
-<h3>RoomsDetails</h3>
-<HssRoomInput ModelRoom="@ModelRoom" OnSubmit="@SaveRoom"/>
+<h3>Room @ModelRoom.RoomIdentifier Details</h3>
+@*<HssRoomInput ModelRoom="@ModelRoom" OnSubmit="@SaveRoom"/>*@
+
+<div class="card">
+    <div class="card-body">
+        <p>Room identifier : @ModelRoom.RoomIdentifier</p>
+        <p>Floor : @ModelRoom.Floor</p>
+        <p>Price : @ModelRoom.Price</p>
+        <p>Single beds : @ModelRoom.CountBeds(BedType.SingleBed)</p>
+        <p>Double beds : @ModelRoom.CountBeds(BedType.DoubleBed)</p>
+        <p>Status : <HssRoomStatus RoomModel="ModelRoom"/></p>
+        @foreach (var addService in AdditionalServiceRoom)
+        {
+            <MatChip Label="@addService.AdditionalService.Name" IsCheckable="@false"/>
+        }
+    </div>
+</div>
 
 @code {
     [Parameter]
@@ -13,9 +30,13 @@
     
     private Room ModelRoom { get; set; }
 
+    private ICollection<AdditionalServiceRoom> AdditionalServiceRoom { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
+        AdditionalServiceRoom = new List<AdditionalServiceRoom>();
         ModelRoom = roomService.GetRoomById(Id);
+        AdditionalServiceRoom = ModelRoom.AdditionalServiceRooms;
         await base.OnInitializedAsync();
     }
     

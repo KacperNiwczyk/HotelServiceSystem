@@ -3,6 +3,7 @@
 @using HotelServiceSystem.Interfaces.Helpers
 @using HotelServiceSystem.Interfaces.Services
 @using HotelServiceSystem.Pages.Default
+
 @inject IAdditionalServiceService additionalServiceService
 @inject IAdditionalServiceHelper additionalServiceHelper
 
@@ -11,8 +12,8 @@
     <HssInputCustom Caption="Floor" @bind-Value="ModelRoom.Floor"/>
     <HssInputCustom Caption="Price" @bind-Value="ModelRoom.Price"/>
     <div class="col-12 row">
-        <MatButton Unelevated="true" Type="Button" Class="form-control col-2" Style="margin-right: 10px" OnClick="@(s => AddBed(BedType.SingleBed))">X @BedCount(BedType.SingleBed) Single Beds</MatButton>
-        <MatButton Unelevated="true" Type="Button" Class="form-control col-2" OnClick="@(s => AddBed(BedType.DoubleBed))">X @BedCount(BedType.DoubleBed) Double Beds</MatButton>
+        <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Button" Color="Color.Primary" Style="margin-right: 10px" Size="Size.Large" StartIcon="@Icons.Material.Outlined.SingleBed" OnClick="@(() => AddBed(BedType.SingleBed))">X @BedCount(BedType.SingleBed)</MudButton>
+        <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Button" Color="Color.Primary" Size="Size.Large" StartIcon="@Icons.Material.Outlined.KingBed" OnClick="@(() => AddBed(BedType.DoubleBed))">X @BedCount(BedType.DoubleBed)</MudButton>
     </div>
     <br/>
     <HssAdditionalServiceSelect AdditionalServiceList="@AdditionalServiceList" @bind-SelectedChips="@_selectedAdditionalServices"/>
@@ -51,7 +52,8 @@
         {
             ModelRoom.AdditionalServiceRooms.Add(new AdditionalServiceRoom
             {
-                AdditionalService = x
+                AdditionalService = x,
+                Room = ModelRoom
             });
         });
 
@@ -60,8 +62,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        AdditionalServiceList = additionalServiceService.GetAllAdditionalServices(x => x.ServiceType.Equals(ServiceType.Room));
+        AdditionalServiceList = await Task.Run(() =>
+            additionalServiceService.GetAllAdditionalServices(x => x.ServiceType.Equals(ServiceType.Room)));
         await base.OnInitializedAsync();
     }
-
 }

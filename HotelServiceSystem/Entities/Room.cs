@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using HotelServiceSystem.Core;
 using HotelServiceSystem.Interfaces.Entities;
 
 namespace HotelServiceSystem.Entities

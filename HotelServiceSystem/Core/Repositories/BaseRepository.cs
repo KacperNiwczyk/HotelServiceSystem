@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using HotelServiceSystem.Core.Helpers;
 using HotelServiceSystem.Interfaces.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace HotelServiceSystem.Core.Repositories
 {

@@ -63,11 +63,20 @@
 @code {
     private List<Room> RoomList { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         RoomList = roomService.GetAllRoomsAsync();
-        RoomList.ForEach(UpdateRoomStatus);
-        await base.OnInitializedAsync();
+        base.OnInitialized();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        foreach (var room in RoomList)
+        {
+            await UpdateRoomStatus(room);
+        }
+        
+        await base.OnParametersSetAsync();
     }
 
     private async Task OnRoomAdded(Room room)
@@ -96,9 +105,9 @@
         };
     }
 
-    private void UpdateRoomStatus(Room room)
+    private async Task UpdateRoomStatus(Room room)
     {
         roomHelper.UpdateStatus(room);
-        roomService.UpdateRoomAsync(room);
+        await roomService.UpdateRoomAsync(room);
     }
 }

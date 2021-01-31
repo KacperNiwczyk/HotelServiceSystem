@@ -35,7 +35,13 @@ namespace HotelServiceSystem.Core.Service
 
         public Room GetRoomById(int id)
         {
-            return _roomRepository.GetById(id);
+            return _roomRepository.GetAll()
+                .Include(x => x.Beds)
+                .Include(x => x.AdditionalServiceRooms)
+                .ThenInclude(x => x.AdditionalService)
+                .Include(x => x.RoomReservations)
+                .ThenInclude(x => x.Reservation)
+                .FirstOrDefault(x => x.Id == id);
         }
 
         public async Task<Room> AddRoomAsync(Room room)
