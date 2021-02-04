@@ -32,7 +32,8 @@
 
     private MatChip[] _selectedAdditionalServices = null;
     
-    private List<AdditionalService> AdditionalServiceList { get; set; }
+    [Parameter]
+    public List<AdditionalService> AdditionalServiceList { get; set; }
 
     private void AddBed(BedType bedType)
     {
@@ -58,12 +59,5 @@
         });
 
         await OnSubmit.InvokeAsync(ModelRoom);
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        AdditionalServiceList = await Task.Run(() =>
-            additionalServiceService.GetAllAdditionalServices(x => x.ServiceType.Equals(ServiceType.Room)));
-        await base.OnInitializedAsync();
     }
 }

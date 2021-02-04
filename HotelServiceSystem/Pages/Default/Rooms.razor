@@ -7,6 +7,7 @@
 @inject IRoomService roomService
 @inject NavigationManager navigationManager
 @inject IRoomHelper roomHelper
+@inject IAdditionalServiceService additionalServiceService
 
 <h3>Rooms</h3>
 <div class="col-12">
@@ -17,7 +18,7 @@
                  <MatExpansionPanelHeader>Add room</MatExpansionPanelHeader> 
              </MatExpansionPanelSummary> 
              <MatExpansionPanelDetails> 
-                 <HssRoomInput ModelRoom="@SetNewRoom()" OnSubmit="@OnRoomAdded"/>
+                 <HssRoomInput ModelRoom="@SetNewRoom()" AdditionalServiceList="@AdditionalServices" OnSubmit="@OnRoomAdded"/>
              </MatExpansionPanelDetails> 
          </MatExpansionPanel>
      </MatAccordion>
@@ -62,18 +63,21 @@
 
 @code {
     private List<Room> RoomList { get; set; }
+    
+    private List<AdditionalService> AdditionalServices { get; set; }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         RoomList = roomService.GetAllRoomsAsync();
-        base.OnInitialized();
+        AdditionalServices = additionalServiceService.GetAllAdditionalServices(x => x.ServiceType == ServiceType.Room);
+        await base.OnInitializedAsync();
     }
 
     protected override async Task OnParametersSetAsync()
     {
         foreach (var room in RoomList)
         {
-            await UpdateRoomStatus(room);
+            UpdateRoomStatus(room);
         }
         
         await base.OnParametersSetAsync();
@@ -105,9 +109,9 @@
         };
     }
 
-    private async Task UpdateRoomStatus(Room room)
+    private void UpdateRoomStatus(Room room)
     {
         roomHelper.UpdateStatus(room);
-        await roomService.UpdateRoomAsync(room);
+        roomService.UpdateRoomAsync(room);
     }
 }
