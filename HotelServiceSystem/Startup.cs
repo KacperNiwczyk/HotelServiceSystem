@@ -45,7 +45,7 @@ namespace HotelServiceSystem
             services.AddMudBlazorSnackbar();
             services.AddMudBlazorResizeListener();
             services.AddScoped<AuthenticationStateProvider, HotelServiceAuthenticationStateProvider>();
-            services.AddTransient(typeof(IRepository<>), typeof(BaseRepository<>));
+            services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
             
             services.AddTransient<IRoomRepository, RoomRepository>();
             services.AddTransient<IRoomService, RoomService>();
@@ -69,7 +69,6 @@ namespace HotelServiceSystem
 
             services.AddDbContext<HotelServiceDatabaseContext>(options =>
             {
-                
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
         }

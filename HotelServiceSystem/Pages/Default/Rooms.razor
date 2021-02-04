@@ -67,9 +67,9 @@
     private List<AdditionalService> AdditionalServices { get; set; }
 
     protected override async Task OnInitializedAsync()
-    {
+    {   
+        AdditionalServices = additionalServiceService.GetAllAdditionalServices();
         RoomList = roomService.GetAllRoomsAsync();
-        AdditionalServices = additionalServiceService.GetAllAdditionalServices(x => x.ServiceType == ServiceType.Room);
         await base.OnInitializedAsync();
     }
 

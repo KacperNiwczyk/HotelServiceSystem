@@ -23,6 +23,8 @@ namespace HotelServiceSystem.Core.Service
         public List<Room> GetAllRoomsAsync()
         {
             return _roomRepository.GetAll().Include(x => x.Beds)
+                .Include(x => x.AdditionalServiceRooms)
+                .ThenInclude(x => x.AdditionalService)
                 .Include(x => x.RoomReservations)
                 .ThenInclude(x => x.Reservation)
                 .ToList();
@@ -33,15 +35,15 @@ namespace HotelServiceSystem.Core.Service
             return _roomRepository.GetFreeRooms(timeSpan);
         }
 
-        public Room GetRoomById(int id)
+        public async Task<Room> GetRoomById(int id)
         {
-            return _roomRepository.GetAll()
+            return await _roomRepository.GetAll()
                 .Include(x => x.Beds)
                 .Include(x => x.AdditionalServiceRooms)
                 .ThenInclude(x => x.AdditionalService)
                 .Include(x => x.RoomReservations)
                 .ThenInclude(x => x.Reservation)
-                .FirstOrDefault(x => x.Id == id);
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<Room> AddRoomAsync(Room room)

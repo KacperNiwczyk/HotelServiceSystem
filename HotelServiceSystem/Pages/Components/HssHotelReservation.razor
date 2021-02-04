@@ -75,7 +75,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ReservationList = hotelReservationService.GetAllHotelReservations();//TODO Sprawdzić dlaczego sie zjebao po wprowadzeniu eager loading
+        ReservationList = hotelReservationService.GetAllHotelReservations();
         await base.OnInitializedAsync();
     }
 
