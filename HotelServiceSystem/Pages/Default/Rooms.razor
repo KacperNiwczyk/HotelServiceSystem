@@ -18,7 +18,7 @@
                  <MatExpansionPanelHeader>Add room</MatExpansionPanelHeader> 
              </MatExpansionPanelSummary> 
              <MatExpansionPanelDetails> 
-                 <HssRoomInput ModelRoom="@SetNewRoom()" AdditionalServiceList="@AdditionalServices" OnSubmit="@OnRoomAdded"/>
+                 <HssRoomInput ModelRoom="@SetNewRoom()" OnSubmit="@OnRoomAdded"/>
              </MatExpansionPanelDetails> 
          </MatExpansionPanel>
      </MatAccordion>
@@ -66,11 +66,10 @@
     
     private List<AdditionalService> AdditionalServices { get; set; }
 
-    protected override void OnInitialized()
-    {   
-        AdditionalServices = additionalServiceService.GetAllAdditionalServices();
+    protected override async Task OnInitializedAsync()
+    {
         RoomList = roomService.GetAllRoomsAsync();
-        base.OnInitialized();
+        await base.OnInitializedAsync();
     }
 
     protected override async Task OnParametersSetAsync()
