@@ -66,18 +66,18 @@
     
     private List<AdditionalService> AdditionalServices { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {   
         AdditionalServices = additionalServiceService.GetAllAdditionalServices();
         RoomList = roomService.GetAllRoomsAsync();
-        await base.OnInitializedAsync();
+        base.OnInitialized();
     }
 
     protected override async Task OnParametersSetAsync()
     {
         foreach (var room in RoomList)
         {
-            UpdateRoomStatus(room);
+            await UpdateRoomStatus(room);
         }
         
         await base.OnParametersSetAsync();
@@ -109,9 +109,9 @@
         };
     }
 
-    private void UpdateRoomStatus(Room room)
+    private async Task UpdateRoomStatus(Room room)
     {
         roomHelper.UpdateStatus(room);
-        roomService.UpdateRoomAsync(room);
+        await roomService.UpdateRoomAsync(room);
     }
 }
