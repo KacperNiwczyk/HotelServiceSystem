@@ -10,7 +10,14 @@
             {
                 foreach (var additionalService in AdditionalServiceList)
                 {
-                    <MatChip Label="@additionalService.Name" IsCheckable="@true" Attributes="@(new Dictionary<string, object> {{IdAttribute, additionalService.Id}})"/>
+                    if (SelectedChips.ToList().Any(x => x.Label == additionalService.Name))
+                    {
+                        <MatChip Label="@additionalService.Name" IsCheckable="@true" IsSelected="@true" Attributes="@(new Dictionary<string, object> {{IdAttribute, additionalService.Id}})"/>   
+                    }
+                    else
+                    {
+                        <MatChip Label="@additionalService.Name" IsCheckable="@true" Attributes="@(new Dictionary<string, object> {{IdAttribute, additionalService.Id}})"/>   
+                    }
                 }
             }
         </MatChipSet>

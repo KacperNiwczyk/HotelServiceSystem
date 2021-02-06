@@ -3,26 +3,37 @@
 @using HotelServiceSystem.Entities
 @using HotelServiceSystem.Core.Helpers
 @using HotelServiceSystem.Core
+
 @inject IRoomService roomService;
 @inject NavigationManager navigationManager
+@inject IAdditionalServiceService additionalServiceService
 
 @if (ModelRoom != null)
 {
-   <h3>Room @ModelRoom.RoomIdentifier Details</h3>
-   <div class="card">
-       <div class="card-body">
-           <p>Room identifier : @ModelRoom.RoomIdentifier</p>
-           <p>Floor : @ModelRoom.Floor</p>
-           <p>Price : @ModelRoom.Price</p>
-           <p>Single beds : @ModelRoom.CountBeds(BedType.SingleBed)</p>
-           <p>Double beds : @ModelRoom.CountBeds(BedType.DoubleBed)</p>
-           <p>Status : <HssRoomStatus RoomModel="ModelRoom"/></p>
-           @foreach (var addService in AdditionalServiceRoom)
-           {
-               <MatChip Label="@addService.AdditionalService.Name" IsCheckable="@false"/>
-           }
-       </div>
-   </div> 
+    <MatAccordion> 
+        <MatExpansionPanel> 
+            <MatExpansionPanelSummary> 
+                <MatExpansionPanelHeader>Edit room</MatExpansionPanelHeader> 
+            </MatExpansionPanelSummary> 
+            <MatExpansionPanelDetails> 
+                <HssRoomInput ModelRoom="@ModelRoom" AdditionalServiceList="@AdditionalServices" OnSubmit="@SaveRoom"/>
+            </MatExpansionPanelDetails> 
+        </MatExpansionPanel>
+    </MatAccordion>
+    <div class="card">
+        <div class="card-body">
+            <p>Room identifier : @ModelRoom.RoomIdentifier</p>
+            <p>Floor : @ModelRoom.Floor</p>
+            <p>Price : @ModelRoom.Price</p>
+            <p>Single beds : @ModelRoom.CountBeds(BedType.SingleBed)</p>
+            <p>Double beds : @ModelRoom.CountBeds(BedType.DoubleBed)</p>
+            <p>Status : <HssRoomStatus RoomModel="ModelRoom"/></p>
+            @foreach (var addService in ModelRoom.AdditionalServiceRooms)
+            {
+                <MatChip Label="@addService.AdditionalService.Name" IsCheckable="@false"/>
+            }
+        </div>
+    </div>
 }
 else
 {
@@ -36,13 +47,14 @@ else
     
     private Room ModelRoom { get; set; }
 
-    private ICollection<AdditionalServiceRoom> AdditionalServiceRoom { get; set; }
+    private bool IsEdit { get; set; }
+
+    private List<AdditionalService> AdditionalServices { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        AdditionalServiceRoom = new List<AdditionalServiceRoom>();
+        AdditionalServices = additionalServiceService.GetAllAdditionalServices(x => x.ServiceType == ServiceType.Room);
         ModelRoom = await roomService.GetRoomById(Id);
-        AdditionalServiceRoom = ModelRoom.AdditionalServiceRooms;
         await base.OnInitializedAsync();
     }
     

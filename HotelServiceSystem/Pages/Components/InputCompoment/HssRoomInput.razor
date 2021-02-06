@@ -3,6 +3,7 @@
 @using HotelServiceSystem.Interfaces.Helpers
 @using HotelServiceSystem.Interfaces.Services
 @using HotelServiceSystem.Pages.Default
+@using System.Net
 
 @inject IAdditionalServiceService additionalServiceService
 @inject IAdditionalServiceHelper additionalServiceHelper
@@ -31,7 +32,20 @@
     public EventCallback<Room> OnSubmit { get; set; }
 
     private MatChip[] _selectedAdditionalServices = null;
-    
+
+    protected override async Task OnInitializedAsync()
+    {
+        var selectedChips = new List<MatChip>();
+        if (ModelRoom?.AdditionalServiceRooms is {} additionalServiceRooms)
+        {
+            selectedChips.AddRange(additionalServiceRooms.Select(addService => new MatChip() {Label = addService.AdditionalService.Name, IsCheckable = true, Attributes = new Dictionary<string, object> {{"Id", addService.AdditionalService.Id}}}));
+        }
+
+        _selectedAdditionalServices = selectedChips.ToArray();
+        
+        await base.OnInitializedAsync();
+    }
+
     [Parameter]
     public List<AdditionalService> AdditionalServiceList { get; set; }
 
@@ -48,15 +62,15 @@
     private async Task Submit()
     {
         var selectedServices = additionalServiceHelper.GetSelectedAdditionalServices(_selectedAdditionalServices, AdditionalServiceList);
-        
-        selectedServices.ForEach(x =>
+
+        foreach (var additionalService in selectedServices.Where(additionalService => ModelRoom.AdditionalServiceRooms.All(y => y.AdditionalService.Name != additionalService.Name)))
         {
             ModelRoom.AdditionalServiceRooms.Add(new AdditionalServiceRoom
             {
-                AdditionalService = x,
+                AdditionalService = additionalService,
                 Room = ModelRoom
             });
-        });
+        }
 
         await OnSubmit.InvokeAsync(ModelRoom);
     }
