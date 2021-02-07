@@ -38,7 +38,7 @@
         var selectedChips = new List<MatChip>();
         if (ModelRoom?.AdditionalServiceRooms is {} additionalServiceRooms)
         {
-            selectedChips.AddRange(additionalServiceRooms.Select(addService => new MatChip() {Label = addService.AdditionalService.Name, IsCheckable = true, Attributes = new Dictionary<string, object> {{"Id", addService.AdditionalService.Id}}}));
+            selectedChips.AddRange(additionalServiceRooms.Select(addService => new MatChip {Label = addService.AdditionalService.Name}));
         }
 
         _selectedAdditionalServices = selectedChips.ToArray();
@@ -62,16 +62,18 @@
     private async Task Submit()
     {
         var selectedServices = additionalServiceHelper.GetSelectedAdditionalServices(_selectedAdditionalServices, AdditionalServiceList);
-
-        foreach (var additionalService in selectedServices.Where(additionalService => ModelRoom.AdditionalServiceRooms.All(y => y.AdditionalService.Name != additionalService.Name)))
+        var additionalServiceRooms = new HashSet<AdditionalServiceRoom>();
+        
+        foreach (var additionalService in selectedServices)
         {
-            ModelRoom.AdditionalServiceRooms.Add(new AdditionalServiceRoom
+            additionalServiceRooms.Add(new AdditionalServiceRoom
             {
                 AdditionalService = additionalService,
                 Room = ModelRoom
             });
         }
 
+        ModelRoom.AdditionalServiceRooms = additionalServiceRooms;
         await OnSubmit.InvokeAsync(ModelRoom);
     }
 }

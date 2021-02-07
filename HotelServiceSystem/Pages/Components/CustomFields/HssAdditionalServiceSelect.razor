@@ -5,19 +5,12 @@
 
 <div class="card">
     <div class="card-body" style="display: flex">
-        <MatChipSet Filter="@true" @bind-SelectedChips="@SelectedChips">
+        <MatChipSet UseOrdinaryChipCheck="@true" Filter="@true" @bind-SelectedChips="@SelectedChips">
             @if (AdditionalServiceList != null)
             {
                 foreach (var additionalService in AdditionalServiceList)
                 {
-                    if (SelectedChips.ToList().Any(x => x.Label == additionalService.Name))
-                    {
-                        <MatChip Label="@additionalService.Name" IsCheckable="@true" IsSelected="@true" Attributes="@(new Dictionary<string, object> {{IdAttribute, additionalService.Id}})"/>   
-                    }
-                    else
-                    {
-                        <MatChip Label="@additionalService.Name" IsCheckable="@true" Attributes="@(new Dictionary<string, object> {{IdAttribute, additionalService.Id}})"/>   
-                    }
+                    <MatChip Label="@additionalService.Name" IsCheckable="@true" Attributes="@(new Dictionary<string, object> {{IdAttribute, additionalService.Id}})"/>
                 }
             }
         </MatChipSet>
@@ -45,10 +38,10 @@
             _selectedChips = value;
         }
     }
-    
-    
+
     [Parameter]
     public EventCallback<MatChip[]> SelectedChipsChanged { get; set; }
 
     private MatChip[] _selectedChips = null;
+    
 }

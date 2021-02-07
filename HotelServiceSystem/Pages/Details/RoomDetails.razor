@@ -3,6 +3,8 @@
 @using HotelServiceSystem.Entities
 @using HotelServiceSystem.Core.Helpers
 @using HotelServiceSystem.Core
+@using Microsoft.EntityFrameworkCore.Diagnostics
+@using MudBlazor.Extensions
 
 @inject IRoomService roomService;
 @inject NavigationManager navigationManager
@@ -11,7 +13,7 @@
 @if (ModelRoom != null)
 {
     <MatAccordion> 
-        <MatExpansionPanel> 
+        <MatExpansionPanel Expanded="@PanelExpanded"> 
             <MatExpansionPanelSummary> 
                 <MatExpansionPanelHeader>Edit room</MatExpansionPanelHeader> 
             </MatExpansionPanelSummary> 
@@ -46,6 +48,8 @@ else
     public int Id { get; set; }
     
     private Room ModelRoom { get; set; }
+    
+    private bool PanelExpanded { get; set; }
 
     private bool IsEdit { get; set; }
 
@@ -61,6 +65,6 @@ else
     private async Task SaveRoom(Room room)
     {
         await roomService.UpdateRoomAsync(ModelRoom);
-        navigationManager.NavigateTo("/rooms");
+        PanelExpanded = false;
     }
 }
