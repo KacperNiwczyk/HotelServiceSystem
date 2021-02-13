@@ -44,7 +44,7 @@
                         <td>@client.Email</td>
                         <td>@client.PhoneNumber</td>
                         <td>@client.TaxId</td>
-                        <td><MatButton Type="Button" OnClick="@(() => EditClient(client.Id))">Edit</MatButton></td>
+                        <td><MatButton Type="Button" OnClick="@(() => ShowDetails(client.Id))">Details</MatButton></td>
                     </tr>
                 }
             }
@@ -73,7 +73,7 @@
         ClientList.Add(client);
     }
 
-    private void EditClient(int id)
+    private void ShowDetails(int id)
     {
        navigationManager.NavigateTo($"clientDetails/{id}"); 
     }

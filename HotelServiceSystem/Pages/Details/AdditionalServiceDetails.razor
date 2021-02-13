@@ -1,13 +1,39 @@
 ﻿@page "/additionalServiceDetails/{Id:int}"
 @using HotelServiceSystem.Entities
 @using HotelServiceSystem.Interfaces.Services
+@using HotelServiceSystem.Core
 @inject IAdditionalServiceService additionalServiceService
-@inject NavigationManager navigationManager
-<HssAdditionalServiceInput AdditionalServiceModel="@AdditionalServiceModel" OnSubmit="@OnAdditionalServiceEdit"/>
+
+@if (AdditionalServiceModel != null)
+{
+    <MatAccordion> 
+        <MatExpansionPanel Expanded="@PanelExpanded"> 
+            <MatExpansionPanelSummary> 
+                <MatExpansionPanelHeader>Edit room</MatExpansionPanelHeader> 
+            </MatExpansionPanelSummary> 
+            <MatExpansionPanelDetails> 
+                <HssAdditionalServiceInput AdditionalServiceModel="@AdditionalServiceModel" AvailableServiceTypes="@(new List<ServiceType>() {ServiceType.Reservation, ServiceType.Room})" OnSubmit="@OnAdditionalServiceEdit"/>
+            </MatExpansionPanelDetails> 
+        </MatExpansionPanel>
+    </MatAccordion>
+    <div class="card">
+        <div class="card-body">
+            <p>Service name : @AdditionalServiceModel.Name </p>
+            <p>Service price : @AdditionalServiceModel.Price </p>
+            <p>Service type : @AdditionalServiceModel.ServiceType </p>
+        </div>
+    </div>
+}
+else
+{
+    <p>...waiting</p>
+}
 
 @code {
     [Parameter]
     public int Id { get; set; }
+    
+    private bool PanelExpanded { get; set; }
     
     private AdditionalService AdditionalServiceModel { get; set; }
 
@@ -20,7 +46,7 @@
     private async Task OnAdditionalServiceEdit(AdditionalService additionalService)
     {
         await additionalServiceService.UpdateAdditionalServiceAsync(additionalService);
-        navigationManager.NavigateTo("/additionalServices");
+        PanelExpanded = false;
     }
 
 }

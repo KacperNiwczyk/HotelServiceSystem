@@ -36,7 +36,7 @@
                     <tr>
                         <td>@additionalService.Name</td>
                         <td>@additionalService.Price</td>
-                        <td><MatButton Type="Button" OnClick="@(() => EditAdditionalService(additionalService.Id))">Edit</MatButton></td>
+                        <td><MatButton Type="Button" OnClick="@(() => ShowDetails(additionalService.Id))">Details</MatButton></td>
                     </tr>
                 }
             }
@@ -67,7 +67,7 @@
         AdditionalServiceList.Add(additionalService);
     }
 
-    private void EditAdditionalService(int id)
+    private void ShowDetails(int id)
     {
         navigationManager.NavigateTo($"additionalServiceDetails/{id}");
     }

@@ -48,7 +48,7 @@
                         <td>@room.Floor</td>
                         <td>@room.Price</td>
                         <td><HssRoomStatus RoomModel="@room"/></td>
-                        <td><MatButton Type="Button" OnClick="@(() => EditRoom(room.Id))">Edit</MatButton></td>
+                        <td><MatButton Type="Button" OnClick="@(() => ShowDetails(room.Id))">Details</MatButton></td>
                     </tr>
                 }
             }
@@ -94,7 +94,7 @@
         return room.Beds.Count(x => x.BedType == bedType);
     }
 
-    private void EditRoom(int id)
+    private void ShowDetails(int id)
     {
         navigationManager.NavigateTo($"roomDetails/{id}");
     }

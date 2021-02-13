@@ -38,7 +38,7 @@
                         <td>@user.UserName</td>
                         <td>@user.UserRole</td>
                         <td>@user.LastLogin</td>
-                        <td><MatButton Type="Button" OnClick="@(() => EditUser(user.Id))"></MatButton></td>
+                        <td><MatButton Type="Button" OnClick="@(() => ShowDetails(user.Id))">Detials</MatButton></td>
                     </tr>
                 }
             }
@@ -66,7 +66,7 @@
         UserList.Add(user);
     }
 
-    private void EditUser(int id)
+    private void ShowDetails(int id)
     {
         navigationManager.NavigateTo($"userDetails/{id}");
     }

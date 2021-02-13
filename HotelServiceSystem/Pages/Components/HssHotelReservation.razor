@@ -56,7 +56,7 @@
                             <td>@reservation.Price</td>
                             <td>@reservation.DateOfSubmission</td>
                             <td>@reservation.NumberOfGuests</td>
-                            <td><MatButton Type="Button" OnClick="@(() => EditHotelReservation(reservation.Id))">Edit</MatButton></td>
+                            <td><MatButton Type="Button" OnClick="@(() => ShowDetails(reservation.Id))">Details</MatButton></td>
                         </tr>
                     }
                 }
@@ -111,7 +111,7 @@
         return client == null ? string.Empty : $"{client.FirstName} {client.LastName}";
     }
 
-    private void EditHotelReservation(int id)
+    private void ShowDetails(int id)
     {
         navigationManager.NavigateTo($"HotelReservationDetails/{id}");
     }
