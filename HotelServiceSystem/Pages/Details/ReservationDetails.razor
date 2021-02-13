@@ -4,22 +4,68 @@
 @inject IHotelReservationService hotelReservationService
 @inject NavigationManager navigationManager
 
-<HssHotelReservationInput ReservationModel="@ReservationModel" OnSubmit="@OnReservationUpdate"/>
+@if (ReservationModel != null)
+{
+    <MatAccordion> 
+        <MatExpansionPanel Expanded="@PanelExpanded"> 
+            <MatExpansionPanelSummary> 
+                <MatExpansionPanelHeader>Edit room</MatExpansionPanelHeader> 
+            </MatExpansionPanelSummary> 
+            <MatExpansionPanelDetails> 
+                <HssHotelReservationInput ReservationModel="@ReservationModel" OnSubmit="@OnReservationUpdate"/>
+            </MatExpansionPanelDetails> 
+        </MatExpansionPanel>
+    </MatAccordion>
+    <div class="card">
+        <div class="card-body">
+            <p>Client : @ReservationModel.Client.FirstName @ReservationModel.Client.LastName</p>
+            <p>Price : @ReservationModel.Price</p>
+            <p>Date from : @ReservationModel.DateFrom Date to : @ReservationModel.DateTo</p>
+            <p>Reserved rooms : </p>
+            @if (_reservedRooms.Any())
+            {
+                foreach (var room in _reservedRooms)
+                {
+                    <MatListItem>@room.Id</MatListItem>
+                    <MatDivider Padded="@true"/>
+                }
+            }
+            <p>Additional Services</p>
+            <p>theres no additional services</p>
+        </div>
+    </div>
+}
+else
+{
+    <p>waiting</p>
+}
+
+
 @code {
     [Parameter]
     public int Id { get; set; }
     
     private HotelReservation ReservationModel { get; set; }
+    
+    private bool PanelExpanded { get; set; }
+    
+    private List<Room> _reservedRooms = new List<Room>();
 
     protected override async Task OnInitializedAsync()
     {
         ReservationModel = hotelReservationService.GetById(Id);
+
+        if (ReservationModel.RoomReservations is {} roomReservations)
+        {
+            _reservedRooms = roomReservations.Where(x => x.Reservation == ReservationModel).Select(x => x.Room).ToList();    
+        }
+
         await base.OnInitializedAsync();
     }
 
     private async Task OnReservationUpdate(HotelReservation hotelReservation)
     {
         await hotelReservationService.UpdateHotelReservationAsync(hotelReservation);
-        navigationManager.NavigateTo("/reservations");
+        PanelExpanded = false;
     }
 }

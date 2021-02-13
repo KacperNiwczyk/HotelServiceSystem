@@ -3,11 +3,34 @@
 @using HotelServiceSystem.Entities
 @inject IUserService userService
 @inject NavigationManager navigationManager
-<HssUserInput UserModel="@UserModel" OnSubmit="@OnUserEdit"></HssUserInput>
+
+@if (UserModel != null)
+{
+    <MatAccordion> 
+        <MatExpansionPanel Expanded="@PanelExpanded"> 
+            <MatExpansionPanelSummary> 
+                <MatExpansionPanelHeader>Edit room</MatExpansionPanelHeader> 
+            </MatExpansionPanelSummary> 
+            <MatExpansionPanelDetails> 
+                <HssUserInput UserModel="@UserModel" OnSubmit="@OnUserEdit"></HssUserInput>
+            </MatExpansionPanelDetails> 
+        </MatExpansionPanel>
+    </MatAccordion>
+    <div class="card">
+        <div class="card-body">
+            <p>User name : @UserModel.UserName</p>
+            <p>Last login : @UserModel.LastLogin</p>
+            <p>Role : @UserModel.UserRole</p>
+        </div>
+    </div>
+}
+
 
 @code {
     [Parameter]
     public int Id { get; set; }
+
+    private bool PanelExpanded { get; set; }
     
     private User UserModel { get; set; }
 
@@ -20,6 +43,6 @@
     private async Task OnUserEdit(User user)
     {
         await userService.UpdateUserAsync(user);
-        navigationManager.NavigateTo("/users");
+        PanelExpanded = false;
     }
 }
