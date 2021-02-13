@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using HotelServiceSystem.Entities;
 using HotelServiceSystem.Interfaces.Helpers;
@@ -12,7 +13,7 @@ namespace HotelServiceSystem.Core.Helpers
 		{
 			var selectedServices = new List<AdditionalService>();
 			if (selectedChips == null || selectedChips.Length <= 0) return selectedServices;
-			selectedServices.AddRange(selectedChips.Select(chip => additionalServiceList.FirstOrDefault(x => x.Id.Equals(chip.Attributes["Id"]))));
+			selectedServices.AddRange(selectedChips.Select(chip => additionalServiceList.FirstOrDefault(x => x.Name.Equals(chip.Label, StringComparison.InvariantCultureIgnoreCase))));
 
 			return selectedServices;
 		}

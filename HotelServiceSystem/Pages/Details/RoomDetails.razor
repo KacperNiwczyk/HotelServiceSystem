@@ -30,9 +30,23 @@
             <p>Single beds : @ModelRoom.CountBeds(BedType.SingleBed)</p>
             <p>Double beds : @ModelRoom.CountBeds(BedType.DoubleBed)</p>
             <p>Status : <HssRoomStatus RoomModel="ModelRoom"/></p>
+            <p>Additional Services</p>
             @foreach (var addService in ModelRoom.AdditionalServiceRooms)
             {
                 <MatChip Label="@addService.AdditionalService.Name" IsCheckable="@false"/>
+            }
+            <p>Reservations</p>
+            @if (_futureReservations.Any())
+            {
+                foreach (var reservation in _futureReservations)
+                {
+                    <MatListItem>@reservation.DateFrom.Date @reservation.DateTo.Date</MatListItem>
+                    <MatDivider Padded="@true"/>
+                }
+            }
+            else
+            {
+                <p>This room has no future resevations</p>
             }
         </div>
     </div>
@@ -51,14 +65,20 @@ else
     
     private bool PanelExpanded { get; set; }
 
-    private bool IsEdit { get; set; }
-
     private List<AdditionalService> AdditionalServices { get; set; }
+    
+    private IEnumerable<Reservation> _futureReservations = new List<Reservation>();
 
     protected override async Task OnInitializedAsync()
     {
         AdditionalServices = additionalServiceService.GetAllAdditionalServices(x => x.ServiceType == ServiceType.Room);
         ModelRoom = await roomService.GetRoomById(Id);
+        
+        if (ModelRoom.RoomReservations is {} roomReservations)
+        {
+            _futureReservations = roomReservations.Where(x => x.Reservation.DateFrom > DateTime.Today.ToLocalTime()).Select(x => x.Reservation);
+        }
+        
         await base.OnInitializedAsync();
     }
     
