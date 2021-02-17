@@ -7,8 +7,5 @@ namespace HotelServiceSystem.Interfaces.Helpers
 	public interface IAdditionalServiceHelper
 	{
 		List<AdditionalService> GetSelectedAdditionalServices(MatChip[] selectedChips, List<AdditionalService> additionalServices);
-
-		void ParseChipToAdditionalService(MatChip[] selectedChips, List<AdditionalService> additionalServiceList,
-			List<AdditionalService> selectedServices);
 	}
 }

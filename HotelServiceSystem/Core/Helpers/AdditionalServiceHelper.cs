@@ -17,16 +17,6 @@ namespace HotelServiceSystem.Core.Helpers
 
 			return selectedServices;
 		}
-
-		public void ParseChipToAdditionalService(MatChip[] selectedChips, List<AdditionalService> additionalServiceList,
-			List<AdditionalService> selectedServices)
-		{
-			if (selectedServices == null) 
-				return;
-			
-			var parsedChips = GetSelectedAdditionalServices(selectedChips, additionalServiceList);
-			selectedServices.AddRange(parsedChips.FindAll(x => !selectedServices.Contains(x)));
-		}
 	}
 	
 }

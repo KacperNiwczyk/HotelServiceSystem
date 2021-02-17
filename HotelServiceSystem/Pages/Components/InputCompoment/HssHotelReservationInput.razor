@@ -27,7 +27,7 @@
         <HSSRoomMultiSelector NotSelected="@RoomList" NotSelectedLabel="Available Rooms" Selected="@SelectedRoomList" SelectedLabel="Selected Rooms" OnRoomsChanged="@(() => CalculatePrice())"/>
     </div>
     <ValidationMessage For="@(() => ReservationModel.RoomReservations)"></ValidationMessage>
-    <HssAdditionalServiceSelect AdditionalServiceList="@_additionalServiceList" @bind-SelectedChips="@_selectedAdditionalService"/>
+    <HssAdditionalServiceSelect AdditionalServiceList="@_additionalServiceList" @bind-SelectedAdditionalServices="@_selectedAdditionalService"/>
     <HssInputCustom Caption="Price" @bind-Value="@Price" ReadOnly="@true"/>
     <HssInputCustom Caption="Discount" @bind-Value="ReservationModel.Discount"/>
     <div class="col-12 row">
@@ -48,12 +48,12 @@
     private List<Room> SelectedRoomList { get; set; }
     private List<Client> ClientList { get; set; }
     private List<AdditionalService> _additionalServiceList = new List<AdditionalService>();
-    private MatChip[] _selectedAdditionalService = null;
+    private List<AdditionalService> _selectedAdditionalService = new List<AdditionalService>();
     private string _price = string.Empty;
     
     private string Price
     {
-        get => CalculatePrice().ToString();
+        get => CalculatePrice().ToString(CultureInfo.InvariantCulture);
         set => _price = value;
     }
 
@@ -92,13 +92,10 @@
             RoomList.RemoveAll(x => SelectedRoomList.Any(y => y.Equals(x)));
         }
         
-        var selectedChips = new List<MatChip>();
         if (ReservationModel?.AdditionalServiceReservations is {} additionalServiceReservations)
         {
-            selectedChips.AddRange(additionalServiceReservations.Select(addService => new MatChip {Label = addService.AdditionalService.Name}));
+            _selectedAdditionalService = additionalServiceReservations.Select(x => x.AdditionalService).ToList();
         }
-
-        _selectedAdditionalService = selectedChips.ToArray();
 
         await base.OnInitializedAsync();
     }
@@ -114,10 +111,9 @@
         }));
         ReservationModel.DateOfSubmission = DateTime.Today.ToLocalTime();
         
-        var selectedServices = additionalServiceHelper.GetSelectedAdditionalServices(_selectedAdditionalService, _additionalServiceList);
         var additionalServiceReservations = new HashSet<AdditionalServiceReservation>();
         
-        foreach (var additionalService in selectedServices)
+        foreach (var additionalService in _selectedAdditionalService)
         {
             additionalServiceReservations.Add(new AdditionalServiceReservation
             {
@@ -127,10 +123,10 @@
         }
 
         ReservationModel.AdditionalServiceReservations = additionalServiceReservations;
-        
+        ReservationModel.Price = CalculatePrice(); //TODO poprawić to gówno
         SelectedRoomList = new List<Room>();
         RoomList = new List<Room>();
-        
+        _selectedAdditionalService = new List<AdditionalService>();
         await OnSubmit.InvokeAsync(ReservationModel);
     }
     
@@ -179,14 +175,14 @@
     private double CalculatePrice()
     {
         var sum = 0d;
-        if (SelectedRoomList is {} selectedRoom && selectedRoom.Count > 0)
+        if (SelectedRoomList != null && SelectedRoomList.Count > 0)
         {
-            sum += selectedRoom.Sum(room => room.Price);
+            sum += SelectedRoomList.Sum(room => room.Price);
         }
 
-        if (ReservationModel.AdditionalServiceReservations is {} additionalServiceReservations && additionalServiceReservations.Count > 0)
+        if (_selectedAdditionalService != null && _selectedAdditionalService.Count > 0)
         {
-            sum += additionalServiceReservations.Sum(service => service.AdditionalService.Price);
+            sum += _selectedAdditionalService.Sum(x => x.Price);
         }
 
         return sum;

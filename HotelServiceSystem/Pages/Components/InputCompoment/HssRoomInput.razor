@@ -16,7 +16,7 @@
         <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Button" Color="Color.Primary" Size="Size.Large" StartIcon="@Icons.Material.Outlined.KingBed" OnClick="@(() => AddBed(BedType.DoubleBed))">X @BedCount(BedType.DoubleBed)</MudButton>
     </div>
     <br/>
-    <HssAdditionalServiceSelect AdditionalServiceList="@AdditionalServiceList" @bind-SelectedChips="@_selectedAdditionalServices"/>
+    <HssAdditionalServiceSelect AdditionalServiceList="@AdditionalServiceList" @bind-SelectedAdditionalServices="@_selectedAdditionalServices"/>
     <div class="col-12 row">
         <span class="col-2"></span>
         <input type="submit" class="form-control col-2 btn btn-primary" value="Submit"/>
@@ -33,18 +33,15 @@
     [Parameter]
     public List<AdditionalService> AdditionalServiceList { get; set; }
 
-    private MatChip[] _selectedAdditionalServices = null;
+    private List<AdditionalService> _selectedAdditionalServices = new List<AdditionalService>();
 
     protected override async Task OnInitializedAsync()
     {
-        var selectedChips = new List<MatChip>();
         if (ModelRoom?.AdditionalServiceRooms is {} additionalServiceRooms)
         {
-            selectedChips.AddRange(additionalServiceRooms.Select(addService => new MatChip {Label = addService.AdditionalService.Name}));
+            _selectedAdditionalServices = additionalServiceRooms.Select(x => x.AdditionalService).ToList();
         }
 
-        _selectedAdditionalServices = selectedChips.ToArray();
-        
         await base.OnInitializedAsync();
     }
 
@@ -60,10 +57,9 @@
 
     private async Task Submit()
     {
-        var selectedServices = additionalServiceHelper.GetSelectedAdditionalServices(_selectedAdditionalServices, AdditionalServiceList);
         var additionalServiceRooms = new HashSet<AdditionalServiceRoom>();
         
-        foreach (var additionalService in selectedServices)
+        foreach (var additionalService in _selectedAdditionalServices)
         {
             additionalServiceRooms.Add(new AdditionalServiceRoom
             {
@@ -72,6 +68,7 @@
             });
         }
 
+        _selectedAdditionalServices = new List<AdditionalService>();
         ModelRoom.AdditionalServiceRooms = additionalServiceRooms;
         await OnSubmit.InvokeAsync(ModelRoom);
     }

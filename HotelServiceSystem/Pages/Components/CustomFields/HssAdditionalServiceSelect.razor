@@ -42,29 +42,36 @@
         }
         
     }
-    
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (SelectedAdditionalServices != null && SelectedAdditionalServices.Count > 0)
+        {
+            var selectedChips = new List<MatChip>();
+            selectedChips.AddRange(SelectedAdditionalServices.Select(addService => new MatChip {Label = addService.Name}));
+            SelectedChips = selectedChips.ToArray();
+        }
+
+        await base.OnInitializedAsync();
+    }
+
     [Parameter]
     public EventCallback<List<AdditionalService>> SelectedAdditionalServicesChanged { get; set; }
     
     private List<AdditionalService> _selectedAdditionalServices  = new List<AdditionalService>();
-    
-    [Parameter]
-    public MatChip[] SelectedChips
+
+    private MatChip[] SelectedChips
     {
         get => _selectedChips;
         set
         {
             if (_selectedChips == value)
                 return;
-
-            serviceHelper.ParseChipToAdditionalService(_selectedChips, AdditionalServiceList, SelectedAdditionalServices);
+            
             _selectedChips = value;
+            SelectedAdditionalServices = serviceHelper.GetSelectedAdditionalServices(_selectedChips, AdditionalServiceList);
         }
     }
-
-    [Parameter]
-    public EventCallback<MatChip[]> SelectedChipsChanged { get; set; }
-
-    private MatChip[] _selectedChips = null;
     
+    private MatChip[] _selectedChips = null;
 }
