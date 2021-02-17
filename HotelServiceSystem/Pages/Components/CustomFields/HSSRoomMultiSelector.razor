@@ -36,22 +36,27 @@
     public List<Room> Selected { get; set; } = new List<Room>();
     
     [Parameter]
+    public EventCallback<object> OnRoomsChanged { get; set; }
+    
+    [Parameter]
     public string SelectedLabel { get; set; }
 
     private void Select(Room room)
     {
         NotSelected.Remove(room);
         Selected.Add(room);
+        OnRoomsChanged.InvokeAsync(new object());
     }
 
     private void Deselect(Room room)
     {
         Selected.Remove(room);
         NotSelected.Add(room);
+        OnRoomsChanged.InvokeAsync(new object());
     }
 
     private string GetRoomTextValue(Room room)
     {
-        return room == null ? string.Empty : $"Number: {room.RoomIdentifier} Single beds: {room.Beds.Count(x => x.BedType == BedType.SingleBed)} Double beds: {room.Beds.Count(x => x.BedType == BedType.DoubleBed)} Floor: {room.Floor}";
+        return room == null ? string.Empty : $"Number: {room.RoomIdentifier} Single beds: {room.Beds.Count(x => x.BedType == BedType.SingleBed)} Double beds: {room.Beds.Count(x => x.BedType == BedType.DoubleBed)} Floor: {room.Floor} Price: {room.Price}";
     }
 }

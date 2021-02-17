@@ -2,6 +2,9 @@
 @using HotelServiceSystem.Entities
 @using HotelServiceSystem.Core
 @using System.Linq.Expressions
+@using HotelServiceSystem.Interfaces.Helpers
+
+@inject IAdditionalServiceHelper serviceHelper;
 
 <div class="card">
     <div class="card-body" style="display: flex">
@@ -26,6 +29,26 @@
     public List<AdditionalService> AdditionalServiceList { get; set; } = new List<AdditionalService>();
     
     [Parameter]
+    public List<AdditionalService> SelectedAdditionalServices
+    {
+        get => _selectedAdditionalServices;
+        set
+        {
+            if (_selectedAdditionalServices == value)
+                return;
+            
+            SelectedAdditionalServicesChanged.InvokeAsync(value);
+            _selectedAdditionalServices = value;
+        }
+        
+    }
+    
+    [Parameter]
+    public EventCallback<List<AdditionalService>> SelectedAdditionalServicesChanged { get; set; }
+    
+    private List<AdditionalService> _selectedAdditionalServices  = new List<AdditionalService>();
+    
+    [Parameter]
     public MatChip[] SelectedChips
     {
         get => _selectedChips;
@@ -34,7 +57,7 @@
             if (_selectedChips == value)
                 return;
 
-            SelectedChipsChanged.InvokeAsync(value);
+            serviceHelper.ParseChipToAdditionalService(_selectedChips, AdditionalServiceList, SelectedAdditionalServices);
             _selectedChips = value;
         }
     }

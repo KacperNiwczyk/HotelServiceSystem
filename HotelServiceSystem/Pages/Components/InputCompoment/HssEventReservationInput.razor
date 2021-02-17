@@ -64,10 +64,11 @@
             Reservation = EventReservationModel,
             Room = x
         }));
+
+        EventReservationModel.DateOfSubmission = DateTime.Today.ToLocalTime();
         
         await OnSubmit.InvokeAsync(EventReservationModel);
-        await OnSubmit.InvokeAsync(EventReservationModel);
-        
+
         EventReservationModel = new EventReservation
         {
             Client = new Client()

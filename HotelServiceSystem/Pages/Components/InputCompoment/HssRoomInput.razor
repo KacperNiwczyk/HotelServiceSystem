@@ -5,7 +5,6 @@
 @using HotelServiceSystem.Pages.Default
 @using System.Net
 
-@inject IAdditionalServiceService additionalServiceService
 @inject IAdditionalServiceHelper additionalServiceHelper
 
 <EditForm Model="@ModelRoom" OnValidSubmit="@Submit">
@@ -30,6 +29,9 @@
     
     [Parameter]
     public EventCallback<Room> OnSubmit { get; set; }
+    
+    [Parameter]
+    public List<AdditionalService> AdditionalServiceList { get; set; }
 
     private MatChip[] _selectedAdditionalServices = null;
 
@@ -46,12 +48,9 @@
         await base.OnInitializedAsync();
     }
 
-    [Parameter]
-    public List<AdditionalService> AdditionalServiceList { get; set; }
-
     private void AddBed(BedType bedType)
     {
-        ModelRoom.Beds.Add(new Bed() {BedType = bedType});
+        ModelRoom.Beds.Add(new Bed { BedType = bedType });
     }
 
     private int BedCount(BedType bedType)
