@@ -2,13 +2,8 @@
 @using HotelServiceSystem.Features
 @using HotelServiceSystem.Interfaces.Services
 @using HotelServiceSystem.Core
-@using HotelServiceSystem.Core.Helpers
-@using System.Collections
-@using System.ComponentModel
 @using System.Globalization
-@using System.Reflection.Emit
 @using HotelServiceSystem.Interfaces.Helpers
-@using Microsoft.Extensions.Logging
 @using TimeSpan = HotelServiceSystem.Core.TimeSpan
 @inject IHotelReservationService hotelReservationService
 @inject IClientService clientService
@@ -57,7 +52,7 @@
         set => _price = value;
     }
 
-    private Client _selectedClient
+    private Client SelectedClient
     {
         get => ReservationModel.Client ?? (ReservationModel.Client = new Client
         {
@@ -128,19 +123,6 @@
         RoomList = new List<Room>();
         _selectedAdditionalService = new List<AdditionalService>();
         await OnSubmit.InvokeAsync(ReservationModel);
-    }
-    
-    private async Task<IEnumerable<Client>> ClientSearch(string searchClient)
-    {
-        if (string.IsNullOrEmpty(searchClient))
-        {
-            return await Task.FromResult(ClientList);
-        }
-        
-        var search = searchClient.ToLower();
-        return await Task.FromResult(ClientList.Where(x => x.FirstName.ToLower().Contains(search) ||
-                                                            x.LastName.ToLower().Contains(search) ||
-                                                            x.PhoneNumber.ToLower().Contains(search)).ToList());
     }
 
     private void FillAvailableRoomsList(TimeSpan timeSpan)
