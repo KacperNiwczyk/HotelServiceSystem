@@ -23,6 +23,8 @@ namespace HotelServiceSystem.Entities
         
         public double Discount { get; set; }
         
+        public bool HasFinished { get; set; }
+        
         public virtual ICollection<RoomReservation> RoomReservations { get; set; }
         
         public virtual ICollection<AdditionalServiceReservation> AdditionalServiceReservations { get; set; }

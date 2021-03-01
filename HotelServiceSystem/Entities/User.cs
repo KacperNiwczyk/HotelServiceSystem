@@ -18,5 +18,7 @@ namespace HotelServiceSystem.Entities
         public DateTime DateOfRegistration { get; set; }
         
         public DateTime LastLogin { get; set; }
+        
+        public bool IsActive { get; set; }
     }
 }
