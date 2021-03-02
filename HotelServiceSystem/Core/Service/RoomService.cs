@@ -30,9 +30,9 @@ namespace HotelServiceSystem.Core.Service
                 .ToList();
         }
 
-        public List<Room> GetAvailableRooms(TimeSpan timeSpan)
+        public List<Room> GetAvailableRooms(HssTimeSpan hssTimeSpan)
         {
-            return _roomRepository.GetFreeRooms(timeSpan);
+            return _roomRepository.GetFreeRooms(hssTimeSpan);
         }
 
         public async Task<Room> GetRoomById(int id)

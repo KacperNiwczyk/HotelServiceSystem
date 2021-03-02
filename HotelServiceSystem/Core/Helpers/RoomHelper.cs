@@ -8,14 +8,14 @@ namespace HotelServiceSystem.Core.Helpers
 {
 	public class RoomHelper : IRoomHelper
 	{
-		public bool IsFree(Room room, TimeSpan timeSpan)
+		public bool IsFree(Room room, HssTimeSpan hssTimeSpan)
 		{
 			foreach (var roomReservation in room.RoomReservations)
 			{
 				if (roomReservation?.Reservation is Reservation reservation)
 				{
-					if (timeSpan.DateFrom.Date >= reservation.DateFrom.Date && timeSpan.DateFrom.Date <= reservation.DateTo.Date ||   
-					    timeSpan.DateTo.Date >= reservation.DateFrom.Date && timeSpan.DateTo.Date <= reservation.DateTo.Date )
+					if (hssTimeSpan.DateFrom.Date >= reservation.DateFrom.Date && hssTimeSpan.DateFrom.Date <= reservation.DateTo.Date ||   
+					    hssTimeSpan.DateTo.Date >= reservation.DateFrom.Date && hssTimeSpan.DateTo.Date <= reservation.DateTo.Date )
 					{
 						return false;
 					}

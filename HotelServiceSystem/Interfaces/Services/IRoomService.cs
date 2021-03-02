@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using HotelServiceSystem.Core;
 using HotelServiceSystem.Entities;
-using TimeSpan = HotelServiceSystem.Core.TimeSpan;
 
 namespace HotelServiceSystem.Interfaces.Services
 {
@@ -11,7 +11,7 @@ namespace HotelServiceSystem.Interfaces.Services
     {
         List<Room> GetAllRoomsAsync();
 
-        List<Room> GetAvailableRooms(TimeSpan timeSpan);
+        List<Room> GetAvailableRooms(HssTimeSpan hssTimeSpan);
         List<Room> GetAllRoomsWithRelations(params Expression<Func<Room, object>>[] navigationProperties);
         Task<Room> GetRoomById(int id);
         Task<Room> AddRoomAsync(Room room);

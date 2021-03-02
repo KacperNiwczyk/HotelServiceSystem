@@ -4,7 +4,7 @@
 @using HotelServiceSystem.Core
 @using System.Globalization
 @using HotelServiceSystem.Interfaces.Helpers
-@using TimeSpan = HotelServiceSystem.Core.TimeSpan
+@using TimeSpan = HotelServiceSystem.Core.HssTimeSpan
 @inject IHotelReservationService hotelReservationService
 @inject IClientService clientService
 @inject IRoomService roomService
@@ -125,9 +125,9 @@
         await OnSubmit.InvokeAsync(ReservationModel);
     }
 
-    private void FillAvailableRoomsList(TimeSpan timeSpan)
+    private void FillAvailableRoomsList(HssTimeSpan hssTimeSpan)
     {
-        RoomList = roomService.GetAvailableRooms(timeSpan);
+        RoomList = roomService.GetAvailableRooms(hssTimeSpan);
     }
 
     private async Task AddClient(Client client)

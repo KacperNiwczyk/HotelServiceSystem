@@ -1,6 +1,7 @@
 ﻿@using HotelServiceSystem.Entities
 @using HotelServiceSystem.Features
 @using HotelServiceSystem.Interfaces.Services
+@using HotelServiceSystem.Core
 @inject IEventReservationService eventReservationService
 @inject IClientService clientService
 @inject IRoomService roomService
@@ -75,9 +76,9 @@
         };
     }
     
-    private void FillAvailableRoomsList(Core.TimeSpan timeSpan)
+    private void FillAvailableRoomsList(HssTimeSpan hssTimeSpan)
     {
-        RoomList = roomService.GetAvailableRooms(timeSpan);
+        RoomList = roomService.GetAvailableRooms(hssTimeSpan);
     }
     
     private async Task AddClient(Client client)

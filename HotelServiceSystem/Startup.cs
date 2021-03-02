@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HotelServiceSystem.Core;
+using HotelServiceSystem.Core.BackgroundWorkers;
 using HotelServiceSystem.Core.Helpers;
 using HotelServiceSystem.Core.Repositories;
 using HotelServiceSystem.Core.Service;
@@ -67,6 +68,9 @@ namespace HotelServiceSystem
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IUserService, UserService>();
 
+            services.AddTransient<IUpdateStatusWorker, UpdateStatusWorker>();
+            services.AddHostedService<UpdateStatusBackgroundService>();
+            
             services.AddDbContext<HotelServiceDatabaseContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));

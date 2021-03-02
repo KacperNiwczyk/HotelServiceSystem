@@ -4,7 +4,6 @@ using HotelServiceSystem.Core.Helpers;
 using HotelServiceSystem.Entities;
 using HotelServiceSystem.Interfaces.Helpers;
 using NUnit.Framework;
-using TimeSpan = HotelServiceSystem.Core.TimeSpan;
 
 namespace HotelServiceSystemUnitTests
 {
@@ -84,7 +83,7 @@ namespace HotelServiceSystemUnitTests
 		{
 			//Arrange
 			//Act
-			var result = _roomHelper.IsFree(_fakeRoom, new TimeSpan(testData.DateFrom, testData.DateTo));
+			var result = _roomHelper.IsFree(_fakeRoom, new HssTimeSpan(testData.DateFrom, testData.DateTo));
 			
 			Assert.AreEqual(testData.ExpectedResult, result);
 		}

@@ -1,6 +1,7 @@
 ﻿@using HotelServiceSystem.Entities
-@using TimeSpan = HotelServiceSystem.Core.TimeSpan
-    <div class="col-12 row">
+@using HotelServiceSystem.Core
+
+<div class="col-12 row">
         <HssDatePicker Label="Arrival" OnValueChanged="@SetDateFrom" ValidationFor="@(() => ReservationModel.DateFrom)"/>
         @if (!IsOneDay)
         {
@@ -34,7 +35,7 @@
     public EventCallback<Reservation> OnReservationModelChange { get; set; }
     
     [Parameter]
-    public EventCallback<TimeSpan> OnDatesSelected { get; set; }
+    public EventCallback<HssTimeSpan> OnDatesSelected { get; set; }
     
     private Reservation _reservation { get; set; }
 
@@ -48,7 +49,7 @@
     {
         if (ReservationModel.DateFrom != default && ReservationModel.DateTo != default)
         {
-            var timeSpan = new TimeSpan(ReservationModel.DateFrom, ReservationModel.DateTo);
+            var timeSpan = new HssTimeSpan(ReservationModel.DateFrom, ReservationModel.DateTo);
             OnDatesSelected.InvokeAsync(timeSpan);
         }
     }

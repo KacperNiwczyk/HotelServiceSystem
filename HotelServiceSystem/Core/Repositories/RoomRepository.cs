@@ -14,11 +14,11 @@ namespace HotelServiceSystem.Core.Repositories
             _roomHelper = roomHelper;
         }
 
-        public List<Room> GetFreeRooms(TimeSpan timeSpan)
+        public List<Room> GetFreeRooms(HssTimeSpan hssTimeSpan)
         {
             return HotelServiceDatabaseContext.Set<Room>()
                 .Include(x => x.RoomReservations).AsEnumerable()
-                .Where(x => _roomHelper.IsFree(x, timeSpan)).ToList();
+                .Where(x => _roomHelper.IsFree(x, hssTimeSpan)).ToList();
         }
     }
 }

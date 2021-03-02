@@ -19,9 +19,20 @@ namespace HotelServiceSystem.Core.Service
 		{
 			_hotelReservationRepository = hotelRepository;
 		}
-		
-		public List<HotelReservation> GetAllHotelReservations()
+
+		public List<HotelReservation> GetAllHotelReservations(Func<HotelReservation, bool> filter = null)
 		{
+			if (filter != null)
+			{
+				return _hotelReservationRepository.GetAll()
+					.Include(x => x.RoomReservations)
+					.ThenInclude(x => x.Room)
+					.Include(x => x.Client)
+					.AsEnumerable()
+					.Where(filter)
+					.ToList();
+			}
+
 			return _hotelReservationRepository.GetAll()
 				.Include(x => x.RoomReservations)
 				.ThenInclude(x => x.Room)

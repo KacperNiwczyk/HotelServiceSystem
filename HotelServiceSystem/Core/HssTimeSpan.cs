@@ -2,12 +2,12 @@
 
 namespace HotelServiceSystem.Core
 {
-    public readonly struct TimeSpan
+    public readonly struct HssTimeSpan
     {
         public DateTime DateFrom { get; }
         public DateTime DateTo { get; }
 
-        public TimeSpan(DateTime dateFrom, DateTime dateTo)
+        public HssTimeSpan(DateTime dateFrom, DateTime dateTo)
         {
             DateFrom = dateFrom;
             DateTo = dateTo;
