@@ -83,7 +83,7 @@ namespace HotelServiceSystemUnitTests
 		{
 			//Arrange
 			//Act
-			var result = _roomHelper.IsFree(_fakeRoom, new HssTimeSpan(testData.DateFrom, testData.DateTo));
+			var result = _roomHelper.IsFree(_fakeRoom, new ReservationSpan(testData.DateFrom, testData.DateTo));
 			
 			Assert.AreEqual(testData.ExpectedResult, result);
 		}

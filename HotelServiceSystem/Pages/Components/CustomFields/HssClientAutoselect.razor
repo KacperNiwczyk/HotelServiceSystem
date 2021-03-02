@@ -79,8 +79,6 @@
         }
         
         var search = searchClient.ToLower();
-        return await Task.FromResult(ClientList.Where(x => x.FirstName.ToLower().Contains(search) ||
-                                                           x.LastName.ToLower().Contains(search) ||
-                                                           x.PhoneNumber.ToLower().Contains(search)).ToList());
+        return await Task.FromResult(ClientList.Where(x => x.GetAutocompleteValue().ToLower().Contains(search)).ToList());
     }
 }

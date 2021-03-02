@@ -30,5 +30,15 @@ namespace HotelServiceSystem.Entities
         {
             Reservations = new HashSet<Reservation>();
         }
+
+        public static Client Default =>
+            new Client
+            {
+                CompanyName = "",
+                Email = "",
+                FirstName = "",
+                LastName = "",
+                PhoneNumber = ""
+            };
     }
 }

@@ -35,7 +35,7 @@
     public EventCallback<Reservation> OnReservationModelChange { get; set; }
     
     [Parameter]
-    public EventCallback<HssTimeSpan> OnDatesSelected { get; set; }
+    public EventCallback<ReservationSpan> OnDatesSelected { get; set; }
     
     private Reservation _reservation { get; set; }
 
@@ -49,8 +49,8 @@
     {
         if (ReservationModel.DateFrom != default && ReservationModel.DateTo != default)
         {
-            var timeSpan = new HssTimeSpan(ReservationModel.DateFrom, ReservationModel.DateTo);
-            OnDatesSelected.InvokeAsync(timeSpan);
+            var reservationSpan = new ReservationSpan(ReservationModel.DateFrom, ReservationModel.DateTo);
+            OnDatesSelected.InvokeAsync(reservationSpan);
         }
     }
 

@@ -73,16 +73,6 @@
         await base.OnInitializedAsync();
     }
 
-    protected override async Task OnParametersSetAsync()
-    {
-        foreach (var room in RoomList)
-        {
-            await UpdateRoomStatus(room);
-        }
-        
-        await base.OnParametersSetAsync();
-    }
-
     private async Task OnRoomAdded(Room room)
     {
         await roomService.AddRoomAsync(room);
@@ -107,11 +97,5 @@
             IsOutOfService = false,
             ShouldBeCleaned = false
         };
-    }
-
-    private async Task UpdateRoomStatus(Room room)
-    {
-        roomHelper.UpdateStatus(room);
-        await roomService.UpdateRoomAsync(room);
     }
 }

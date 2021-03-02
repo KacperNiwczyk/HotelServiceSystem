@@ -11,7 +11,6 @@
     <HssClientAutoselect ClientList="@ClientList" ClientModel="@EventReservationModel.Client" OnClientAdd="@AddClient" ClientValueChanged="@SetClient"/>
     <HssInputCustom Caption="Number of guests" @bind-Value="EventReservationModel.NumberOfGuests"/>
     
-    @* Dodać kontrolkę czy to wydarzenie jedno, czy dwu dniowe*@
     <HssTimespanPicker ReservationModel="@EventReservationModel" OnDatesSelected="@FillAvailableRoomsList"/>
     
     @*Dodać kontrolkę czy to jest  *@
@@ -76,9 +75,9 @@
         };
     }
     
-    private void FillAvailableRoomsList(HssTimeSpan hssTimeSpan)
+    private void FillAvailableRoomsList(ReservationSpan reservationSpan)
     {
-        RoomList = roomService.GetAvailableRooms(hssTimeSpan);
+        RoomList = roomService.GetAvailableRooms(reservationSpan);
     }
     
     private async Task AddClient(Client client)
