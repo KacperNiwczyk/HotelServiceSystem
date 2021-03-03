@@ -3,16 +3,12 @@
 
 <EditForm Model="@ClientModel" OnValidSubmit="@Submit">
     <FluentValidationValidator/>
-    <HssInputCustom Caption="First name" @bind-Value="ClientModel.FirstName"/>
-    <ValidationMessage For="@(() => ClientModel.FirstName)"/>
-    <HssInputCustom Caption="Last name" @bind-Value="ClientModel.LastName"/>
-    <ValidationMessage For="@(() => ClientModel.LastName)"/>
-    <HssInputCustom Caption="Company name" @bind-Value="ClientModel.CompanyName"/>
-    <HssInputCustom Caption="Email" @bind-Value="ClientModel.Email"/>
-    <ValidationMessage For="@(() => ClientModel.Email)"/>
-    <HssInputCustom Caption="Phone number" @bind-Value="ClientModel.PhoneNumber"/>
-    <ValidationMessage For="@(() => ClientModel.PhoneNumber)"/>
-    <HssInputCustom Caption="Tax Id" @bind-Value="ClientModel.TaxId"/>
+    <HssInputCustom Caption="First name" @bind-Value="ClientModel.FirstName" ValidationFor="@(() => ClientModel.FirstName)"/>
+    <HssInputCustom Caption="Last name" @bind-Value="ClientModel.LastName" ValidationFor="@(() => ClientModel.LastName)"/>
+    <HssInputCustom Caption="Company name" @bind-Value="ClientModel.CompanyName" ValidationFor="@(() => ClientModel.CompanyName)"/>
+    <HssInputCustom Caption="Email" @bind-Value="ClientModel.Email" ValidationFor="@(() => ClientModel.Email)"/>
+    <HssInputCustom Caption="Phone number" @bind-Value="ClientModel.PhoneNumber" ValidationFor="@(() => ClientModel.PhoneNumber)"/>
+    <HssInputCustom Caption="Tax Id" @bind-Value="ClientModel.TaxId" ValidationFor="@(() => ClientModel.TaxId)"/>
     <div class="col-12 row">
         <span class="col-2"></span>
         <input type="submit" class="form-control col-1 btn btn-primary" value="Submit"/>

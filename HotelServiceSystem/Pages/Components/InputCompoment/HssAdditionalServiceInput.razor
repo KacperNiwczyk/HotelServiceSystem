@@ -3,19 +3,20 @@
 @using HotelServiceSystem.Core
 
 <EditForm Model="@AdditionalServiceModel" OnValidSubmit="@Submit">
-        <HssInputCustom Caption="Name" @bind-Value="AdditionalServiceModel.Name"/>
-        <HssInputCustom Caption="Price" @bind-Value="AdditionalServiceModel.Price"/>
-         <HssSelectCustom Label="Service Type" @bind-Value="AdditionalServiceModel.ServiceType" ValidationFor="@(() => AdditionalServiceModel.ServiceType)">
-                    @foreach (var service in AvailableServiceTypes)
-                    {
-                        <option value="@service">@service.ToString()</option>
-                    }
-                </HssSelectCustom>
-        <div class="col-12 row">
-            <span class="col-2"></span>
-            <input type="submit" class="form-control col-2 btn btn-primary" value="Submit"/>
-        </div>
-    </EditForm>
+    <FluentValidationValidator/>
+    <HssInputCustom Caption="Name" @bind-Value="AdditionalServiceModel.Name" ValidationFor="@(() => AdditionalServiceModel.Name)"/>
+    <HssInputCustom Caption="Price" @bind-Value="AdditionalServiceModel.Price" ValidationFor="@(() => AdditionalServiceModel.Price)"/>
+    <HssSelectCustom Label="Service Type" @bind-Value="AdditionalServiceModel.ServiceType" ValidationFor="@(() => AdditionalServiceModel.ServiceType)">
+        @foreach (var service in AvailableServiceTypes)
+        {
+            <option value="@service">@service.ToString()</option>
+        }
+    </HssSelectCustom>
+    <div class="col-12 row">
+        <span class="col-2"></span>
+        <input type="submit" class="form-control col-2 btn btn-primary" value="Submit"/>
+    </div>
+</EditForm>
 
 @code {
     

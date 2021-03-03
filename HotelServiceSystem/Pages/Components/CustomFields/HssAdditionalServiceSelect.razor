@@ -29,6 +29,11 @@
     public List<AdditionalService> AdditionalServiceList { get; set; } = new List<AdditionalService>();
     
     [Parameter]
+    public EventCallback<List<AdditionalService>> SelectedAdditionalServicesChanged { get; set; }
+    
+    private List<AdditionalService> _selectedAdditionalServices  = new List<AdditionalService>();
+    
+    [Parameter]
     public List<AdditionalService> SelectedAdditionalServices
     {
         get => _selectedAdditionalServices;
@@ -55,10 +60,7 @@
         await base.OnInitializedAsync();
     }
 
-    [Parameter]
-    public EventCallback<List<AdditionalService>> SelectedAdditionalServicesChanged { get; set; }
-    
-    private List<AdditionalService> _selectedAdditionalServices  = new List<AdditionalService>();
+
 
     private MatChip[] SelectedChips
     {

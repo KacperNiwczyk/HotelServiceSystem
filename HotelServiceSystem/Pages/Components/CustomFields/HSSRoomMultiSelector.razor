@@ -27,16 +27,44 @@
 
 @code {
     [Parameter]
-    public List<Room> NotSelected { get; set; } = new List<Room>();
+    public List<Room> NotSelected
+    {
+        get => _notSelected;
+        set
+        {
+            if (_notSelected == value)
+                return;
+            
+            NotSelectedChanged.InvokeAsync(value);
+            _notSelected = value;
+        } 
+    }
+    
+    private List<Room> _notSelected = new List<Room>();
+    
+    [Parameter]
+    public EventCallback<List<Room>> NotSelectedChanged { get; set; }
     
     [Parameter]
     public string NotSelectedLabel { get; set; }
     
     [Parameter]
-    public List<Room> Selected { get; set; } = new List<Room>();
+    public List<Room> Selected
+    {
+        get => _selected;
+        set
+        {
+            if (_selected == value)
+                return;
+            SelectedChanged.InvokeAsync(value);
+            _selected = value;
+        } 
+    } 
+    
+    private List<Room> _selected = new List<Room>();
     
     [Parameter]
-    public EventCallback<object> OnRoomsChanged { get; set; }
+    public EventCallback<List<Room>> SelectedChanged { get; set; }
     
     [Parameter]
     public string SelectedLabel { get; set; }
@@ -45,14 +73,12 @@
     {
         NotSelected.Remove(room);
         Selected.Add(room);
-        OnRoomsChanged.InvokeAsync(new object());
     }
 
     private void Deselect(Room room)
     {
         Selected.Remove(room);
         NotSelected.Add(room);
-        OnRoomsChanged.InvokeAsync(new object());
     }
 
     private string GetRoomTextValue(Room room)

@@ -8,10 +8,12 @@ namespace HotelServiceSystem.Core.Validations
 		public HotelReservationValidator()
 		{
 			RuleFor(x => x.Client).NotNull();
-			RuleFor(x => x.Client.Id).NotEmpty().When(x => x.Client != null);
-			RuleFor(x => x.Client.Id).NotEqual(0).When(x => x.Client != null);
+			RuleFor(x => x.Client.Id).NotEmpty().When(x => x.Client != null).WithMessage("Pole client nie może być puste");
 			RuleFor(x => x.DateFrom).NotEmpty();
 			RuleFor(x => x.DateTo).NotEmpty();
+			RuleFor(x => x.NumberOfGuests).NotEmpty().GreaterThan(0);
+			// RuleFor(x => x.RoomReservations).NotNull();
+			// RuleFor(x => x.RoomReservations.Count).GreaterThan(0);
 		}
 	}
 }

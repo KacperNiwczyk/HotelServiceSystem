@@ -69,6 +69,7 @@
 
     private async Task OnClientAdd(Client client)
     {
+        client.IsActive = true;
         await clientService.AddClientAsync(client);
         ClientList.Add(client);
     }

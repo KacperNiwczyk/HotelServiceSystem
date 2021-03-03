@@ -3,19 +3,20 @@
 @using HotelServiceSystem.Features.Enums
 
 <EditForm Model="@UserModel" OnValidSubmit="@Submit">
-        <HssInputCustom Caption="Name" @bind-Value="UserModel.UserName"/>
-        <HssInputCustom Caption="Password" @bind-Value="UserModel.Password" />
-        <HssSelectCustom Label="Role" @bind-Value="SelectedRole" ValidationFor="@(() => SelectedRole)">
-            @foreach (var role in AvailableRoles)
-            {
-                <option value="@role">@role.ToString()</option>
-            }
-        </HssSelectCustom>
-        <div class="col-12 row">
-            <span class="col-2"></span>
-            <input type="submit" class="form-control col-2 btn btn-primary" value="Submit"/>
-        </div>
-    </EditForm>
+    <FluentValidationValidator/>
+    <HssInputCustom Caption="Name" @bind-Value="UserModel.UserName" ValidationFor="@(() => UserModel.UserName)"/>
+    <HssInputCustom Caption="Password" @bind-Value="UserModel.Password" ValidationFor="@(() => UserModel.Password)"/>
+    <HssSelectCustom Label="Role" @bind-Value="SelectedRole" ValidationFor="@(() => SelectedRole)">
+        @foreach (var role in AvailableRoles)
+        {
+            <option value="@role">@role.ToString()</option>
+        }
+    </HssSelectCustom>
+    <div class="col-12 row">
+        <span class="col-2"></span>
+        <input type="submit" class="form-control col-2 btn btn-primary" value="Submit"/>
+    </div>
+</EditForm>
 
 @code {
     

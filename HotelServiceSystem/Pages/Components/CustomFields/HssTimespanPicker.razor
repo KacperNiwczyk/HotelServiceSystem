@@ -1,6 +1,7 @@
 ﻿@using HotelServiceSystem.Entities
 @using HotelServiceSystem.Core
 
+
 <div class="col-12 row">
         <HssDatePicker Label="Arrival" OnValueChanged="@SetDateFrom" ValidationFor="@(() => ReservationModel.DateFrom)"/>
         @if (!IsOneDay)
@@ -24,7 +25,6 @@
         set
         {
             _reservation = value;
-            OnReservationModelChange.InvokeAsync(value);
         } 
     }
 
@@ -32,7 +32,7 @@
     public bool IsOneDay { get; set; } = false;
     
     [Parameter]
-    public EventCallback<Reservation> OnReservationModelChange { get; set; }
+    public EventCallback<Reservation> ReservationModelChanged { get; set; }
     
     [Parameter]
     public EventCallback<ReservationSpan> OnDatesSelected { get; set; }

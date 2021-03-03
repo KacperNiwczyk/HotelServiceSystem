@@ -1,6 +1,8 @@
 ﻿@using HotelServiceSystem.Entities
 @using HotelServiceSystem.Core.Helpers
 @using System.Linq.Expressions
+
+<div class="form-control-wrapper">
 @if (ClientList != null && ClientList.Any())
     {
         <BlazoredTypeahead SearchMethod="ClientSearch" @bind-Value="@ClientValue" ShowDropDownOnFocus="@true">
@@ -25,9 +27,10 @@
             </div>
         </div>
     }
-    <br/>
-    <ValidationMessage For="@(() => ClientValue.Id)"></ValidationMessage>
-
+    <div class="form-control-validation">
+        <ValidationMessage For="@(() => ClientValue.Id)"/>
+    </div>
+</div>
 @code {
 
     [Parameter]
@@ -35,16 +38,7 @@
 
     private Client ClientValue
     {
-        get => ClientModel ??= new Client()
-        {
-            FirstName = "",
-            LastName = "",
-            CompanyName = "",
-            Email = "",
-            Id = 0,
-            PhoneNumber = "",
-            TaxId = "" 
-        };
+        get => ClientModel ??= Client.Default;
         set
         {
             ClientModel = value;

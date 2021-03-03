@@ -121,8 +121,9 @@
         return new HotelReservation
         {
             AdditionalServiceReservations = new List<AdditionalServiceReservation>(),
+            NumberOfGuests = 1,
             RoomReservations = new List<RoomReservation>(),
-            Client = new Client()
+            Client = new Client
             {
                 Id = 0
             }

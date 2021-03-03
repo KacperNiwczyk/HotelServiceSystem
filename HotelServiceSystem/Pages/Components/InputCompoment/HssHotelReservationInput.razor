@@ -14,13 +14,12 @@
     <FluentValidationValidator />
     <HssClientAutoselect ClientModel="@ReservationModel.Client" ClientList="@ClientList" OnClientAdd="@AddClient" ClientValueChanged="@SetClient"/>
     <br/>
-    <HssInputCustom Caption="Number of guests" @bind-Value="ReservationModel.NumberOfGuests"/>
+    <HssInputCustom Caption="Number of guests" @bind-Value="ReservationModel.NumberOfGuests" ValidationFor="@(() => ReservationModel.NumberOfGuests)"/>
     <HssTimespanPicker ReservationModel="@ReservationModel" OnDatesSelected="@FillAvailableRoomsList"/>
     <br/>
     <div class="form-group">
-        <HSSRoomMultiSelector NotSelected="@RoomList" NotSelectedLabel="Available Rooms" Selected="@SelectedRoomList" SelectedLabel="Selected Rooms" OnRoomsChanged="@(() => CalculatePrice())"/>
+        <HSSRoomMultiSelector @bind-NotSelected="@RoomList" NotSelectedLabel="Available Rooms" @bind-Selected="@SelectedRoomList" SelectedLabel="Selected Rooms"/>
     </div>
-    <ValidationMessage For="@(() => ReservationModel.RoomReservations)"></ValidationMessage>
     <HssAdditionalServiceSelect AdditionalServiceList="@_additionalServiceList" @bind-SelectedAdditionalServices="@_selectedAdditionalService"/>
     <HssInputCustom Caption="Price" @bind-Value="@Price" ReadOnly="@true"/>
     <HssInputCustom Caption="Discount" @bind-Value="ReservationModel.Discount"/>
@@ -161,6 +160,7 @@
 
     private async Task DisableClientAdd(Client client)
     {
+        client.IsActive = true;
         await clientService.AddClientAsync(client);
         ClientList.Add(client);
         ReservationModel.Client = client;
