@@ -3,12 +3,14 @@
 @using HotelServiceSystem.Interfaces.Services
 @using HotelServiceSystem.Core
 @using System.Globalization
+@using HotelServiceSystem.Core.Validations
 @using HotelServiceSystem.Interfaces.Helpers
 @inject IHotelReservationService hotelReservationService
 @inject IClientService clientService
 @inject IRoomService roomService
 @inject IAdditionalServiceService additionalServiceService
 @inject IAdditionalServiceHelper additionalServiceHelper
+@inject IServiceProvider _serviceProvider;
 
 <EditForm Model="@ReservationModel" OnValidSubmit="@Submit">
     <FluentValidationValidator />
@@ -18,14 +20,15 @@
     <HssTimespanPicker ReservationModel="@ReservationModel" OnDatesSelected="@FillAvailableRoomsList"/>
     <br/>
     <div class="form-group">
-        <HSSRoomMultiSelector @bind-NotSelected="@RoomList" NotSelectedLabel="Available Rooms" @bind-Selected="@SelectedRoomList" SelectedLabel="Selected Rooms"/>
+        <HSSRoomMultiSelector @bind-NotSelected="@RoomList" NotSelectedLabel="Available Rooms" @bind-Selected="@SelectedRoomList" SelectedLabel="Selected Rooms" @bind-RoomReservations="@ReservationModel.RoomReservations" OnRoomsChanged="@CalculatePrice"/>
     </div>
+    <ValidationMessage For="@(() => ReservationModel.RoomReservations)"/>
     <HssAdditionalServiceSelect AdditionalServiceList="@_additionalServiceList" @bind-SelectedAdditionalServices="@_selectedAdditionalService"/>
     <HssInputCustom Caption="Price" @bind-Value="@Price" ReadOnly="@true"/>
     <HssInputCustom Caption="Discount" @bind-Value="ReservationModel.Discount"/>
     <div class="col-12 row">
         <span class="col-2"></span>
-        <input type="submit" class="form-control col-2 btn btn-primary" value="Submit"/>
+        <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Success" Class="form-control col-2 btn btn-primary">Submit</MudButton>
     </div>
 </EditForm>
 
@@ -68,7 +71,7 @@
     {
         RoomList = new List<Room>();
         SelectedRoomList = new List<Room>();
-        
+
         ClientList = clientService.GetAllClients();
         _additionalServiceList = additionalServiceService.GetAllAdditionalServices(x => x.ServiceType == ServiceType.Reservation);
         

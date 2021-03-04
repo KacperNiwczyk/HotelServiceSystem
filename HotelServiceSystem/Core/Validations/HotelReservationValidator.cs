@@ -12,8 +12,8 @@ namespace HotelServiceSystem.Core.Validations
 			RuleFor(x => x.DateFrom).NotEmpty();
 			RuleFor(x => x.DateTo).NotEmpty();
 			RuleFor(x => x.NumberOfGuests).NotEmpty().GreaterThan(0);
-			// RuleFor(x => x.RoomReservations).NotNull();
-			// RuleFor(x => x.RoomReservations.Count).GreaterThan(0);
+			RuleFor(x => x.RoomReservations).NotNull();
+			RuleFor(x => x.RoomReservations).Must(x => x.Count > 0);
 		}
 	}
 }

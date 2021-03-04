@@ -15,7 +15,7 @@
     <ul>
         <li style="list-style-type: none">@SelectedLabel</li>
         <ul class="selectable-ul">
-            @foreach (var item in Selected)
+            @foreach (var item in RoomReservations.Select(x => x.Room))
             {
                 <li @onclick="@(() => Deselect(item))">@GetRoomTextValue(item)</li>
             }
@@ -46,6 +46,25 @@
     public EventCallback<List<Room>> NotSelectedChanged { get; set; }
     
     [Parameter]
+    public ICollection<RoomReservation> RoomReservations
+    {
+        get => _roomReservations;
+        set
+        {
+            if (_roomReservations == value)
+                return;
+            
+            RoomReservationsChanged.InvokeAsync(value);
+            _roomReservations = value;
+        } 
+    }
+
+    private ICollection<RoomReservation> _roomReservations = new List<RoomReservation>();
+    
+    [Parameter]
+    public EventCallback<ICollection<RoomReservation>> RoomReservationsChanged { get; set; }
+
+    [Parameter]
     public string NotSelectedLabel { get; set; }
     
     [Parameter]
@@ -68,17 +87,32 @@
     
     [Parameter]
     public string SelectedLabel { get; set; }
+    
+    [Parameter]
+    public EventCallback<object> OnRoomsChanged { get; set; }
 
     private void Select(Room room)
     {
         NotSelected.Remove(room);
         Selected.Add(room);
+        
+        RoomReservations.Add(new RoomReservation()
+        {
+            Room = room
+        });
+        
+        OnRoomsChanged.InvokeAsync(new object());
     }
 
     private void Deselect(Room room)
     {
         Selected.Remove(room);
         NotSelected.Add(room);
+
+        var roomReservation = RoomReservations.First(x => x.Room.Equals(room));
+        RoomReservations.Remove(roomReservation);
+        
+        OnRoomsChanged.InvokeAsync(new object());
     }
 
     private string GetRoomTextValue(Room room)
