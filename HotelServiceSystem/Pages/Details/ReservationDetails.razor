@@ -31,7 +31,10 @@
                 }
             }
             <p>Additional Services</p>
-            <p>theres no additional services</p>
+            @foreach (var addService in ReservationModel.AdditionalServiceReservations)
+            {
+                <MatChip Label="@addService.AdditionalService.Name" IsCheckable="@false"/>
+            }
         </div>
     </div>
 }

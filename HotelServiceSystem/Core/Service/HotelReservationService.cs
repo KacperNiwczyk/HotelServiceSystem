@@ -42,7 +42,7 @@ namespace HotelServiceSystem.Core.Service
 
 		public HotelReservation GetById(int id)
 		{
-			return _hotelReservationRepository.GetById(id);
+			return _hotelReservationRepository.GetAll().Include(x => x.AdditionalServiceReservations).FirstOrDefault(x => x.Id == id);
 		}
 
 		public List<HotelReservation> GetAllWithRelations(params Expression<Func<HotelReservation, object>>[] navigationProperties)
