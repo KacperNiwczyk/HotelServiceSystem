@@ -1,5 +1,6 @@
 ﻿@using HotelServiceSystem.Entities
 @using HotelServiceSystem.Core
+@using HotelServiceSystem.ViewModel
 
 
 <div class="col-12 row">
@@ -19,7 +20,7 @@
     public string DepartureDateLabel { get; set; } = "Departure";
     
     [Parameter]
-    public Reservation ReservationModel
+    public HotelReservationViewModel ReservationModel
     {
         get => _reservation;
         set
@@ -32,12 +33,12 @@
     public bool IsOneDay { get; set; } = false;
     
     [Parameter]
-    public EventCallback<Reservation> ReservationModelChanged { get; set; }
+    public EventCallback<HotelReservationViewModel> ReservationModelChanged { get; set; }
     
     [Parameter]
     public EventCallback<ReservationSpan> OnDatesSelected { get; set; }
     
-    private Reservation _reservation { get; set; }
+    private HotelReservationViewModel _reservation { get; set; }
 
     private void SetDateFrom(DateTime dateTime)
     {

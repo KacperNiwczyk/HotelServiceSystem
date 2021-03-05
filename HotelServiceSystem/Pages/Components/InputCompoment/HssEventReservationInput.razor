@@ -11,7 +11,7 @@
     <HssClientAutoselect ClientList="@ClientList" ClientModel="@EventReservationModel.Client" OnClientAdd="@AddClient" ClientValueChanged="@SetClient"/>
     <HssInputCustom Caption="Number of guests" @bind-Value="EventReservationModel.NumberOfGuests"/>
     
-    <HssTimespanPicker ReservationModel="@EventReservationModel" OnDatesSelected="@FillAvailableRoomsList"/>
+    @*<HssTimespanPicker ReservationModel="@EventReservationModel" OnDatesSelected="@FillAvailableRoomsList"/>*@
     
     @*Dodać kontrolkę czy to jest  *@
     <div class="form-group">

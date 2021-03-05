@@ -23,7 +23,7 @@ namespace HotelServiceSystem.Core.Repositories
 
         public TEntity GetById(int id)
         {
-            return HotelServiceDatabaseContext.Set<TEntity>().Find(id);
+            return HotelServiceDatabaseContext.Set<TEntity>().IncludeAll().FirstOrDefault();
         }
 
         public async Task<TEntity> AddAsync(TEntity entity)
