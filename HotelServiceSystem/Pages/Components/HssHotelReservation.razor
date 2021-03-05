@@ -1,7 +1,6 @@
 ﻿@using HotelServiceSystem.Entities
 @using HotelServiceSystem.Interfaces.Services
 @using System.Text
-@using HotelServiceSystem.ViewModel
 @inject IHotelReservationService hotelReservationService
 @inject IRoomService roomService
 @inject NavigationManager navigationManager
@@ -19,7 +18,7 @@
                     </MatExpansionPanelHeader>
                 </MatExpansionPanelSummary>
                 <MatExpansionPanelDetails>
-                    <HssHotelReservationInput ReservationViewModel="@SetNewHotelReservation()"  OnSubmit="@OnReservationAdd"/>
+                    <HssHotelReservationInput ReservationModel="@SetNewHotelReservation()"  OnSubmit="@OnReservationAdd"/>
                 </MatExpansionPanelDetails>
             </MatExpansionPanel>
         </MatAccordion>
@@ -101,11 +100,10 @@
         return builder.ToString();
     }
 
-    private async Task OnReservationAdd(HotelReservationViewModel hotelReservation)
+    private async Task OnReservationAdd(HotelReservation hotelReservation)
     {
-        var parsedReservation = hotelReservation.ToHotelReservation();
-        await hotelReservationService.AddHotelReservationAsync(parsedReservation);
-        ReservationList.Add(parsedReservation);
+        await hotelReservationService.AddHotelReservationAsync(hotelReservation);
+        ReservationList.Add(hotelReservation);
     }
 
     private string GetFirstNameLastName(Client client)
@@ -118,11 +116,13 @@
         navigationManager.NavigateTo($"HotelReservationDetails/{id}");
     }
 
-    private HotelReservationViewModel SetNewHotelReservation()
+    private HotelReservation SetNewHotelReservation()
     {
-        return new HotelReservationViewModel
+        return new HotelReservation
         {
+            AdditionalServiceReservations = new List<AdditionalServiceReservation>(),
             NumberOfGuests = 1,
+            RoomReservations = new List<RoomReservation>(),
             Client = new Client
             {
                 Id = 0

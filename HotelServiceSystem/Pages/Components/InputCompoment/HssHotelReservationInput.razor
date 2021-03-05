@@ -5,7 +5,6 @@
 @using System.Globalization
 @using HotelServiceSystem.Core.Validations
 @using HotelServiceSystem.Interfaces.Helpers
-@using HotelServiceSystem.ViewModel
 @inject IHotelReservationService hotelReservationService
 @inject IClientService clientService
 @inject IRoomService roomService
@@ -13,20 +12,20 @@
 @inject IAdditionalServiceHelper additionalServiceHelper
 @inject IServiceProvider _serviceProvider;
 
-<EditForm Model="@ReservationViewModel" OnValidSubmit="@Submit">
+<EditForm Model="@ReservationModel" OnValidSubmit="@Submit">
     <FluentValidationValidator />
-    <HssClientAutoselect ClientModel="@ReservationViewModel.Client" ClientList="@ClientList" OnClientAdd="@AddClient" ClientValueChanged="@SetClient"/>
+    <HssClientAutoselect ClientModel="@ReservationModel.Client" ClientList="@ClientList" OnClientAdd="@AddClient" ClientValueChanged="@SetClient"/>
     <br/>
-    <HssInputCustom Caption="Number of guests" @bind-Value="ReservationViewModel.NumberOfGuests" ValidationFor="@(() => ReservationViewModel.NumberOfGuests)"/>
-    <HssTimespanPicker ReservationModel="@ReservationViewModel" OnDatesSelected="@FillAvailableRoomsList"/>
+    <HssInputCustom Caption="Number of guests" @bind-Value="ReservationModel.NumberOfGuests" ValidationFor="@(() => ReservationModel.NumberOfGuests)"/>
+    <HssTimespanPicker ReservationModel="@ReservationModel" OnDatesSelected="@FillAvailableRoomsList"/>
     <br/>
     <div class="form-group">
-        <HSSRoomMultiSelector @bind-NotSelected="@RoomList" NotSelectedLabel="Available Rooms" @bind-Selected="@ReservationViewModel.SelectedRooms" SelectedLabel="Selected Rooms" OnRoomsChanged="@CalculatePrice"/>
+        <HSSRoomMultiSelector @bind-NotSelected="@RoomList" NotSelectedLabel="Available Rooms" @bind-Selected="@SelectedRoomList" SelectedLabel="Selected Rooms" @bind-RoomReservations="@ReservationModel.RoomReservations" OnRoomsChanged="@CalculatePrice"/>
     </div>
-    <ValidationMessage For="@(() => ReservationViewModel.SelectedRooms)"/>
-    <HssAdditionalServiceSelect AdditionalServiceList="@_additionalServiceList" @bind-SelectedAdditionalServices="@ReservationViewModel.SelectedAdditionalServices"/>
+    <ValidationMessage For="@(() => ReservationModel.RoomReservations)"/>
+    <HssAdditionalServiceSelect AdditionalServiceList="@_additionalServiceList" @bind-SelectedAdditionalServices="@_selectedAdditionalService"/>
     <HssInputCustom Caption="Price" @bind-Value="@Price" ReadOnly="@true"/>
-    <HssInputCustom Caption="Discount" @bind-Value="ReservationViewModel.Discount"/>
+    <HssInputCustom Caption="Discount" @bind-Value="ReservationModel.Discount"/>
     <div class="col-12 row">
         <span class="col-2"></span>
         <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Success" Class="form-control col-2 btn btn-primary">Submit</MudButton>
@@ -38,10 +37,7 @@
     public HotelReservation ReservationModel { get; set; }
     
     [Parameter]
-    public HotelReservationViewModel ReservationViewModel { get; set; }
-    
-    [Parameter]
-    public EventCallback<HotelReservationViewModel> OnSubmit { get; set; }
+    public EventCallback<HotelReservation> OnSubmit { get; set; }
     
     private bool EnableClientAdd { get; set; }
     private List<Room> RoomList { get; set; }
@@ -67,8 +63,8 @@
 
     private Client SelectedClient
     {
-        get => ReservationViewModel.Client ?? (ReservationViewModel.Client = Client.Default);
-        set => ReservationViewModel.Client = value;
+        get => ReservationModel.Client ?? (ReservationModel.Client = Client.Default);
+        set => ReservationModel.Client = value;
     }
 
     protected override async Task OnInitializedAsync()
@@ -79,15 +75,18 @@
         ClientList = clientService.GetAllClients();
         _additionalServiceList = additionalServiceService.GetAllAdditionalServices(x => x.ServiceType == ServiceType.Reservation);
         
-        //GetPreselectedRooms(ReservationViewModel.RoomReservations);
-        //GetPreselectedAdditionalServices(ReservationViewModel.SelectedAdditionalServices);
+        GetPreselectedRooms(ReservationModel.RoomReservations);
+        GetPreselectedAdditionalServices(ReservationModel.AdditionalServiceReservations);
 
         await base.OnInitializedAsync();
     }
 
     private void GetPreselectedAdditionalServices(ICollection<AdditionalServiceReservation> additionalServiceReservations)
     {
-
+        if (additionalServiceReservations != null && additionalServiceReservations.Count > 0)
+        {
+            _selectedAdditionalService = additionalServiceReservations.Select(x => x.AdditionalService).ToList();
+        }
     }
 
     private void GetPreselectedRooms(ICollection<RoomReservation> roomReservations)
@@ -111,15 +110,15 @@
     
     private async Task Submit()
     {
-        //ReservationModel.RoomReservations.Clear();
-        //ReservationModel.DateOfSubmission = DateTime.Today.ToLocalTime();
-        //ParseSelectedRooms();
-        //ParseAdditionalServices();
-        ReservationViewModel.Price = _price;
+        ReservationModel.RoomReservations.Clear();
+        ReservationModel.DateOfSubmission = DateTime.Today.ToLocalTime();
+        ParseSelectedRooms();
+        ParseAdditionalServices();
+        ReservationModel.Price = _price;
         SelectedRoomList = new List<Room>();
         RoomList = new List<Room>();
         _selectedAdditionalService = new List<AdditionalService>();
-        await OnSubmit.InvokeAsync(ReservationViewModel);
+        await OnSubmit.InvokeAsync(ReservationModel);
     }
 
     private void ParseAdditionalServices()
@@ -159,7 +158,7 @@
 
     private void SetClient(Client client)
     {
-        ReservationViewModel.Client = client;
+        ReservationModel.Client = client;
     }
 
     private async Task DisableClientAdd(Client client)
@@ -167,7 +166,7 @@
         client.IsActive = true;
         await clientService.AddClientAsync(client);
         ClientList.Add(client);
-        ReservationViewModel.Client = client;
+        ReservationModel.Client = client;
         EnableClientAdd = false;
     }
 

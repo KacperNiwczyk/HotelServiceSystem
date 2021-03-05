@@ -1,7 +1,6 @@
 ﻿@page "/hotelReservationDetails/{Id:int}"
 @using HotelServiceSystem.Entities
 @using HotelServiceSystem.Interfaces.Services
-@using HotelServiceSystem.ViewModel
 @inject IHotelReservationService hotelReservationService
 @inject NavigationManager navigationManager
 
@@ -13,7 +12,7 @@
                 <MatExpansionPanelHeader>Edit room</MatExpansionPanelHeader> 
             </MatExpansionPanelSummary> 
             <MatExpansionPanelDetails> 
-                <HssHotelReservationInput ReservationViewModel="@ReservationModel" OnSubmit="OnReservationUpdate"/>
+                <HssHotelReservationInput ReservationModel="@ReservationModel" OnSubmit="@OnReservationUpdate"/>
             </MatExpansionPanelDetails> 
         </MatExpansionPanel>
     </MatAccordion>
@@ -46,9 +45,7 @@ else
     [Parameter]
     public int Id { get; set; }
     
-    private HotelReservationViewModel ReservationModel { get; set; }
-    
-    private HotelReservation ReservationReference { get; set; }
+    private HotelReservation ReservationModel { get; set; }
     
     private bool PanelExpanded { get; set; }
     
@@ -56,16 +53,19 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        ReservationReference = hotelReservationService.GetById(Id);
-        ReservationModel = HotelReservationViewModel.FromHotelReservation(ReservationReference);
-        _reservedRooms = ReservationModel.SelectedRooms;
+        ReservationModel = hotelReservationService.GetById(Id);
+
+        if (ReservationModel.RoomReservations is {} roomReservations)
+        {
+            _reservedRooms = roomReservations.Where(x => x.Reservation == ReservationModel).Select(x => x.Room).ToList();    
+        }
+
         await base.OnInitializedAsync();
     }
 
-    private async Task OnReservationUpdate(HotelReservationViewModel hotelReservation)
+    private async Task OnReservationUpdate(HotelReservation hotelReservation)
     {
-        ReservationReference.UpdateFrom(hotelReservation);
-        await hotelReservationService.UpdateHotelReservationAsync(ReservationReference);
+        await hotelReservationService.UpdateHotelReservationAsync(hotelReservation);
         PanelExpanded = false;
     }
 }
