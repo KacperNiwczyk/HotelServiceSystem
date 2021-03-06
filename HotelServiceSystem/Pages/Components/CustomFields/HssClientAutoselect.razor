@@ -59,6 +59,7 @@
 
     private async Task AddClient(Client client)
     {
+        client.IsActive = true;
         await OnClientAdd.InvokeAsync(client);
         ClientList.Add(client);
         ClientValue = client;

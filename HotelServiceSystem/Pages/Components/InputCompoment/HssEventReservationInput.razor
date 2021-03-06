@@ -2,92 +2,143 @@
 @using HotelServiceSystem.Features
 @using HotelServiceSystem.Interfaces.Services
 @using HotelServiceSystem.Core
+@using HotelServiceSystem.Interfaces.Helpers
+@using HotelServiceSystem.ViewModel
+@using System.Globalization
 @inject IEventReservationService eventReservationService
 @inject IClientService clientService
 @inject IRoomService roomService
+@inject IRoomHelper _roomHelper 
 
-<EditForm Model="@EventReservationModel" OnValidSubmit="@Submit">
+<EditForm Model="@EventViewModel" OnValidSubmit="@Submit">
     <FluentValidationValidator/>
-    <HssClientAutoselect ClientList="@ClientList" ClientModel="@EventReservationModel.Client" OnClientAdd="@AddClient" ClientValueChanged="@SetClient"/>
-    <HssInputCustom Caption="Number of guests" @bind-Value="EventReservationModel.NumberOfGuests"/>
+    <HssClientAutoselect ClientList="@ClientList" ClientModel="@EventViewModel.Client" OnClientAdd="@AddClient" ClientValueChanged="@SetClient"/>
+    <HssInputCustom Caption="Number of guests" @bind-Value="EventViewModel.NumberOfGuests"/>
+    <HssTimespanPicker ReservationModel="@EventViewModel" OnDatesSelected="@FillAvailableRoomsList"/>
     
-    @*<HssTimespanPicker ReservationModel="@EventReservationModel" OnDatesSelected="@FillAvailableRoomsList"/>*@
-    
-    @*Dodać kontrolkę czy to jest  *@
     <div class="form-group">
-        <HSSRoomMultiSelector NotSelected="@RoomList" NotSelectedLabel="Available Rooms" Selected="@SelectedRoomList" SelectedLabel="Selected Rooms"/>
+        <HSSRoomMultiSelector NotSelected="@RoomList" NotSelectedLabel="Available Rooms" Selected="@EventViewModel.SelectedRooms" SelectedLabel="Selected Rooms" OnRoomsChanged="@CalculatePrice"/>
     </div>
     
     @*EventRoom*@
 
-    <HssInputCustom Caption="Price" @bind-Value="EventReservationModel.Price"/>
-    <HssInputCustom Caption="Discount" @bind-Value="EventReservationModel.Discount"/>
-    <MatStringField Label="Description" @bind-Value="EventReservationModel.Description" FullWidth="true"/>
+    <HssInputCustom Caption="Price" @bind-Value="Price"/>
+    <HssInputCustom Caption="Discount" @bind-Value="EventViewModel.Discount"/>
+    <MatStringField Label="Description" @bind-Value="EventViewModel.Description" FullWidth="true"/>
     <div class="col-12 row">
         <span class="col-2"></span>
-        <input type="submit" class="form-control col-2 btn btn-primary" value="Submit"/>
+        <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Success" Class="form-control col-2 btn btn-primary">Submit</MudButton>
     </div>
 </EditForm>
 
 @code {
     [Parameter]
-    public EventReservation EventReservationModel { get; set; }
+    public EventReservationViewModel EventViewModel { get; set; }
     
     private List<Room> SelectedRoomList { get; set; }
     private List<Room> RoomList { get; set; }
     private List<Client> ClientList { get; set; }
+    private double _price;
+    private int DaysCount { get; set; }
+    
+    private string Price
+    {
+        get
+        {
+            CalculatePrice();
+            return _price.ToString(CultureInfo.InvariantCulture);
+        }
+        set
+        {
+            CalculatePrice();
+            _price = double.Parse(value);
+        } 
+    }
 
     [Parameter]
-    public EventCallback<EventReservation> OnSubmit { get; set; }
+    public EventCallback<EventReservationViewModel> OnSubmit { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         RoomList = new List<Room>();
-        SelectedRoomList = new List<Room>();
         ClientList = clientService.GetAllClients();
         
-        EventReservationModel = new EventReservation
-        {
-            Client = new Client()
-        };
+        var arrival = EventViewModel.DateFrom;
+        var departure = EventViewModel.DateTo;
         
-        RoomList.Select(x => new MultiSelector(x.Id.ToString(), $"Room Number : {x.RoomIdentifier}")).ToList();
+        if (arrival != default && departure != default)
+        {
+            await FillAvailableRoomsList(new ReservationSpan(arrival, departure));
+        }
+        
+        GetPreselectedRooms(EventViewModel.SelectedRooms);
         await base.OnInitializedAsync();
     }
     
+    private void GetPreselectedRooms(ICollection<Room> selectedRooms)
+    {
+        if (selectedRooms == null || selectedRooms.Count <= 0)
+        {
+            return;
+        }
+            
+        foreach (var room in selectedRooms)
+        {
+            if (room != null)
+            {
+                SelectedRoomList.Add(room);
+            }
+        }
+
+        RoomList.RemoveAll(x => SelectedRoomList.Any(y => y.Equals(x)));
+    }
+
 
     private async Task Submit()
     {
-        EventReservationModel.RoomReservations.Clear();
-        SelectedRoomList.ForEach( x=> EventReservationModel.RoomReservations.Add(new RoomReservation
-        {
-            Reservation = EventReservationModel,
-            Room = x
-        }));
-
-        EventReservationModel.DateOfSubmission = DateTime.Today.ToLocalTime();
-        
-        await OnSubmit.InvokeAsync(EventReservationModel);
-
-        EventReservationModel = new EventReservation
-        {
-            Client = new Client()
-        };
+        EventViewModel.DateOfSubmission = DateTime.Today.ToLocalTime();
+        EventViewModel.Price = _price;
+        await OnSubmit.InvokeAsync(EventViewModel);
     }
     
     private async Task FillAvailableRoomsList(ReservationSpan reservationSpan)
     {
         RoomList = await roomService.GetAvailableRooms(reservationSpan);
+        RoomList = RoomList.Where(x => _roomHelper.IsFree(x, reservationSpan)).ToList();
+        DaysCount = reservationSpan.GetAmountOfDays();
+    }
+
+    private DateTime GetMinimalDepartureDate()
+    {
+        return EventViewModel.DateFrom != default ? EventViewModel.DateFrom : DateTime.Now.ToLocalTime().AddDays(-1);
     }
     
     private async Task AddClient(Client client)
     {
         await clientService.AddClientAsync(client);
-        ClientList.Add(client);
     }
     
     private void SetClient(Client client)
     {
-        EventReservationModel.Client = client;
+        EventViewModel.Client = client;
+    }
+    
+    private void CalculatePrice()
+    {
+        _price = 0d;
+
+        var selectedRooms = EventViewModel.SelectedRooms;
+        if (selectedRooms != null && selectedRooms.Count > 0)
+        {
+            _price += selectedRooms.Sum(room => room.Price);
+        }
+
+        var selectedAdditionalService = EventViewModel.SelectedAdditionalServices;
+        if (selectedAdditionalService != null && selectedAdditionalService.Count > 0)
+        {
+            _price += selectedAdditionalService.Sum(x => x.Price);
+        }
+
+        _price *= DaysCount;
     }
 }

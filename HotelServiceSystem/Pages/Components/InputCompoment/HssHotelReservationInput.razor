@@ -69,12 +69,6 @@
         } 
     }
 
-    private Client SelectedClient
-    {
-        get => ReservationViewModel.Client ?? (ReservationViewModel.Client = Client.Default);
-        set => ReservationViewModel.Client = value;
-    }
-
     protected override async Task OnInitializedAsync()
     {
         RoomList = new List<Room>();
@@ -135,7 +129,6 @@
     private async Task AddClient(Client client)
     {
         await clientService.AddClientAsync(client);
-        ClientList.Add(client);
     }
 
     private void SetClient(Client client)
@@ -143,20 +136,11 @@
         ReservationViewModel.Client = client;
     }
 
-    private async Task DisableClientAdd(Client client)
-    {
-        client.IsActive = true;
-        await clientService.AddClientAsync(client);
-        ClientList.Add(client);
-        ReservationViewModel.Client = client;
-        EnableClientAdd = false;
-    }
-
     private DateTime GetMinimalDepartureDate()
     {
         return ReservationModel.DateFrom != default ? ReservationModel.DateFrom : DateTime.Now.ToLocalTime().AddDays(-1);
     }
-
+    
     private void CalculatePrice()
     {
         _price = 0d;
