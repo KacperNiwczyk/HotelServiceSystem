@@ -9,7 +9,7 @@ namespace HotelServiceSystem.Interfaces.Services
 	public interface IHotelReservationService
 	{
 		List<HotelReservation> GetAllHotelReservations(Func<HotelReservation, bool> filter = null);
-		HotelReservation GetById(int id);
+		Task<HotelReservation> GetById(int id);
 		List<HotelReservation> GetAllWithRelations(
 			params Expression<Func<HotelReservation, object>>[] navigationProperties);
 		Task<HotelReservation> AddHotelReservationAsync(HotelReservation reservation);

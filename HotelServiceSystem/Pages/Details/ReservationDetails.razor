@@ -1,6 +1,8 @@
 ﻿@page "/hotelReservationDetails/{Id:int}"
+
 @using HotelServiceSystem.Entities
 @using HotelServiceSystem.Interfaces.Services
+
 @inject IHotelReservationService hotelReservationService
 @inject NavigationManager navigationManager
 
@@ -56,7 +58,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        ReservationModel = hotelReservationService.GetById(Id);
+        ReservationModel = await hotelReservationService.GetById(Id);
 
         if (ReservationModel.RoomReservations is {} roomReservations)
         {

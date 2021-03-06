@@ -40,9 +40,9 @@ namespace HotelServiceSystem.Core.Service
 				.ToList();
 		}
 
-		public HotelReservation GetById(int id)
+		public async Task<HotelReservation> GetById(int id)
 		{
-			return _hotelReservationRepository.GetAll().Include(x => x.AdditionalServiceReservations).FirstOrDefault(x => x.Id == id);
+			return await _hotelReservationRepository.GetAll().Include(x => x.AdditionalServiceReservations).FirstOrDefaultAsync(x => x.Id == id);
 		}
 
 		public List<HotelReservation> GetAllWithRelations(params Expression<Func<HotelReservation, object>>[] navigationProperties)
