@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using HotelServiceSystem.Entities;
 using HotelServiceSystem.Interfaces.Helpers;
 using Microsoft.EntityFrameworkCore;
@@ -14,11 +15,10 @@ namespace HotelServiceSystem.Core.Repositories
             _roomHelper = roomHelper;
         }
 
-        public List<Room> GetFreeRooms(ReservationSpan reservationSpan)
+        public async Task<List<Room>> GetFreeRooms(ReservationSpan reservationSpan)
         {
-            return HotelServiceDatabaseContext.Set<Room>()
-                .Include(x => x.RoomReservations).AsEnumerable()
-                .Where(x => _roomHelper.IsFree(x, reservationSpan)).ToList();
+            return await  HotelServiceDatabaseContext.Set<Room>()
+                .Include(x => x.RoomReservations).ToListAsync();
         }
     }
 }

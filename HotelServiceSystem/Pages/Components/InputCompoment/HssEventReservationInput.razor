@@ -75,9 +75,9 @@
         };
     }
     
-    private void FillAvailableRoomsList(ReservationSpan reservationSpan)
+    private async Task FillAvailableRoomsList(ReservationSpan reservationSpan)
     {
-        RoomList = roomService.GetAvailableRooms(reservationSpan);
+        RoomList = await roomService.GetAvailableRooms(reservationSpan);
     }
     
     private async Task AddClient(Client client)

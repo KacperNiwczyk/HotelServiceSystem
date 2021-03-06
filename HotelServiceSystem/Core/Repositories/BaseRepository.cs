@@ -26,6 +26,11 @@ namespace HotelServiceSystem.Core.Repositories
             return HotelServiceDatabaseContext.Set<TEntity>().IncludeAll().FirstOrDefault();
         }
 
+        public async Task<DbSet<TEntity>> GetSetAsync()
+        {
+            return await Task.FromResult(HotelServiceDatabaseContext.Set<TEntity>());
+        }
+
         public async Task<TEntity> AddAsync(TEntity entity)
         {
             if (entity == null)

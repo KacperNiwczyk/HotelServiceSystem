@@ -27,12 +27,22 @@
             {
                 foreach (var room in _reservedRooms)
                 {
-                    <MatListItem>@room.Id</MatListItem>
+                    <MatListItem>@room.RoomIdentifier</MatListItem>
                     <MatDivider Padded="@true"/>
                 }
             }
             <p>Additional Services</p>
-            <p>theres no additional services</p>
+            @if (_selectedAdditionalServices != null && _selectedAdditionalServices.Count > 0)
+            {
+                foreach (var addService in ReservationModel.SelectedAdditionalServices)
+                {
+                    <MatChip Label="@addService.Name" IsCheckable="@false"/>
+                }
+            }
+            else
+            {
+                <p>theres no additional services</p>
+            }
         </div>
     </div>
 }
@@ -53,12 +63,15 @@ else
     private bool PanelExpanded { get; set; }
     
     private List<Room> _reservedRooms = new List<Room>();
+    
+    private List<AdditionalService> _selectedAdditionalServices = new List<AdditionalService>();
 
     protected override async Task OnInitializedAsync()
     {
-        ReservationReference = hotelReservationService.GetById(Id);
+        ReservationReference = await hotelReservationService.GetById(Id);
         ReservationModel = HotelReservationViewModel.FromHotelReservation(ReservationReference);
         _reservedRooms = ReservationModel.SelectedRooms;
+        _selectedAdditionalServices = ReservationModel.SelectedAdditionalServices;
         await base.OnInitializedAsync();
     }
 

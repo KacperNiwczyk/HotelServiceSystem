@@ -4,10 +4,10 @@
 
 
 <div class="col-12 row">
-        <HssDatePicker Label="Arrival" OnValueChanged="@SetDateFrom" ValidationFor="@(() => ReservationModel.DateFrom)"/>
+        <HssDatePicker Label="Arrival" ChosenDate="@ReservationModel.DateFrom" OnValueChanged="@SetDateFrom" ValidationFor="@(() => ReservationModel.DateFrom)"/>
         @if (!IsOneDay)
         {
-            <HssDatePicker Label="Departure" OnValueChanged="@SetDateTo" ValidationFor="@(() => ReservationModel.DateTo)" MinimalDate="@GetMinimalDepartureDate()"/>  
+            <HssDatePicker Label="Departure" ChosenDate="@ReservationModel.DateTo" OnValueChanged="@SetDateTo" ValidationFor="@(() => ReservationModel.DateTo)" MinimalDate="@GetMinimalDepartureDate()"/>  
         }
     </div>
 
