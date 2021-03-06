@@ -39,6 +39,9 @@
     public HotelReservation ReservationModel { get; set; }
     
     [Parameter]
+    public bool IsUpdate { get; set; }
+    
+    [Parameter]
     public HotelReservationViewModel ReservationViewModel { get; set; }
     
     [Parameter]
@@ -91,8 +94,6 @@
         await base.OnInitializedAsync();
     }
 
-
-
     private void GetPreselectedRooms(ICollection<Room> selectedRooms)
     {
         if (selectedRooms == null || selectedRooms.Count <= 0)
@@ -114,9 +115,14 @@
     private async Task Submit()
     {;
         ReservationViewModel.Price = _price;
-        SelectedRoomList = new List<Room>();
-        RoomList = new List<Room>();
-        _selectedAdditionalService = new List<AdditionalService>();
+        
+        if (!IsUpdate)
+        {
+            SelectedRoomList = new List<Room>();
+            RoomList = new List<Room>();
+            _selectedAdditionalService = new List<AdditionalService>();
+        }
+        
         await OnSubmit.InvokeAsync(ReservationViewModel);
     }
 
