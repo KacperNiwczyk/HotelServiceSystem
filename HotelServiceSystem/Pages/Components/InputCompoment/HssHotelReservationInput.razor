@@ -52,7 +52,7 @@
     private List<Room> SelectedRoomList { get; set; }
     private List<Client> ClientList { get; set; }
     private List<AdditionalService> _additionalServiceList = new List<AdditionalService>();
-    private List<AdditionalService> _selectedAdditionalService = new List<AdditionalService>();
+    private int NumberOfDays { get; set; }
     private double _price;
 
     private string Price
@@ -120,7 +120,6 @@
         {
             SelectedRoomList = new List<Room>();
             RoomList = new List<Room>();
-            _selectedAdditionalService = new List<AdditionalService>();
         }
         
         await OnSubmit.InvokeAsync(ReservationViewModel);
@@ -130,6 +129,7 @@
     {
         RoomList = await roomService.GetAvailableRooms(reservationSpan);
         RoomList = RoomList.Where(x => _roomHelper.IsFree(x, reservationSpan)).ToList();
+        NumberOfDays = reservationSpan.GetAmountOfDays();
     }
 
     private async Task AddClient(Client client)
@@ -167,9 +167,12 @@
             _price += selectedRooms.Sum(room => room.Price);
         }
 
-        if (_selectedAdditionalService != null && _selectedAdditionalService.Count > 0)
+        var selectedAdditionalService = ReservationViewModel.SelectedAdditionalServices;
+        if (selectedAdditionalService != null && selectedAdditionalService.Count > 0)
         {
-            _price += _selectedAdditionalService.Sum(x => x.Price);
+            _price += selectedAdditionalService.Sum(x => x.Price);
         }
+
+        _price *= NumberOfDays;
     }
 }

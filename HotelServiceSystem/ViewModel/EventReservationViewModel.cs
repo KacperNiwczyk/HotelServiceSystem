@@ -1,21 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using HotelServiceSystem.Entities;
 
 namespace HotelServiceSystem.ViewModel
 {
-	public class HotelReservationViewModel : ReservationViewModel
+	public class EventReservationViewModel : ReservationViewModel
 	{
-		public HotelReservationViewModel()
+		public string Description { get; set; }
+		
+		public EventReservationViewModel()
 		{
 			SelectedRooms = new List<Room>();
 			SelectedAdditionalServices= new List<AdditionalService>();
 		}
 
-		public HotelReservation ToHotelReservation()
+		public EventReservation ToEventReservation()
 		{
-			return new HotelReservation
+			return new EventReservation
 			{
 				Id = Id,
 				Client = Client,
@@ -26,11 +27,12 @@ namespace HotelServiceSystem.ViewModel
 				DateOfSubmission = DateOfSubmission,
 				Discount = Discount,
 				HasFinished = HasFinished,
+				Description = Description,
 				RoomReservations = ParseRoomReservations(),
 				AdditionalServiceReservations = ParseAdditionalServiceReservations()
 			};
 		}
-
+		
 		private ICollection<AdditionalServiceReservation> ParseAdditionalServiceReservations()
 		{
 			return SelectedAdditionalServices
@@ -42,9 +44,9 @@ namespace HotelServiceSystem.ViewModel
 			return SelectedRooms.Select(selectedRoom => new RoomReservation {Room = selectedRoom}).ToList();
 		}
 
-		public static HotelReservationViewModel FromHotelReservation(HotelReservation reservation)
+		public static EventReservationViewModel FromEventReservation(EventReservation reservation)
 		{
-			return new HotelReservationViewModel
+			return new EventReservationViewModel
 			{
 				Id = reservation.Id,
 				Client = reservation.Client,
@@ -55,6 +57,7 @@ namespace HotelServiceSystem.ViewModel
 				Price = reservation.Price,
 				Discount = reservation.Discount,
 				HasFinished = reservation.HasFinished,
+				Description = reservation.Description,
 				SelectedRooms = reservation.RoomReservations.Select(x => x.Room).ToList(),
 				SelectedAdditionalServices =
 					reservation.AdditionalServiceReservations.Select(x => x.AdditionalService).ToList()
