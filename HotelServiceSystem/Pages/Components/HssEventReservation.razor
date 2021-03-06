@@ -1,6 +1,7 @@
 ﻿@using HotelServiceSystem.Entities
 @using System.Text
 @using HotelServiceSystem.Interfaces.Services
+@using HotelServiceSystem.ViewModel
 @inject IEventReservationService eventReservationService
 @inject NavigationManager navigationManager
 
@@ -16,7 +17,7 @@
                         </MatExpansionPanelHeader>
                     </MatExpansionPanelSummary>
                     <MatExpansionPanelDetails>
-                        <HssEventReservationInput EventReservationModel="@SetNewEventReservation()" OnSubmit="@OnEventReservationAdd"/>
+                        <HssEventReservationInput EventViewModel="@SetNewEventReservation()" OnSubmit="@OnEventReservationAdd"/>
                     </MatExpansionPanelDetails>
                 </MatExpansionPanel>
             </MatAccordion>
@@ -80,9 +81,11 @@
         await base.OnInitializedAsync();
     }
 
-    private void OnEventReservationAdd(EventReservation eventReservation)
+    private async Task OnEventReservationAdd(EventReservationViewModel eventReservation)
     {
-        EventReservationList.Add(eventReservation);
+        var parsedModel = eventReservation.ToEventReservation();
+        await eventReservationService.AddEventAsync(parsedModel);
+        EventReservationList.Add(parsedModel);
     }
     
     private string GetReservedRoomsList(ICollection<RoomReservation> roomReservations)
@@ -116,12 +119,11 @@
         return client == null ? string.Empty : $"{client.FirstName} {client.LastName}";
     }
     
-    private EventReservation SetNewEventReservation()
+    private EventReservationViewModel SetNewEventReservation()
     {
-        return new EventReservation
+        return new EventReservationViewModel()
         {
-            AdditionalServiceReservations = new List<AdditionalServiceReservation>(),
-            RoomReservations = new List<RoomReservation>(),
+            NumberOfGuests = 1,
             Client = new Client()
             {
                 Id = 0

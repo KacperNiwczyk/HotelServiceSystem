@@ -49,7 +49,6 @@
     
     private bool EnableClientAdd { get; set; }
     private List<Room> RoomList { get; set; }
-    private List<Room> SelectedRoomList { get; set; }
     private List<Client> ClientList { get; set; }
     private List<AdditionalService> _additionalServiceList = new List<AdditionalService>();
     private int NumberOfDays { get; set; }
@@ -72,7 +71,6 @@
     protected override async Task OnInitializedAsync()
     {
         RoomList = new List<Room>();
-        SelectedRoomList = new List<Room>();
         ClientList = clientService.GetAllClients();
         _additionalServiceList = additionalServiceService.GetAllAdditionalServices(x => x.ServiceType == ServiceType.Reservation);
         
@@ -94,25 +92,17 @@
         {
             return;
         }
-            
-        foreach (var room in selectedRooms)
-        {
-            if (room != null)
-            {
-                SelectedRoomList.Add(room);
-            }
-        }
-
-        RoomList.RemoveAll(x => SelectedRoomList.Any(y => y.Equals(x)));
+        
+        RoomList.RemoveAll(x => selectedRooms.Any(y => y.Equals(x)));
     }
     
     private async Task Submit()
     {;
         ReservationViewModel.Price = _price;
+        ReservationViewModel.DateOfSubmission = DateTime.Today.ToLocalTime();
         
         if (!IsUpdate)
         {
-            SelectedRoomList = new List<Room>();
             RoomList = new List<Room>();
         }
         
