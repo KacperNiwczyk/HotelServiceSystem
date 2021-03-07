@@ -4,7 +4,44 @@
 @using HotelServiceSystem.ViewModel
 @inject IEventReservationService eventReservationService
 @inject NavigationManager navigationManager
-<HssEventReservationInput EventViewModel="@EventReservationModel" OnSubmit="@OnReservationEdit"/>
+@if (EventReservationModel != null)
+{
+    <MudExpansionPanel @bind-IsExpanded="@PanelExpanded" Text="Edit event reservation">
+        <HssEventReservationInput EventViewModel="@EventReservationModel" OnSubmit="OnReservationUpdate" IsUpdate="@true"/>
+    </MudExpansionPanel>
+    <div class="card">
+        <div class="card-body">
+            <p>Client : @EventReservationModel.Client.FirstName @EventReservationModel.Client.LastName</p>
+            <p>Price : @EventReservationModel.Price</p>
+            <p>Date from : @EventReservationModel.DateFrom Date to : @EventReservationModel.DateTo</p>
+            <p>Reserved rooms : </p>
+            @if (_reservedRooms.Any())
+            {
+                foreach (var room in _reservedRooms)
+                {
+                    <MatListItem>@room.RoomIdentifier</MatListItem>
+                    <MatDivider Padded="@true"/>
+                }
+            }
+            <p>Additional Services</p>
+            @if (_selectedAdditionalServices != null && _selectedAdditionalServices.Count > 0)
+            {
+                foreach (var addService in EventReservationModel.SelectedAdditionalServices)
+                {
+                    <MatChip Label="@addService.Name" IsCheckable="@false"/>
+                }
+            }
+            else
+            {
+                <p>theres no additional services</p>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <p>waiting</p>
+}
 
 @code {
     [Parameter]
@@ -12,15 +49,21 @@
     
     private EventReservationViewModel EventReservationModel { get; set; }
     private EventReservation EventReference { get; set; }
+    private List<Room> _reservedRooms = new List<Room>();
+    private List<AdditionalService> _selectedAdditionalServices = new List<AdditionalService>();
+    
+    private bool PanelExpanded { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         EventReference = eventReservationService.GetById(Id);
         EventReservationModel = EventReservationViewModel.FromEventReservation(EventReference);
+        _reservedRooms = EventReservationModel.SelectedRooms;
+        _selectedAdditionalServices = EventReservationModel.SelectedAdditionalServices;
         await base.OnInitializedAsync();
     }
 
-    private async Task OnReservationEdit(EventReservationViewModel eventReservation)
+    private async Task OnReservationUpdate(EventReservationViewModel eventReservation)
     {
         EventReference.UpdateFrom(eventReservation);
         await eventReservationService.UpdateEventAsync(EventReference);

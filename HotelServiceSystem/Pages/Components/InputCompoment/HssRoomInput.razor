@@ -11,9 +11,14 @@
     <HssInputCustom Caption="Room identifier" @bind-Value="ModelRoom.RoomIdentifier"/>
     <HssInputCustom Caption="Floor" @bind-Value="ModelRoom.Floor"/>
     <HssInputCustom Caption="Price" @bind-Value="ModelRoom.Price"/>
-    <div class="col-12 row">
-        <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Button" Color="Color.Primary" Style="margin-right: 10px" Size="Size.Large" StartIcon="@Icons.Material.Outlined.SingleBed" OnClick="@(() => AddBed(BedType.SingleBed))">X @BedCount(BedType.SingleBed)</MudButton>
-        <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Button" Color="Color.Primary" Size="Size.Large" StartIcon="@Icons.Material.Outlined.KingBed" OnClick="@(() => AddBed(BedType.DoubleBed))">X @BedCount(BedType.DoubleBed)</MudButton>
+    <div class="col-6 row">
+        <MudFab Color="Color.Primary" Style="margin-right: 10px" Size="Size.Large" Label="@SingleBedLabel" Icon="@Icons.Material.Outlined.SingleBed" OnClick="@(() => AddBed(BedType.SingleBed))"/>
+        <MudFab Color="Color.Error" Icon="@Icons.Material.Filled.Remove" Size="Size.Small" IconSize="Size.Medium" OnClick="@(() => RemoveBeds(BedType.SingleBed))" />
+    </div>
+    <br/>
+    <div class="col-6 row">
+        <MudFab Color="Color.Primary" Style="margin-right: 10px" Size="Size.Large" Label="@DoubleBedLabel" Icon="@Icons.Material.Outlined.KingBed" OnClick="@(() => AddBed(BedType.DoubleBed))"/>
+        <MudFab Color="Color.Error" Icon="@Icons.Material.Filled.Remove" Size="Size.Small" IconSize="Size.Medium" OnClick="@(() => RemoveBeds(BedType.DoubleBed))" />
     </div>
     <br/>
     <HssAdditionalServiceSelect AdditionalServiceList="@AdditionalServiceList" @bind-SelectedAdditionalServices="@_selectedAdditionalServices"/>
@@ -33,6 +38,10 @@
     [Parameter]
     public List<AdditionalService> AdditionalServiceList { get; set; }
 
+    private string DoubleBedLabel => $"x{BedCount(BedType.DoubleBed)}";
+
+    private string SingleBedLabel => $"x{BedCount(BedType.SingleBed)}";
+
     private List<AdditionalService> _selectedAdditionalServices = new List<AdditionalService>();
 
     protected override async Task OnInitializedAsync()
@@ -48,6 +57,17 @@
     private void AddBed(BedType bedType)
     {
         ModelRoom.Beds.Add(new Bed { BedType = bedType });
+    }
+
+    private void RemoveBeds(BedType bedType)
+    {
+        var beds = ModelRoom.Beds;
+        var bedToRemove = beds.FirstOrDefault(x => x.BedType == bedType);
+        
+        if (bedToRemove != null)
+        {
+            beds.Remove(bedToRemove);
+        }
     }
 
     private int BedCount(BedType bedType)

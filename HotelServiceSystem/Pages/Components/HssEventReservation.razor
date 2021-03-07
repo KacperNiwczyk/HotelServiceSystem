@@ -58,7 +58,7 @@
                             <td>@reservation.DateOfSubmission</td>
                             <td>@reservation.NumberOfGuests</td>
                             <td>@reservation.Description</td>
-                            <td><MatButton Type="Button" OnClick="@(() => EditReservation(reservation.Id))"></MatButton></td>
+                            <td><MatButton Type="Button" OnClick="@(() => ShowDetails(reservation.Id))">Details</MatButton></td>
                         </tr>
                     }
                 }
@@ -109,7 +109,7 @@
         return builder.ToString();
     }
 
-    private void EditReservation(int id)
+    private void ShowDetails(int id)
     {
         navigationManager.NavigateTo($"eventReservationDetails/{id}");
     }
