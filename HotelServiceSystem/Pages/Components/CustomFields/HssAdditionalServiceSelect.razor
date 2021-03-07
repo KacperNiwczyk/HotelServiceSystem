@@ -8,15 +8,15 @@
 
 <div class="card">
     <div class="card-body" style="display: flex">
-        <MatChipSet UseOrdinaryChipCheck="@true" Filter="@true" @bind-SelectedChips="@SelectedChips">
+        <MudChipSet MultiSelection="@true" Filter="@true" @bind-SelectedChips="@_selectedChips">
             @if (AdditionalServiceList != null)
             {
                 foreach (var additionalService in AdditionalServiceList)
                 {
-                    <MatChip Label="@additionalService.Name" IsCheckable="@true" Attributes="@(new Dictionary<string, object> {{IdAttribute, additionalService.Id}})"/>
+                    <MudChip Text="@additionalService.Name" UserAttributes="@(new Dictionary<string, object> {{IdAttribute, additionalService.Id}})"/>
                 }
             }
-        </MatChipSet>
+        </MudChipSet>
     </div>
 </div>
 
@@ -32,6 +32,16 @@
     public EventCallback<List<AdditionalService>> SelectedAdditionalServicesChanged { get; set; }
     
     private List<AdditionalService> _selectedAdditionalServices  = new List<AdditionalService>();
+
+    private MudChip[] SelectedChips
+    {
+        get => _selectedChips;
+        set
+        {
+            SelectedAdditionalServices = ParseChips(value);
+            _selectedChips = value;
+        }
+    }
     
     [Parameter]
     public List<AdditionalService> SelectedAdditionalServices
@@ -45,35 +55,24 @@
             SelectedAdditionalServicesChanged.InvokeAsync(value);
             _selectedAdditionalServices = value;
         }
-        
+    }
+    
+    private List<AdditionalService> ParseChips(IEnumerable<MudChip> newChips)
+    {
+        return newChips.Select(chip => AdditionalServiceList.FirstOrDefault(x => x.Name.Equals(chip.Text, StringComparison.OrdinalIgnoreCase))).ToList();
     }
 
     protected override async Task OnInitializedAsync()
     {
         if (SelectedAdditionalServices != null && SelectedAdditionalServices.Count > 0)
         {
-            var selectedChips = new List<MatChip>();
-            selectedChips.AddRange(SelectedAdditionalServices.Select(addService => new MatChip {Label = addService.Name}));
+            var selectedChips = new List<MudChip>();
+            selectedChips.AddRange(SelectedAdditionalServices.Select(addService => new MudChip {Text = addService.Name, IsSelected = true}));
             SelectedChips = selectedChips.ToArray();
         }
 
         await base.OnInitializedAsync();
     }
 
-
-
-    private MatChip[] SelectedChips
-    {
-        get => _selectedChips;
-        set
-        {
-            if (_selectedChips == value)
-                return;
-            
-            _selectedChips = value;
-            SelectedAdditionalServices = serviceHelper.GetSelectedAdditionalServices(_selectedChips, AdditionalServiceList);
-        }
-    }
-    
-    private MatChip[] _selectedChips = null;
+    private MudChip[] _selectedChips = null;
 }
