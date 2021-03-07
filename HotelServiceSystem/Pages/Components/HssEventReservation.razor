@@ -9,18 +9,9 @@
 <div class="col-12">
     <hr/>
         <div class="col-12">
-            <MatAccordion>
-                <MatExpansionPanel>
-                    <MatExpansionPanelSummary>
-                        <MatExpansionPanelHeader>
-                            Add Event Reservation
-                        </MatExpansionPanelHeader>
-                    </MatExpansionPanelSummary>
-                    <MatExpansionPanelDetails>
-                        <HssEventReservationInput EventViewModel="@SetNewEventReservation()" OnSubmit="@OnEventReservationAdd"/>
-                    </MatExpansionPanelDetails>
-                </MatExpansionPanel>
-            </MatAccordion>
+            <MudExpansionPanel Text="Add event reservation">
+                <HssEventReservationInput EventViewModel="@SetNewEventReservation()" OnSubmit="@OnEventReservationAdd"/>
+            </MudExpansionPanel>
         </div>
         <br/>
     <br/>

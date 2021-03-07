@@ -11,18 +11,9 @@
 <div class="col-12">
     <hr/>
     <div class="col-12">
-        <MatAccordion>
-            <MatExpansionPanel>
-                <MatExpansionPanelSummary>
-                    <MatExpansionPanelHeader>
-                        Add Hotel Reservation
-                    </MatExpansionPanelHeader>
-                </MatExpansionPanelSummary>
-                <MatExpansionPanelDetails>
-                    <HssHotelReservationInput ReservationViewModel="@SetNewHotelReservation()"  OnSubmit="@OnReservationAdd"/>
-                </MatExpansionPanelDetails>
-            </MatExpansionPanel>
-        </MatAccordion>
+        <MudExpansionPanel Text="Add Hotel reservation">
+            <HssHotelReservationInput ReservationViewModel="@SetNewHotelReservation()"  OnSubmit="@OnReservationAdd"/>
+        </MudExpansionPanel>
     </div>
     <br/>
     <div class="col-10">
