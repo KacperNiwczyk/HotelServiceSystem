@@ -8,7 +8,7 @@
 
 <div class="card">
     <div class="card-body" style="display: flex">
-        <MudChipSet MultiSelection="@true" Filter="@true" @bind-SelectedChips="@_selectedChips">
+        <MudChipSet MultiSelection="@true" UseOrdinaryCheck="@true" Filter="@true" @bind-SelectedChips="@SelectedChips">
             @if (AdditionalServiceList != null)
             {
                 foreach (var additionalService in AdditionalServiceList)
@@ -67,7 +67,7 @@
         if (SelectedAdditionalServices != null && SelectedAdditionalServices.Count > 0)
         {
             var selectedChips = new List<MudChip>();
-            selectedChips.AddRange(SelectedAdditionalServices.Select(addService => new MudChip {Text = addService.Name, IsSelected = true}));
+            selectedChips.AddRange(SelectedAdditionalServices.Select(addService => new MudChip {Text = addService.Name}));
             SelectedChips = selectedChips.ToArray();
         }
 

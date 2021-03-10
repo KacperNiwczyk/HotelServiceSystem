@@ -42,8 +42,8 @@ namespace HotelServiceSystem
             services.AddMudBlazorResizeListener();
             services.AddMudBlazorScrollListener();
             services.AddMudBlazorScrollManager();
-            services.AddMudBlazorDom();
-            
+            services.AddMudBlazorJsApi();
+
             services.AddScoped<AuthenticationStateProvider, HotelServiceAuthenticationStateProvider>();
             services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
             
