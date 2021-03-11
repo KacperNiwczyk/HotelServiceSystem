@@ -6,16 +6,17 @@
 
 @if (AdditionalServiceModel != null)
 {
-    <MatAccordion> 
-        <MatExpansionPanel Expanded="@PanelExpanded"> 
-            <MatExpansionPanelSummary> 
-                <MatExpansionPanelHeader>Edit room</MatExpansionPanelHeader> 
-            </MatExpansionPanelSummary> 
-            <MatExpansionPanelDetails> 
-                <HssAdditionalServiceInput AdditionalServiceModel="@AdditionalServiceModel" AvailableServiceTypes="@(new List<ServiceType>() {ServiceType.Reservation, ServiceType.Room})" OnSubmit="@OnAdditionalServiceEdit"/>
-            </MatExpansionPanelDetails> 
-        </MatExpansionPanel>
-    </MatAccordion>
+    <MudExpansionPanel HideIcon="@true" IsExpanded="PanelExpanded">
+        <TitleContent>
+            <div class="d-flex">
+                <MudIcon Icon="@Icons.Rounded.Edit" class="mr3"/>
+                <MudText> Edit additonal service</MudText>
+            </div>
+        </TitleContent>
+        <ChildContent>
+            <HssAdditionalServiceInput AdditionalServiceModel="AdditionalServiceModel" AvailableServiceTypes="_allowedServiceTypes" OnSubmit="OnAdditionalServiceEdit"/>
+        </ChildContent>
+    </MudExpansionPanel>
     <div class="card">
         <div class="card-body">
             <p>Service name : @AdditionalServiceModel.Name </p>
@@ -36,6 +37,8 @@ else
     private bool PanelExpanded { get; set; }
     
     private AdditionalService AdditionalServiceModel { get; set; }
+
+    private List<ServiceType> _allowedServiceTypes = new List<ServiceType> {ServiceType.Reservation, ServiceType.Room};
 
     protected override async Task OnInitializedAsync()
     {

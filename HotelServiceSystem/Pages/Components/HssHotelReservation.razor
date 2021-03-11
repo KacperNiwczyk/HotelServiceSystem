@@ -6,16 +6,18 @@
 @inject IRoomService roomService
 @inject NavigationManager navigationManager
 
-<br/>
-<h3>Reservations</h3>
 <div class="col-12">
-    <hr/>
-    <div class="col-12">
-        <MudExpansionPanel Text="Add Hotel reservation">
-            <HssHotelReservationInput ReservationViewModel="@SetNewHotelReservation()"  OnSubmit="@OnReservationAdd"/>
+        <MudExpansionPanel HideIcon="@true">
+            <TitleContent>
+                <div class="d-flex">
+                    <MudIcon Icon="@Icons.Rounded.Add" class="mr3"/>
+                    <MudText> Add reservation</MudText>
+                </div>
+            </TitleContent>
+            <ChildContent>
+                <HssHotelReservationInput ReservationViewModel="@SetNewHotelReservation()" OnSubmit="OnReservationAdd"/>
+            </ChildContent>
         </MudExpansionPanel>
-    </div>
-    <br/>
     <div class="col-10">
         <h3>Reservations</h3>
         <br/>

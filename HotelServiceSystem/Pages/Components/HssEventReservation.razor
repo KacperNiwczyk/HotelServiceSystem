@@ -5,16 +5,18 @@
 @inject IEventReservationService eventReservationService
 @inject NavigationManager navigationManager
 
-<h3>HssEventReservation</h3>
 <div class="col-12">
-    <hr/>
-        <div class="col-12">
-            <MudExpansionPanel Text="Add event reservation">
-                <HssEventReservationInput EventViewModel="@SetNewEventReservation()" OnSubmit="@OnEventReservationAdd"/>
-            </MudExpansionPanel>
-        </div>
-        <br/>
-    <br/>
+    <MudExpansionPanel HideIcon="@true">
+        <TitleContent>
+            <div class="d-flex">
+                <MudIcon Icon="@Icons.Rounded.Add" class="mr3"/>
+                <MudText> Add reservation</MudText>
+            </div>
+        </TitleContent>
+        <ChildContent>
+            <HssEventReservationInput EventViewModel="@SetNewEventReservation()" OnSubmit="OnEventReservationAdd"/>
+        </ChildContent>
+    </MudExpansionPanel>
     <div class="col-10">
         <h3>Reservations</h3>
         <br/>

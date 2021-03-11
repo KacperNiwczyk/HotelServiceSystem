@@ -36,9 +36,6 @@
 
 @code {
     [Parameter]
-    public HotelReservation ReservationModel { get; set; }
-    
-    [Parameter]
     public bool IsUpdate { get; set; }
     
     [Parameter]
@@ -128,7 +125,7 @@
 
     private DateTime GetMinimalDepartureDate()
     {
-        return ReservationModel.DateFrom != default ? ReservationModel.DateFrom : DateTime.Now.ToLocalTime().AddDays(-1);
+        return ReservationViewModel.DateFrom != default ? ReservationViewModel.DateFrom : DateTime.Now.ToLocalTime().AddDays(-1);
     }
     
     private void CalculatePrice()

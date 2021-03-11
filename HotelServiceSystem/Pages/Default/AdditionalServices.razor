@@ -7,19 +7,17 @@
 
 <h3>AdditionalServices</h3>
 <div class="col-12">
-        <hr/>
-        <MatAccordion>
-            <MatExpansionPanel>
-                <MatExpansionPanelSummary>
-                    <MatExpansionPanelHeader>
-                        Add addiotional service
-                    </MatExpansionPanelHeader>
-                </MatExpansionPanelSummary>
-                <MatExpansionPanelDetails>
-                    <HssAdditionalServiceInput AdditionalServiceModel="@(new AdditionalService())" OnSubmit="@OnAdditionalServiceAdd" AvailableServiceTypes="@_serviceTypes"/> 
-                </MatExpansionPanelDetails>
-            </MatExpansionPanel>
-        </MatAccordion>
+    <MudExpansionPanel HideIcon="@true">
+        <TitleContent>
+            <div class="d-flex">
+                <MudIcon Icon="@Icons.Rounded.Add" class="mr3"/>
+                <MudText> Add additonal service</MudText>
+            </div>
+        </TitleContent>
+        <ChildContent>
+            <HssAdditionalServiceInput AdditionalServiceModel="@(new AdditionalService())" AvailableServiceTypes="_serviceTypes" OnSubmit="OnAdditionalServiceAdd"/>
+        </ChildContent>
+    </MudExpansionPanel>
     <div class="col-10">
         <table class="table">
             <thead>

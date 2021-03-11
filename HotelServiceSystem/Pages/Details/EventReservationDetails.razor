@@ -6,8 +6,16 @@
 @inject NavigationManager navigationManager
 @if (EventReservationModel != null)
 {
-    <MudExpansionPanel @bind-IsExpanded="@PanelExpanded" Text="Edit event reservation">
-        <HssEventReservationInput EventViewModel="@EventReservationModel" OnSubmit="OnReservationUpdate" IsUpdate="@true"/>
+    <MudExpansionPanel IsExpanded="@PanelExpanded" HideIcon="@true">
+        <TitleContent>
+            <div class="d-flex">
+                <MudIcon Icon="@Icons.Rounded.Edit" class="mr3"/>
+                <MudText> Edit reservation</MudText>
+            </div>
+        </TitleContent>
+        <ChildContent>
+            <HssEventReservationInput EventViewModel="EventReservationModel" OnSubmit="OnReservationUpdate" IsUpdate="@true"/>
+        </ChildContent>
     </MudExpansionPanel>
     <div class="card">
         <div class="card-body">

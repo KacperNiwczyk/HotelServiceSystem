@@ -9,19 +9,19 @@
 @inject IRoomHelper roomHelper
 @inject IAdditionalServiceService additionalServiceService
 
-<h3>Rooms</h3>
 <div class="col-12">
     <hr/>
-     <MatAccordion> 
-         <MatExpansionPanel> 
-             <MatExpansionPanelSummary> 
-                 <MatExpansionPanelHeader>Add room</MatExpansionPanelHeader> 
-             </MatExpansionPanelSummary> 
-             <MatExpansionPanelDetails> 
-                 <HssRoomInput ModelRoom="@SetNewRoom()" AdditionalServiceList="@AdditionalServices" OnSubmit="@OnRoomAdded"/>
-             </MatExpansionPanelDetails> 
-         </MatExpansionPanel>
-     </MatAccordion>
+    <MudExpansionPanel HideIcon="@true">
+        <TitleContent>
+            <div class="d-flex">
+                <MudIcon Icon="@Icons.Rounded.Add" class="mr3"/>
+                <MudText>Add new room</MudText>
+            </div>
+        </TitleContent>
+        <ChildContent>
+            <HssRoomInput ModelRoom="@SetNewRoom()" AdditionalServiceList="@AdditionalServices" OnSubmit="@OnRoomAdded"/>
+        </ChildContent>
+    </MudExpansionPanel>
     <br/>
     <div class="col-10">
         <h3>Rooms</h3>
