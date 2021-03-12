@@ -1,13 +1,12 @@
 ﻿@page "/reservations"
-<MatTabGroup>
-    <MatTab Label="Hotel reservations">
+<MudTabs SliderColor="@Color.Dark" PanelClass="pa-6" Centered="@true">
+    <MudTabPanel Text="Hotel reservations">
         <HssHotelReservation/>
-    </MatTab>
-    <MatTab Label="Event reservation">
+    </MudTabPanel>
+    <MudTabPanel Text="Event reservations">
         <HssEventReservation/>
-    </MatTab>
-</MatTabGroup>
-
+    </MudTabPanel>
+</MudTabs>
 
 @code{
 
