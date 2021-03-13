@@ -37,6 +37,7 @@ namespace HotelServiceSystem
             services.AddMatBlazor();
             
             //MudBlazor
+            services.AddMudServices();
             services.AddMudBlazorDialog();
             services.AddMudBlazorSnackbar();
             services.AddMudBlazorResizeListener();

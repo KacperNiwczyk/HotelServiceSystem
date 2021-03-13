@@ -20,6 +20,7 @@
         .selectable-ul li:hover{
             background-color: #08c;
         }
+  
         
 .hss-table-header {
     background-color: #6C733D
@@ -30,3 +31,11 @@
         .hss-table-header span:hover{
             color: #9DA65D
         }
+        
+.hss-nav-bar {
+    background-color: #202426
+}
+
+.hss-nav-bar a{
+    color: #F2F2F2
+}

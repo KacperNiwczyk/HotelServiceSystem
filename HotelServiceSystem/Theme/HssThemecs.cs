@@ -8,13 +8,16 @@ namespace HotelServiceSystem.Theme
         {
             Palette = new Palette()
             {
-                Primary = Colors.Blue.Darken1,
-                Secondary = Colors.DeepPurple.Accent2,
-                Background = Colors.Grey.Lighten5,
-                AppbarBackground = Colors.Blue.Darken1,
+                Primary = "#6C733D",
+                Secondary = "#9DA65D",
+                Background = "#E91E63",
+                LinesDefault = "rgba(0,0,0, 0.12)",
+                LinesInputs = "#BDBDBD",
+                Divider = "#E0E0E0",
+                AppbarBackground = "#202426",
                 DrawerBackground = "#FFF",
                 DrawerText = "rgba(0,0,0, 0.7)",
-                Success = "#06d79c"
+                Success = "#06d79c",
             };
 
             LayoutProperties = new LayoutProperties()

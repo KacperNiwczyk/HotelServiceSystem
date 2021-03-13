@@ -8,43 +8,50 @@
 @inject IRoomHelper roomHelper
 @inject IAdditionalServiceService additionalServiceService
 
-<div class="col-12">
-    <hr/>
-    <MudExpansionPanel HideIcon="@true">
-        <TitleContent>
-            <div class="d-flex">
-                <MudIcon Icon="@Icons.Rounded.Add" class="mr3"/>
-                <MudText>Add new room</MudText>
-            </div>
-        </TitleContent>
-        <ChildContent>
-            <HssRoomInput ModelRoom="@SetNewRoom()" AdditionalServiceList="@AdditionalServices" OnSubmit="@OnRoomAdded"/>
-        </ChildContent>
-    </MudExpansionPanel>
-    <MudTable T="Room" Items="RoomList" Hover="@true" SelectedItemChanged="@(item => ShowDetails(item.Id))" >
-            <HeaderContent>
-                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room,object>(x => x.Id))">Id</MudTableSortLabel></MudTh>
-                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room,object>(x => x.RoomIdentifier))">Name</MudTableSortLabel></MudTh>
-                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room,object>(x => BedCount(x, BedType.SingleBed)))">Single Beds</MudTableSortLabel></MudTh>
-                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room,object>(x => BedCount(x, BedType.DoubleBed)))">Double beds</MudTableSortLabel></MudTh>
-                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room,object>(x => x.Floor))">Floor</MudTableSortLabel></MudTh>
-                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room,object>(x => x.Price))">Price</MudTableSortLabel></MudTh>
-                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room,object>(GetRoomStatusValue))">Status</MudTableSortLabel></MudTh>
-            </HeaderContent>
-            <RowTemplate>
-                <MudTd DataLabel="Id">@context.Id</MudTd>
-                <MudTd DataLabel="Name">@context.RoomIdentifier</MudTd>
-                <MudTd DataLabel="Single beds">@BedCount(context, BedType.SingleBed)</MudTd>
-                <MudTd DataLabel="Double beds">@BedCount(context, BedType.DoubleBed)</MudTd>
-                <MudTd DataLabel="Floor">@context.Floor</MudTd>
-                <MudTd DataLabel="Price">@context.Price</MudTd>
-                <MudTd DataLabel="Status"><HssRoomStatus RoomModel="@context"/></MudTd>
-            </RowTemplate>
-            <PagerContent>
-                <MudTablePager PageSizeOptions="@(new []{10, 25})"/>
-            </PagerContent>
-        </MudTable>
-</div>
+<MudGrid>
+        <MudItem xs="12">
+            <MudCard Elevation="25">
+                <MudExpansionPanel HideIcon="@true">
+                        <TitleContent>
+                            <div class="d-flex">
+                                <MudIcon Icon="@Icons.Rounded.Add" class="mr3"/>
+                                <MudText>Add new room</MudText>
+                            </div>
+                        </TitleContent>
+                        <ChildContent>
+                            <HssRoomInput ModelRoom="@SetNewRoom()" AdditionalServiceList="@AdditionalServices" OnSubmit="@OnRoomAdded"/>
+                        </ChildContent>
+                    </MudExpansionPanel>
+            </MudCard>
+        </MudItem>
+    <MudItem xs="12">
+        <MudCard Elevation="25">
+            <MudTable T="Room" Class="rounded" Items="RoomList" Hover="@true" SelectedItemChanged="@(item => ShowDetails(item.Id))">
+                    <HeaderContent>
+                        <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => x.Id))">Id</MudTableSortLabel></MudTh>
+                        <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => x.RoomIdentifier))">Name</MudTableSortLabel></MudTh>
+                        <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => BedCount(x, BedType.SingleBed)))">Single Beds</MudTableSortLabel></MudTh>
+                        <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => BedCount(x, BedType.DoubleBed)))">Double beds</MudTableSortLabel></MudTh>
+                        <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => x.Floor))">Floor</MudTableSortLabel></MudTh>
+                        <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => x.Price))">Price</MudTableSortLabel></MudTh>
+                        <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(GetRoomStatusValue))">Status</MudTableSortLabel></MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="Id">@context.Id</MudTd>
+                        <MudTd DataLabel="Name">@context.RoomIdentifier</MudTd>
+                        <MudTd DataLabel="Single beds">@BedCount(context, BedType.SingleBed)</MudTd>
+                        <MudTd DataLabel="Double beds">@BedCount(context, BedType.DoubleBed)</MudTd>
+                        <MudTd DataLabel="Floor">@context.Floor</MudTd>
+                        <MudTd DataLabel="Price">@context.Price</MudTd>
+                        <MudTd DataLabel="Status"><HssRoomStatus RoomModel="@context"/></MudTd>
+                    </RowTemplate>
+                    <PagerContent>
+                        <MudTablePager PageSizeOptions="@(new[] {10, 25})"/>
+                    </PagerContent>
+                </MudTable>
+        </MudCard>
+    </MudItem>
+</MudGrid>
 
 @code {
     private List<Room> RoomList { get; set; }
