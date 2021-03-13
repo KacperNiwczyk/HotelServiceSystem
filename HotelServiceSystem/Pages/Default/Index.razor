@@ -1,7 +1,22 @@
 ﻿@page "/"
+@using HotelServiceSystem.Interfaces.Services
+@using HotelServiceSystem.Entities
+@inject IRoomService RoomService
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
+<MudGrid>
+    <MudItem xs="6">
+        <HssRoomTable RoomList="@_rooms" Dense="@true"/>
+    </MudItem>
+</MudGrid>
 
 <SurveyPrompt Title="How is Blazor working for you?"/>
+
+@code{
+    private List<Room> _rooms = new List<Room>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _rooms = RoomService.GetAllRoomsAsync().Where(x => x.ShouldBeCleaned).Take(5).ToList();
+        await base.OnInitializedAsync();
+    }
+}

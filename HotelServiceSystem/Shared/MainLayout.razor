@@ -1,7 +1,8 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider Theme="@_themeManager.Theme" />
-<MudLayout>
+<MudThemeProvider Theme="_themeManager.Theme" />
+
+<MudLayout Style="background-color: #F5F5F5">
     <MudAppBar Elevation="4" Style="background-color:#8C8C88">
         <MudHidden Breakpoint="Breakpoint.SmAndDown">
             <MudIcon Icon="@Icons.Material.Outlined.Roofing" Size="Size.Large" />
@@ -53,6 +54,4 @@
         _themeManager.FontFamily = "Montserrat";
         _themeManager.DefaultBorderRadius = 3;
     }
-
-
 }

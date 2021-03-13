@@ -12,7 +12,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 using HotelServiceSystem.Interfaces.Services;
-using MatBlazor;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
@@ -34,16 +33,9 @@ namespace HotelServiceSystem
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddMatBlazor();
-            
+
             //MudBlazor
             services.AddMudServices();
-            services.AddMudBlazorDialog();
-            services.AddMudBlazorSnackbar();
-            services.AddMudBlazorResizeListener();
-            services.AddMudBlazorScrollListener();
-            services.AddMudBlazorScrollManager();
-            services.AddMudBlazorJsApi();
 
             services.AddScoped<AuthenticationStateProvider, HotelServiceAuthenticationStateProvider>();
             services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
@@ -63,7 +55,6 @@ namespace HotelServiceSystem
             
             services.AddTransient<IAdditionalServiceRepository, AdditionalServiceRepository>();
             services.AddTransient<IAdditionalServiceService, AdditionalServiceService>();
-            services.AddTransient<IAdditionalServiceHelper, AdditionalServiceHelper>();
 
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IUserService, UserService>();

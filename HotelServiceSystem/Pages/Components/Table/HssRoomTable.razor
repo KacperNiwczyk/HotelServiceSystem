@@ -1,0 +1,67 @@
+﻿@using HotelServiceSystem.Entities
+@using HotelServiceSystem.Core
+@inject NavigationManager navigationManager
+
+<MudCard Elevation="25">
+    <MudTable T="Room" Items="RoomList" Dense="@Dense" Hover="@true" SelectedItemChanged="@(item => ShowDetails(item.Id))">
+            <HeaderContent>
+                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => x.Id))">Id</MudTableSortLabel></MudTh>
+                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => x.RoomIdentifier))">Name</MudTableSortLabel></MudTh>
+                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => BedCount(x, BedType.SingleBed)))">Single Beds</MudTableSortLabel></MudTh>
+                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => BedCount(x, BedType.DoubleBed)))">Double beds</MudTableSortLabel></MudTh>
+                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => x.Floor))">Floor</MudTableSortLabel></MudTh>
+                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => x.Price))">Price</MudTableSortLabel></MudTh>
+                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(GetRoomStatusValue))">Status</MudTableSortLabel></MudTh>
+            </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Name">@context.RoomIdentifier</MudTd>
+            <MudTd DataLabel="Single beds">@BedCount(context, BedType.SingleBed)</MudTd>
+            <MudTd DataLabel="Double beds">@BedCount(context, BedType.DoubleBed)</MudTd>
+            <MudTd DataLabel="Floor">@context.Floor</MudTd>
+            <MudTd DataLabel="Price">@context.Price</MudTd>
+            <MudTd DataLabel="Status"><HssRoomStatus RoomModel="@context"/></MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="@(new[] {10, 25})"/>
+        </PagerContent>
+    </MudTable>
+</MudCard>
+
+@code {
+    [Parameter]
+    public List<Room> RoomList { get; set; }
+    
+    [Parameter]
+    public bool Dense { get; set; }
+    
+    private void ShowDetails(int id)
+    {
+        navigationManager.NavigateTo($"roomDetails/{id}");
+    }
+    
+    private int BedCount(Room room, BedType bedType)
+    {
+        return room.Beds.Count(x => x.BedType == bedType);
+    }
+    
+    private string GetRoomStatusValue(Room room)
+    {
+        if (!room.IsFreeNow)
+        {
+            return "Occupied";
+        }
+        
+        if(room.IsOutOfService)
+        {
+            return "Out of service";
+        }
+        
+        if(room.ShouldBeCleaned)
+        {
+            return "Needs cleaning";
+        }
+
+        return "Available";
+    }
+}

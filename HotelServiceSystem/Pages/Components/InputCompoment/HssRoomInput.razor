@@ -5,23 +5,29 @@
 @using HotelServiceSystem.Pages.Default
 @using System.Net
 
-@inject IAdditionalServiceHelper additionalServiceHelper
-
 <EditForm Model="@ModelRoom" OnValidSubmit="@Submit">
-    <HssInputCustom Caption="Room identifier" @bind-Value="ModelRoom.RoomIdentifier"/>
-    <HssInputCustom Caption="Floor" @bind-Value="ModelRoom.Floor"/>
-    <HssInputCustom Caption="Price" @bind-Value="ModelRoom.Price"/>
-    <div class="col-6 row">
-        <MudFab Color="Color.Primary" Style="margin-right: 10px" Size="Size.Large" Label="@SingleBedLabel" Icon="@Icons.Material.Outlined.SingleBed" OnClick="@(() => AddBed(BedType.SingleBed))"/>
-        <MudFab Color="Color.Error" Icon="@Icons.Material.Filled.Remove" Size="Size.Small" IconSize="Size.Medium" OnClick="@(() => RemoveBeds(BedType.SingleBed))" />
-    </div>
-    <br/>
-    <div class="col-6 row">
-        <MudFab Color="Color.Primary" Style="margin-right: 10px" Size="Size.Large" Label="@DoubleBedLabel" Icon="@Icons.Material.Outlined.KingBed" OnClick="@(() => AddBed(BedType.DoubleBed))"/>
-        <MudFab Color="Color.Error" Icon="@Icons.Material.Filled.Remove" Size="Size.Small" IconSize="Size.Medium" OnClick="@(() => RemoveBeds(BedType.DoubleBed))" />
-    </div>
-    <br/>
-    <HssAdditionalServiceSelect AdditionalServiceList="@AdditionalServiceList" @bind-SelectedAdditionalServices="@_selectedAdditionalServices"/>
+    <MudGrid>
+        <MudItem xs="12" sm="4">
+            <MudTextField Label="Room identifier" @bind-Value="ModelRoom.RoomIdentifier" Variant="Variant.Filled" Margin="Margin.Dense"/>
+        </MudItem>
+        <MudItem xs="12" sm="4">
+            <MudTextField Label="Floor" @bind-Value="ModelRoom.Floor" Variant="Variant.Filled" Margin="Margin.Dense"/>
+        </MudItem>
+        <MudItem xs="12" sm="4">
+            <MudTextField Label="Price" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" @bind-Value="ModelRoom.Floor" Variant="Variant.Filled" Margin="Margin.Dense"/>
+        </MudItem>
+        <MudItem xs="8" md="2">
+            <MudFab Color="Color.Dark" Size="Size.Large" Label="@SingleBedLabel" Icon="@Icons.Material.Outlined.SingleBed" OnClick="@(() => AddBed(BedType.SingleBed))"/>
+            <MudFab Color="Color.Error" Icon="@Icons.Material.Filled.Remove" Size="Size.Small" IconSize="Size.Medium" OnClick="@(() => RemoveBeds(BedType.SingleBed))"/>
+        </MudItem>
+        <MudItem xs="8" md="2">
+            <MudFab Color="Color.Dark" Size="Size.Large" Label="@DoubleBedLabel" Icon="@Icons.Material.Outlined.KingBed" OnClick="@(() => AddBed(BedType.DoubleBed))"/>
+            <MudFab Color="Color.Error" Icon="@Icons.Material.Filled.Remove" Size="Size.Small" IconSize="Size.Medium" OnClick="@(() => RemoveBeds(BedType.DoubleBed))"/>
+        </MudItem>
+        <MudItem xs="12">
+            <HssAdditionalServiceSelect AdditionalServiceList="@AdditionalServiceList" @bind-SelectedAdditionalServices="@_selectedAdditionalServices"/>
+        </MudItem>
+    </MudGrid>
     <div class="col-12 row">
         <span class="col-2"></span>
         <input type="submit" class="form-control col-2 btn btn-primary" value="Submit"/>
@@ -38,9 +44,9 @@
     [Parameter]
     public List<AdditionalService> AdditionalServiceList { get; set; }
 
-    private string DoubleBedLabel => $"x{BedCount(BedType.DoubleBed)}";
+    private string DoubleBedLabel => $"Double beds x{BedCount(BedType.DoubleBed)}";
 
-    private string SingleBedLabel => $"x{BedCount(BedType.SingleBed)}";
+    private string SingleBedLabel => $"Single beds x{BedCount(BedType.SingleBed)}";
 
     private List<AdditionalService> _selectedAdditionalServices = new List<AdditionalService>();
 

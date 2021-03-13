@@ -4,22 +4,24 @@
 @using System.Linq.Expressions
 @using HotelServiceSystem.Interfaces.Helpers
 
-@inject IAdditionalServiceHelper serviceHelper;
-
-<div class="card">
-    <div class="card-body" style="display: flex">
-        <MudChipSet MultiSelection="@true" UseOrdinaryCheck="@true" Filter="@true" @bind-SelectedChips="@SelectedChips">
-            @if (AdditionalServiceList != null)
-            {
-                foreach (var additionalService in AdditionalServiceList)
+<MudCard>
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText>Additional services</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+            <MudChipSet MultiSelection="@true" UseOrdinaryCheck="@true" Filter="@true" @bind-SelectedChips="@SelectedChips">
+                @if (AdditionalServiceList != null)
                 {
-                    <MudChip Text="@additionalService.Name" UserAttributes="@(new Dictionary<string, object> {{IdAttribute, additionalService.Id}})"/>
+                    foreach (var additionalService in AdditionalServiceList)
+                    {
+                        <MudChip Text="@additionalService.Name" UserAttributes="@(new Dictionary<string, object> {{IdAttribute, additionalService.Id}})"/>
+                    }
                 }
-            }
-        </MudChipSet>
-    </div>
-</div>
-
+            </MudChipSet>
+    </MudCardContent>
+</MudCard>
 
 @code {
         
