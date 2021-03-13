@@ -1,18 +1,48 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="sidebar">
-    <NavMenu/>
-</div>
+<MudThemeProvider Theme="_themeManager.Theme" />
 
-<div class="main">
-    <div class="top-row px-4">
-        <LoginLayout/>
-    </div>
-
-    <div class="content px-4">
-        @Body
-    </div>
+<MudLayout>
+    <MudAppBar Elevation="4">
+        <MudHidden Breakpoint="Breakpoint.SmAndDown">
+            <MudIcon Icon="@Icons.Material.Outlined.Roofing" Size="Size.Large" />
+        </MudHidden>
+        <MudHidden Breakpoint="Breakpoint.Xs">
+            <MudText Typo="Typo.h6" Class="ml-4">myHotel.io</MudText>
+        </MudHidden>
+        <MudHidden Breakpoint="Breakpoint.Xs" Invert="true">
+            <MudText Typo="Typo.subtitle2">myHotel.io</MudText>
+        </MudHidden>
+        <MudMenu Direction="Direction.Left" OffsetX="true" Dense="true" Class="mt-1 ml-4">
+            <LoginLayout/>
+        </MudMenu>
+    </MudAppBar>
+        <MudDrawer @bind-Open="@_drawerOpen" Elevation="25" ClipMode="_themeManager.DrawerClipMode">
+            <NavMenu/>
+        </MudDrawer>
+    <MudMainContent>
+        <MudHidden Breakpoint="Breakpoint.SmAndDown">
+        <MudToolBar DisableGutters="true">
+            <MudIconButton Icon="@Icons.Material.Outlined.Menu" Color="Color.Inherit" OnClick="@((e) => DrawerToggle())" Class="ml-3"/>
+        </MudToolBar>
+        </MudHidden>
+        <MudContainer MaxWidth="MaxWidth.False" Class="mt-4">
+            @Body
+        </MudContainer>
+    </MudMainContent>
     <MudScrollToTop>
-        <MudFab Color="Color.Tertiary" Icon="@Icons.Filled.ArrowCircleUp" />
+        <MudFab Color="Color.Tertiary" Icon="@Icons.Filled.ArrowCircleUp"/>
     </MudScrollToTop>
-</div>
+</MudLayout>
+
+@code{
+    private ThemeManagerTheme _themeManager = new ThemeManagerTheme();
+    
+    public bool _drawerOpen = true;
+    
+    private void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
+}

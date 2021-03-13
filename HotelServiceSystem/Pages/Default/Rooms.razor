@@ -3,7 +3,6 @@
 @using HotelServiceSystem.Entities
 @using HotelServiceSystem.Core
 @using HotelServiceSystem.Interfaces.Helpers
-
 @inject IRoomService roomService
 @inject NavigationManager navigationManager
 @inject IRoomHelper roomHelper
@@ -24,13 +23,13 @@
     </MudExpansionPanel>
     <MudTable T="Room" Items="RoomList" Hover="@true" SelectedItemChanged="@(item => ShowDetails(item.Id))" >
             <HeaderContent>
-                <MudTh Style="background-color: #2b2a29; color: white"><MudTableSortLabel SortBy="@(new Func<Room,object>(x => x.Id))">Id</MudTableSortLabel></MudTh>
-                <MudTh Style="background-color: #2b2a29; color: white"><MudTableSortLabel SortBy="@(new Func<Room,object>(x => x.RoomIdentifier))">Name</MudTableSortLabel></MudTh>
-                <MudTh Style="background-color: #2b2a29; color: white"><MudTableSortLabel SortBy="@(new Func<Room,object>(x => BedCount(x, BedType.SingleBed)))">Single Beds</MudTableSortLabel></MudTh>
-                <MudTh Style="background-color: #2b2a29; color: white"><MudTableSortLabel SortBy="@(new Func<Room,object>(x => BedCount(x, BedType.DoubleBed)))">Double beds</MudTableSortLabel></MudTh>
-                <MudTh Style="background-color: #2b2a29; color: white"><MudTableSortLabel SortBy="@(new Func<Room,object>(x => x.Floor))">Floor</MudTableSortLabel></MudTh>
-                <MudTh Style="background-color: #2b2a29; color: white"><MudTableSortLabel SortBy="@(new Func<Room,object>(x => x.Price))">Price</MudTableSortLabel></MudTh>
-                <MudTh Style="background-color: #2b2a29; color: white"><MudTableSortLabel SortBy="@(new Func<Room,object>(GetRoomStatusValue))">Status</MudTableSortLabel></MudTh>
+                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room,object>(x => x.Id))">Id</MudTableSortLabel></MudTh>
+                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room,object>(x => x.RoomIdentifier))">Name</MudTableSortLabel></MudTh>
+                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room,object>(x => BedCount(x, BedType.SingleBed)))">Single Beds</MudTableSortLabel></MudTh>
+                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room,object>(x => BedCount(x, BedType.DoubleBed)))">Double beds</MudTableSortLabel></MudTh>
+                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room,object>(x => x.Floor))">Floor</MudTableSortLabel></MudTh>
+                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room,object>(x => x.Price))">Price</MudTableSortLabel></MudTh>
+                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room,object>(GetRoomStatusValue))">Status</MudTableSortLabel></MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Id">@context.Id</MudTd>
