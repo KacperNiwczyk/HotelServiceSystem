@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace HotelServiceSystem.Core
 {
@@ -8,6 +9,8 @@ namespace HotelServiceSystem.Core
         IQueryable<T> GetAll();
 
         T GetById(int id);
+
+        Task<DbSet<T>> GetSetAsync();
         Task<T> AddAsync(T entity);
         Task<T> UpdateAsync(T entity);
         Task DeleteAsync(T entity);

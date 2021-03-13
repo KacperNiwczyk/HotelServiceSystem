@@ -1,29 +1,23 @@
 ﻿@using HotelServiceSystem.Entities
 @using HotelServiceSystem.Interfaces.Services
 @using System.Text
+@using HotelServiceSystem.ViewModel
 @inject IHotelReservationService hotelReservationService
 @inject IRoomService roomService
 @inject NavigationManager navigationManager
 
-<br/>
-<h3>Reservations</h3>
 <div class="col-12">
-    <hr/>
-    <div class="col-12">
-        <MatAccordion>
-            <MatExpansionPanel>
-                <MatExpansionPanelSummary>
-                    <MatExpansionPanelHeader>
-                        Add Hotel Reservation
-                    </MatExpansionPanelHeader>
-                </MatExpansionPanelSummary>
-                <MatExpansionPanelDetails>
-                    <HssHotelReservationInput ReservationModel="@SetNewHotelReservation()"  OnSubmit="@OnReservationAdd"/>
-                </MatExpansionPanelDetails>
-            </MatExpansionPanel>
-        </MatAccordion>
-    </div>
-    <br/>
+        <MudExpansionPanel HideIcon="@true">
+            <TitleContent>
+                <div class="d-flex">
+                    <MudIcon Icon="@Icons.Rounded.Add" class="mr3"/>
+                    <MudText> Add reservation</MudText>
+                </div>
+            </TitleContent>
+            <ChildContent>
+                <HssHotelReservationInput ReservationViewModel="@SetNewHotelReservation()" OnSubmit="OnReservationAdd"/>
+            </ChildContent>
+        </MudExpansionPanel>
     <div class="col-10">
         <h3>Reservations</h3>
         <br/>
@@ -100,10 +94,11 @@
         return builder.ToString();
     }
 
-    private async Task OnReservationAdd(HotelReservation hotelReservation)
+    private async Task OnReservationAdd(HotelReservationViewModel hotelReservation)
     {
-        await hotelReservationService.AddHotelReservationAsync(hotelReservation);
-        ReservationList.Add(hotelReservation);
+        var parsedReservation = hotelReservation.ToHotelReservation();
+        await hotelReservationService.AddHotelReservationAsync(parsedReservation);
+        ReservationList.Add(parsedReservation);
     }
 
     private string GetFirstNameLastName(Client client)
@@ -116,13 +111,11 @@
         navigationManager.NavigateTo($"HotelReservationDetails/{id}");
     }
 
-    private HotelReservation SetNewHotelReservation()
+    private HotelReservationViewModel SetNewHotelReservation()
     {
-        return new HotelReservation
+        return new HotelReservationViewModel
         {
-            AdditionalServiceReservations = new List<AdditionalServiceReservation>(),
             NumberOfGuests = 1,
-            RoomReservations = new List<RoomReservation>(),
             Client = new Client
             {
                 Id = 0

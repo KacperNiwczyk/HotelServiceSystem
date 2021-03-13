@@ -5,48 +5,35 @@
 @inject IAdditionalServiceService additionalServiceService
 @inject NavigationManager navigationManager
 
-<h3>AdditionalServices</h3>
 <div class="col-12">
-        <hr/>
-        <MatAccordion>
-            <MatExpansionPanel>
-                <MatExpansionPanelSummary>
-                    <MatExpansionPanelHeader>
-                        Add addiotional service
-                    </MatExpansionPanelHeader>
-                </MatExpansionPanelSummary>
-                <MatExpansionPanelDetails>
-                    <HssAdditionalServiceInput AdditionalServiceModel="@(new AdditionalService())" OnSubmit="@OnAdditionalServiceAdd" AvailableServiceTypes="@_serviceTypes"/> 
-                </MatExpansionPanelDetails>
-            </MatExpansionPanel>
-        </MatAccordion>
-    <div class="col-10">
-        <table class="table">
-            <thead>
-            <tr>
-                <th>Name</th>
-                <th>Price</th>
-            </tr>
-            </thead>
-            <tbody>
-            @if (AdditionalServiceList != null)
-            {
-                foreach (var additionalService in AdditionalServiceList)
-                {
-                    <tr>
-                        <td>@additionalService.Name</td>
-                        <td>@additionalService.Price</td>
-                        <td><MatButton Type="Button" OnClick="@(() => ShowDetails(additionalService.Id))">Details</MatButton></td>
-                    </tr>
-                }
-            }
-            else
-            {
-                <h3>..Loading</h3>
-            }
-            </tbody>
-        </table>
-    </div>
+    <MudExpansionPanel HideIcon="@true">
+        <TitleContent>
+            <div class="d-flex">
+                <MudIcon Icon="@Icons.Rounded.Add" class="mr3"/>
+                <MudText> Add additonal service</MudText>
+            </div>
+        </TitleContent>
+        <ChildContent>
+            <HssAdditionalServiceInput AdditionalServiceModel="@(new AdditionalService())" AvailableServiceTypes="_serviceTypes" OnSubmit="OnAdditionalServiceAdd"/>
+        </ChildContent>
+    </MudExpansionPanel>
+    <MudTable T="AdditionalService" Items="AdditionalServiceList" Hover="@true" SelectedItemChanged="@(item => ShowServiceDetails(item.Id))" >
+        <HeaderContent>
+            <MudTh Style="background-color: #2b2a29; color: white"><MudTableSortLabel SortBy="@(new Func<AdditionalService,object>(x => x.Id))">Id</MudTableSortLabel></MudTh>
+            <MudTh Style="background-color: #2b2a29; color: white"><MudTableSortLabel SortBy="@(new Func<AdditionalService,object>(x => x.Name))">Name</MudTableSortLabel></MudTh>
+            <MudTh Style="background-color: #2b2a29; color: white"><MudTableSortLabel SortBy="@(new Func<AdditionalService,object>(x => x.Price))">Price</MudTableSortLabel></MudTh>
+            <MudTh Style="background-color: #2b2a29; color: white"><MudTableSortLabel SortBy="@(new Func<AdditionalService,object>(x => x.ServiceType))">Type</MudTableSortLabel></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Price">@context.Price</MudTd>
+            <MudTd DataLabel="Type">@context.ServiceType</MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="@(new []{10, 25})"/>
+        </PagerContent>
+    </MudTable>
 </div>
 
 
@@ -67,7 +54,7 @@
         AdditionalServiceList.Add(additionalService);
     }
 
-    private void ShowDetails(int id)
+    private void ShowServiceDetails(int id)
     {
         navigationManager.NavigateTo($"additionalServiceDetails/{id}");
     }

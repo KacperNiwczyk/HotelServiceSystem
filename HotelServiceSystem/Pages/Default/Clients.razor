@@ -3,22 +3,19 @@
 @using HotelServiceSystem.Interfaces.Services
 @inject IClientService clientService
 @inject NavigationManager navigationManager
-<h3>Clients</h3>
 
 <div class="col-12">
-    <hr/>
-    <MatAccordion>
-        <MatExpansionPanel>
-            <MatExpansionPanelSummary>
-                <MatExpansionPanelHeader>
-                    Add Client
-                </MatExpansionPanelHeader>
-            </MatExpansionPanelSummary>
-            <MatExpansionPanelDetails>
-                <HssClientsInput ClientModel="@(new Client())" OnSubmit="@OnClientAdd" />
-            </MatExpansionPanelDetails>
-        </MatExpansionPanel>
-    </MatAccordion>
+    <MudExpansionPanel HideIcon="@true">
+        <TitleContent>
+            <div class="d-flex">
+                <MudIcon Icon="@Icons.Rounded.Add" class="mr3"/>
+                <MudText> Add Client</MudText>
+            </div>
+        </TitleContent>
+        <ChildContent>
+            <HssClientsInput ClientModel="@(new Client())" OnSubmit="OnClientAdd"/>
+        </ChildContent>
+    </MudExpansionPanel>
     <div class="col-10">
         <h3>Clients</h3>
         <table class="table">

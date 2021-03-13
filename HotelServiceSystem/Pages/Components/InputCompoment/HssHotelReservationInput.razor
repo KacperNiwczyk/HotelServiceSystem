@@ -5,27 +5,29 @@
 @using System.Globalization
 @using HotelServiceSystem.Core.Validations
 @using HotelServiceSystem.Interfaces.Helpers
+@using HotelServiceSystem.ViewModel
 @inject IHotelReservationService hotelReservationService
 @inject IClientService clientService
 @inject IRoomService roomService
+@inject IRoomHelper _roomHelper
 @inject IAdditionalServiceService additionalServiceService
 @inject IAdditionalServiceHelper additionalServiceHelper
 @inject IServiceProvider _serviceProvider;
 
-<EditForm Model="@ReservationModel" OnValidSubmit="@Submit">
+<EditForm Model="@ReservationViewModel" OnValidSubmit="@Submit">
     <FluentValidationValidator />
-    <HssClientAutoselect ClientModel="@ReservationModel.Client" ClientList="@ClientList" OnClientAdd="@AddClient" ClientValueChanged="@SetClient"/>
+    <HssClientAutoselect ClientModel="@ReservationViewModel.Client" ClientList="@ClientList" OnClientAdd="@AddClient" ClientValueChanged="@SetClient"/>
     <br/>
-    <HssInputCustom Caption="Number of guests" @bind-Value="ReservationModel.NumberOfGuests" ValidationFor="@(() => ReservationModel.NumberOfGuests)"/>
-    <HssTimespanPicker ReservationModel="@ReservationModel" OnDatesSelected="@FillAvailableRoomsList"/>
+    <HssInputCustom Caption="Number of guests" @bind-Value="ReservationViewModel.NumberOfGuests" ValidationFor="@(() => ReservationViewModel.NumberOfGuests)"/>
+    <HssTimespanPicker ReservationModel="@ReservationViewModel" OnDatesSelected="@FillAvailableRoomsList"/>
     <br/>
     <div class="form-group">
-        <HSSRoomMultiSelector @bind-NotSelected="@RoomList" NotSelectedLabel="Available Rooms" @bind-Selected="@SelectedRoomList" SelectedLabel="Selected Rooms" @bind-RoomReservations="@ReservationModel.RoomReservations" OnRoomsChanged="@CalculatePrice"/>
+        <HSSRoomMultiSelector @bind-NotSelected="@RoomList" NotSelectedLabel="Available Rooms" @bind-Selected="@ReservationViewModel.SelectedRooms" SelectedLabel="Selected Rooms" OnRoomsChanged="@CalculatePrice"/>
     </div>
-    <ValidationMessage For="@(() => ReservationModel.RoomReservations)"/>
-    <HssAdditionalServiceSelect AdditionalServiceList="@_additionalServiceList" @bind-SelectedAdditionalServices="@_selectedAdditionalService"/>
+    <ValidationMessage For="@(() => ReservationViewModel.SelectedRooms)"/>
+    <HssAdditionalServiceSelect AdditionalServiceList="@_additionalServiceList" @bind-SelectedAdditionalServices="@ReservationViewModel.SelectedAdditionalServices"/>
     <HssInputCustom Caption="Price" @bind-Value="@Price" ReadOnly="@true"/>
-    <HssInputCustom Caption="Discount" @bind-Value="ReservationModel.Discount"/>
+    <HssInputCustom Caption="Discount" @bind-Value="ReservationViewModel.Discount"/>
     <div class="col-12 row">
         <span class="col-2"></span>
         <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Success" Class="form-control col-2 btn btn-primary">Submit</MudButton>
@@ -34,17 +36,19 @@
 
 @code {
     [Parameter]
-    public HotelReservation ReservationModel { get; set; }
+    public bool IsUpdate { get; set; }
     
     [Parameter]
-    public EventCallback<HotelReservation> OnSubmit { get; set; }
+    public HotelReservationViewModel ReservationViewModel { get; set; }
+    
+    [Parameter]
+    public EventCallback<HotelReservationViewModel> OnSubmit { get; set; }
     
     private bool EnableClientAdd { get; set; }
     private List<Room> RoomList { get; set; }
-    private List<Room> SelectedRoomList { get; set; }
     private List<Client> ClientList { get; set; }
     private List<AdditionalService> _additionalServiceList = new List<AdditionalService>();
-    private List<AdditionalService> _selectedAdditionalService = new List<AdditionalService>();
+    private int NumberOfDays { get; set; }
     private double _price;
 
     private string Price
@@ -61,131 +65,85 @@
         } 
     }
 
-    private Client SelectedClient
-    {
-        get => ReservationModel.Client ?? (ReservationModel.Client = Client.Default);
-        set => ReservationModel.Client = value;
-    }
-
     protected override async Task OnInitializedAsync()
     {
         RoomList = new List<Room>();
-        SelectedRoomList = new List<Room>();
-
         ClientList = clientService.GetAllClients();
         _additionalServiceList = additionalServiceService.GetAllAdditionalServices(x => x.ServiceType == ServiceType.Reservation);
         
-        GetPreselectedRooms(ReservationModel.RoomReservations);
-        GetPreselectedAdditionalServices(ReservationModel.AdditionalServiceReservations);
-
+        var arrival = ReservationViewModel.DateFrom;
+        var departure = ReservationViewModel.DateTo;
+        
+        if (arrival != default && departure != default)
+        {
+            await FillAvailableRoomsList(new ReservationSpan(arrival, departure));
+        }
+        
+        GetPreselectedRooms(ReservationViewModel.SelectedRooms);
         await base.OnInitializedAsync();
     }
 
-    private void GetPreselectedAdditionalServices(ICollection<AdditionalServiceReservation> additionalServiceReservations)
+    private void GetPreselectedRooms(ICollection<Room> selectedRooms)
     {
-        if (additionalServiceReservations != null && additionalServiceReservations.Count > 0)
-        {
-            _selectedAdditionalService = additionalServiceReservations.Select(x => x.AdditionalService).ToList();
-        }
-    }
-
-    private void GetPreselectedRooms(ICollection<RoomReservation> roomReservations)
-    {
-        if (roomReservations == null || roomReservations.Count <= 0)
+        if (selectedRooms == null || selectedRooms.Count <= 0)
         {
             return;
         }
-            
-        foreach (var roomReservation in roomReservations)
-        {
-            var room = roomReservation.Room;
-            if (room != null)
-            {
-                SelectedRoomList.Add(room);
-            }
-        }
-
-        RoomList.RemoveAll(x => SelectedRoomList.Any(y => y.Equals(x)));
+        
+        RoomList.RemoveAll(x => selectedRooms.Any(y => y.Equals(x)));
     }
     
     private async Task Submit()
-    {
-        ReservationModel.RoomReservations.Clear();
-        ReservationModel.DateOfSubmission = DateTime.Today.ToLocalTime();
-        ParseSelectedRooms();
-        ParseAdditionalServices();
-        ReservationModel.Price = _price;
-        SelectedRoomList = new List<Room>();
-        RoomList = new List<Room>();
-        _selectedAdditionalService = new List<AdditionalService>();
-        await OnSubmit.InvokeAsync(ReservationModel);
-    }
-
-    private void ParseAdditionalServices()
-    {
-        var additionalServiceReservations = new HashSet<AdditionalServiceReservation>();
-        foreach (var additionalService in _selectedAdditionalService)
+    {;
+        ReservationViewModel.Price = _price;
+        ReservationViewModel.DateOfSubmission = DateTime.Today.ToLocalTime();
+        
+        if (!IsUpdate)
         {
-            additionalServiceReservations.Add(new AdditionalServiceReservation
-            {
-                AdditionalService = additionalService,
-                Reservation = ReservationModel
-            });
+            RoomList = new List<Room>();
         }
-
-        ReservationModel.AdditionalServiceReservations = additionalServiceReservations;
+        
+        await OnSubmit.InvokeAsync(ReservationViewModel);
     }
 
-    private void ParseSelectedRooms()
+    private async Task FillAvailableRoomsList(ReservationSpan reservationSpan)
     {
-        SelectedRoomList.ForEach(x => ReservationModel.RoomReservations.Add(new RoomReservation
-        {
-            Reservation = ReservationModel,
-            Room = x
-        }));
-    }
-
-    private void FillAvailableRoomsList(ReservationSpan reservationSpan)
-    {
-        RoomList = roomService.GetAvailableRooms(reservationSpan);
+        RoomList = await roomService.GetAvailableRooms(reservationSpan);
+        RoomList = RoomList.Where(x => _roomHelper.IsFree(x, reservationSpan)).ToList();
+        NumberOfDays = reservationSpan.GetAmountOfDays();
     }
 
     private async Task AddClient(Client client)
     {
         await clientService.AddClientAsync(client);
-        ClientList.Add(client);
     }
 
     private void SetClient(Client client)
     {
-        ReservationModel.Client = client;
-    }
-
-    private async Task DisableClientAdd(Client client)
-    {
-        client.IsActive = true;
-        await clientService.AddClientAsync(client);
-        ClientList.Add(client);
-        ReservationModel.Client = client;
-        EnableClientAdd = false;
+        ReservationViewModel.Client = client;
     }
 
     private DateTime GetMinimalDepartureDate()
     {
-        return ReservationModel.DateFrom != default ? ReservationModel.DateFrom : DateTime.Now.ToLocalTime().AddDays(-1);
+        return ReservationViewModel.DateFrom != default ? ReservationViewModel.DateFrom : DateTime.Now.ToLocalTime().AddDays(-1);
     }
-
+    
     private void CalculatePrice()
     {
         _price = 0d;
-        if (SelectedRoomList != null && SelectedRoomList.Count > 0)
+
+        var selectedRooms = ReservationViewModel.SelectedRooms;
+        if (selectedRooms != null && selectedRooms.Count > 0)
         {
-            _price += SelectedRoomList.Sum(room => room.Price);
+            _price += selectedRooms.Sum(room => room.Price);
         }
 
-        if (_selectedAdditionalService != null && _selectedAdditionalService.Count > 0)
+        var selectedAdditionalService = ReservationViewModel.SelectedAdditionalServices;
+        if (selectedAdditionalService != null && selectedAdditionalService.Count > 0)
         {
-            _price += _selectedAdditionalService.Sum(x => x.Price);
+            _price += selectedAdditionalService.Sum(x => x.Price);
         }
+
+        _price *= NumberOfDays;
     }
 }

@@ -1,19 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using HotelServiceSystem.Core;
 using HotelServiceSystem.Core.BackgroundWorkers;
 using HotelServiceSystem.Core.Helpers;
 using HotelServiceSystem.Core.Repositories;
 using HotelServiceSystem.Core.Service;
-using HotelServiceSystem.Entities;
 using HotelServiceSystem.Interfaces.Helpers;
 using HotelServiceSystem.Interfaces.Repositories;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -42,16 +35,22 @@ namespace HotelServiceSystem
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddMatBlazor();
+            
+            //MudBlazor
             services.AddMudBlazorDialog();
             services.AddMudBlazorSnackbar();
             services.AddMudBlazorResizeListener();
+            services.AddMudBlazorScrollListener();
+            services.AddMudBlazorScrollManager();
+            services.AddMudBlazorJsApi();
+
             services.AddScoped<AuthenticationStateProvider, HotelServiceAuthenticationStateProvider>();
             services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
             
             services.AddTransient<IRoomRepository, RoomRepository>();
             services.AddTransient<IRoomService, RoomService>();
             services.AddTransient<IRoomHelper, RoomHelper>();
-            
+
             services.AddTransient<IClientRepository, ClientRepository>();
             services.AddTransient<IClientService, ClientService>();
             
@@ -73,7 +72,8 @@ namespace HotelServiceSystem
             
             services.AddDbContext<HotelServiceDatabaseContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), 
+                    o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
             });
         }
 

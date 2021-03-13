@@ -6,16 +6,17 @@
 
 @if (UserModel != null)
 {
-    <MatAccordion> 
-        <MatExpansionPanel Expanded="@PanelExpanded"> 
-            <MatExpansionPanelSummary> 
-                <MatExpansionPanelHeader>Edit room</MatExpansionPanelHeader> 
-            </MatExpansionPanelSummary> 
-            <MatExpansionPanelDetails> 
-                <HssUserInput UserModel="@UserModel" OnSubmit="@OnUserEdit"></HssUserInput>
-            </MatExpansionPanelDetails> 
-        </MatExpansionPanel>
-    </MatAccordion>
+    <MudExpansionPanel HideIcon="@true" IsExpanded="PanelExpanded">
+        <TitleContent>
+            <div class="d-flex">
+                <MudIcon Icon="@Icons.Rounded.Edit" class="mr3"/>
+                <MudText> Edit user</MudText>
+            </div>
+        </TitleContent>
+        <ChildContent>
+            <HssUserInput UserModel="UserModel" OnSubmit="OnUserEdit"/>
+        </ChildContent>
+    </MudExpansionPanel>
     <div class="card">
         <div class="card-body">
             <p>User name : @UserModel.UserName</p>

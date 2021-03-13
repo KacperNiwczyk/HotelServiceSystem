@@ -42,7 +42,13 @@ namespace HotelServiceSystem.Core.Service
 
 		public async Task<HotelReservation> GetById(int id)
 		{
-			return await _hotelReservationRepository.GetAll().Include(x => x.AdditionalServiceReservations).FirstOrDefaultAsync(x => x.Id == id);
+			return await _hotelReservationRepository.GetSetAsync().Result
+				.Include(x => x.AdditionalServiceReservations)
+				.ThenInclude(x => x.AdditionalService)
+				.Include(x => x.Client)
+				.Include(x => x.RoomReservations)
+				.ThenInclude(x => x.Room)
+				.FirstOrDefaultAsync(x => x.Id == id);
 		}
 
 		public List<HotelReservation> GetAllWithRelations(params Expression<Func<HotelReservation, object>>[] navigationProperties)

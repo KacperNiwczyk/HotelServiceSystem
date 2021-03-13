@@ -1,12 +1,13 @@
 ﻿@using HotelServiceSystem.Entities
 @using HotelServiceSystem.Core
+@using HotelServiceSystem.ViewModel
 
 
 <div class="col-12 row">
-        <HssDatePicker Label="Arrival" OnValueChanged="@SetDateFrom" ValidationFor="@(() => ReservationModel.DateFrom)"/>
+        <HssDatePicker Label="Arrival" ChosenDate="@ReservationModel.DateFrom" OnValueChanged="@SetDateFrom" ValidationFor="@(() => ReservationModel.DateFrom)"/>
         @if (!IsOneDay)
         {
-            <HssDatePicker Label="Departure" OnValueChanged="@SetDateTo" ValidationFor="@(() => ReservationModel.DateTo)" MinimalDate="@GetMinimalDepartureDate()"/>  
+            <HssDatePicker Label="Departure" ChosenDate="@ReservationModel.DateTo" OnValueChanged="@SetDateTo" ValidationFor="@(() => ReservationModel.DateTo)" MinimalDate="@GetMinimalDepartureDate()"/>  
         }
     </div>
 
@@ -19,7 +20,7 @@
     public string DepartureDateLabel { get; set; } = "Departure";
     
     [Parameter]
-    public Reservation ReservationModel
+    public ReservationViewModel ReservationModel
     {
         get => _reservation;
         set
@@ -32,12 +33,12 @@
     public bool IsOneDay { get; set; } = false;
     
     [Parameter]
-    public EventCallback<Reservation> ReservationModelChanged { get; set; }
+    public EventCallback<ReservationViewModel> ReservationModelChanged { get; set; }
     
     [Parameter]
     public EventCallback<ReservationSpan> OnDatesSelected { get; set; }
     
-    private Reservation _reservation { get; set; }
+    private ReservationViewModel _reservation { get; set; }
 
     private void SetDateFrom(DateTime dateTime)
     {

@@ -1,28 +1,22 @@
 ﻿@using HotelServiceSystem.Entities
 @using System.Text
 @using HotelServiceSystem.Interfaces.Services
+@using HotelServiceSystem.ViewModel
 @inject IEventReservationService eventReservationService
 @inject NavigationManager navigationManager
 
-<h3>HssEventReservation</h3>
 <div class="col-12">
-    <hr/>
-        <div class="col-6">
-            <MatAccordion>
-                <MatExpansionPanel>
-                    <MatExpansionPanelSummary>
-                        <MatExpansionPanelHeader>
-                            Add Event Reservation
-                        </MatExpansionPanelHeader>
-                    </MatExpansionPanelSummary>
-                    <MatExpansionPanelDetails>
-                        <HssEventReservationInput EventReservationModel="@SetNewEventReservation()" OnSubmit="@OnEventReservationAdd"/>
-                    </MatExpansionPanelDetails>
-                </MatExpansionPanel>
-            </MatAccordion>
-        </div>
-        <br/>
-    <br/>
+    <MudExpansionPanel HideIcon="@true">
+        <TitleContent>
+            <div class="d-flex">
+                <MudIcon Icon="@Icons.Rounded.Add" class="mr3"/>
+                <MudText> Add reservation</MudText>
+            </div>
+        </TitleContent>
+        <ChildContent>
+            <HssEventReservationInput EventViewModel="@SetNewEventReservation()" OnSubmit="OnEventReservationAdd"/>
+        </ChildContent>
+    </MudExpansionPanel>
     <div class="col-10">
         <h3>Reservations</h3>
         <br/>
@@ -57,7 +51,7 @@
                             <td>@reservation.DateOfSubmission</td>
                             <td>@reservation.NumberOfGuests</td>
                             <td>@reservation.Description</td>
-                            <td><MatButton Type="Button" OnClick="@(() => EditReservation(reservation.Id))"></MatButton></td>
+                            <td><MatButton Type="Button" OnClick="@(() => ShowDetails(reservation.Id))">Details</MatButton></td>
                         </tr>
                     }
                 }
@@ -80,9 +74,11 @@
         await base.OnInitializedAsync();
     }
 
-    private void OnEventReservationAdd(EventReservation eventReservation)
+    private async Task OnEventReservationAdd(EventReservationViewModel eventReservation)
     {
-        EventReservationList.Add(eventReservation);
+        var parsedModel = eventReservation.ToEventReservation();
+        await eventReservationService.AddEventAsync(parsedModel);
+        EventReservationList.Add(parsedModel);
     }
     
     private string GetReservedRoomsList(ICollection<RoomReservation> roomReservations)
@@ -106,7 +102,7 @@
         return builder.ToString();
     }
 
-    private void EditReservation(int id)
+    private void ShowDetails(int id)
     {
         navigationManager.NavigateTo($"eventReservationDetails/{id}");
     }
@@ -116,12 +112,11 @@
         return client == null ? string.Empty : $"{client.FirstName} {client.LastName}";
     }
     
-    private EventReservation SetNewEventReservation()
+    private EventReservationViewModel SetNewEventReservation()
     {
-        return new EventReservation
+        return new EventReservationViewModel()
         {
-            AdditionalServiceReservations = new List<AdditionalServiceReservation>(),
-            RoomReservations = new List<RoomReservation>(),
+            NumberOfGuests = 1,
             Client = new Client()
             {
                 Id = 0

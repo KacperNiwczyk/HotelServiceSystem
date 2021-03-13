@@ -5,19 +5,17 @@
 @inject NavigationManager navigationManager
 
 <div class="col-12">
-        <hr/>
-        <MatAccordion>
-            <MatExpansionPanel>
-                <MatExpansionPanelSummary>
-                    <MatExpansionPanelHeader>
-                        Add user
-                    </MatExpansionPanelHeader>
-                </MatExpansionPanelSummary>
-                <MatExpansionPanelDetails>
-                    <HssUserInput UserModel="@(new User())" OnSubmit="@OnUserAdd" /> 
-                </MatExpansionPanelDetails>
-            </MatExpansionPanel>
-        </MatAccordion>
+    <MudExpansionPanel HideIcon="@true">
+        <TitleContent>
+            <div class="d-flex">
+                <MudIcon Icon="@Icons.Rounded.Add" class="mr3"/>
+                <MudText> Add user</MudText>
+            </div>
+        </TitleContent>
+        <ChildContent>
+            <HssUserInput UserModel="@(new User())" OnSubmit="OnUserAdd"/>
+        </ChildContent>
+    </MudExpansionPanel>
     <div class="col-10">
         <table class="table">
             <thead>
