@@ -5,66 +5,27 @@
 @using HotelServiceSystem.ViewModel
 @inject IHotelReservationService hotelReservationService
 @inject IRoomService roomService
-@inject NavigationManager navigationManager
 
-<div class="col-12">
-        <MudExpansionPanel HideIcon="@true">
-            <TitleContent>
-                <div class="d-flex">
-                    <MudIcon Icon="@Icons.Rounded.Add" class="mr3"/>
-                    <MudText> Add reservation</MudText>
-                </div>
-            </TitleContent>
-            <ChildContent>
-                <HssHotelReservationInput ReservationViewModel="@SetNewHotelReservation()" OnSubmit="OnReservationAdd"/>
-            </ChildContent>
-        </MudExpansionPanel>
-    <div class="col-10">
-        <h3>Reservations</h3>
-        <br/>
-        <table class="table">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Client</th>
-                <th>Room list</th>
-                <th>Date from</th>
-                <th>Date to</th>
-                <th>Price</th>
-                <th>Date of submission</th>
-                <th>Number of guests</th>
-            </tr>
-            </thead>
-            <tbody>
-            @if (ReservationList != null)
-            {
-                if (ReservationList.Count > 0)
-                {
-                    foreach (var reservation in ReservationList)
-                    {
-                        <tr>
-                            <td>@reservation.Id</td>
-                            <td>@GetFirstNameLastName(reservation.Client)</td>
-                            <td>@GetReservedRoomsList(reservation.RoomReservations)</td>
-                            <td>@reservation.DateFrom</td>
-                            <td>@reservation.DateTo</td>
-                            <td>@reservation.Price</td>
-                            <td>@reservation.DateOfSubmission</td>
-                            <td>@reservation.NumberOfGuests</td>
-                            @*<td><MatButton Type="Button" OnClick="@(() => ShowDetails(reservation.Id))">Details</MatButton></td>*@
-                        </tr>
-                    }
-                }
-            }
-            else
-            {
-                <h3>..Loading</h3>
-            }
-            </tbody>
-        </table>
-    </div>
-</div>
-
+<MudGrid>
+    <MudItem xs="12">
+        <MudCard Elevation="25">
+            <MudExpansionPanel HideIcon="@true">
+                <TitleContent>
+                    <div class="d-flex">
+                        <MudIcon Icon="@Icons.Rounded.Add" class="mr3"/>
+                        <MudText> Add reservation</MudText>
+                    </div>
+                </TitleContent>
+                <ChildContent>
+                    <HssHotelReservationInput ReservationViewModel="@SetNewHotelReservation()" OnSubmit="OnReservationAdd"/>
+                </ChildContent>
+            </MudExpansionPanel>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="12">
+        <HssHotelReservationTable HotelReservationList="@ReservationList" Dense="@false"/>
+    </MudItem>
+</MudGrid>
 @code {
     private List<HotelReservation> ReservationList { get; set; }
 
@@ -73,43 +34,12 @@
         ReservationList = hotelReservationService.GetAllHotelReservations();
         await base.OnInitializedAsync();
     }
-
-    private string GetReservedRoomsList(ICollection<RoomReservation> roomReservations)
-    {
-        var builder = new StringBuilder();
-        const string separator = " ";
-        for(var i = 0; i < roomReservations.Count; i++)
-        {
-            var roomReservation = roomReservations.ElementAt(i);
-
-            if (roomReservation.Room != null)
-            {
-               builder.Append(roomReservation.Room.RoomIdentifier);
-               if (i < roomReservations.Count - 1)
-               {
-                   builder.Append(separator);
-               }
-            }
-        }
-
-        return builder.ToString();
-    }
-
+    
     private async Task OnReservationAdd(HotelReservationViewModel hotelReservation)
     {
         var parsedReservation = hotelReservation.ToHotelReservation();
         await hotelReservationService.AddHotelReservationAsync(parsedReservation);
         ReservationList.Add(parsedReservation);
-    }
-
-    private string GetFirstNameLastName(Client client)
-    {
-        return client == null ? string.Empty : $"{client.FirstName} {client.LastName}";
-    }
-
-    private void ShowDetails(int id)
-    {
-        navigationManager.NavigateTo($"HotelReservationDetails/{id}");
     }
 
     private HotelReservationViewModel SetNewHotelReservation()

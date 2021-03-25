@@ -23,7 +23,7 @@
             <MudTd DataLabel="Status"><HssRoomStatus RoomModel="@context"/></MudTd>
         </RowTemplate>
         <PagerContent>
-            <MudTablePager PageSizeOptions="@(new[] {10, 25})"/>
+            <MudTablePager PageSizeOptions="@HssPagingSize.DefaultPageSize"/>
         </PagerContent>
     </MudTable>
 </MudCard>

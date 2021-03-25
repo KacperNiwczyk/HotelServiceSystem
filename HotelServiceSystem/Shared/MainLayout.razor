@@ -1,7 +1,6 @@
 ﻿@inherits LayoutComponentBase
 
 <MudThemeProvider Theme="_themeManager.Theme" />
-
 <MudLayout Style="background-color: #F5F5F5">
     <MudAppBar Elevation="4" Style="background-color:#8C8C88">
         <MudHidden Breakpoint="Breakpoint.SmAndDown">
@@ -17,16 +16,16 @@
             <LoginLayout/>
         </MudMenu>
     </MudAppBar>
-        <MudDrawer @bind-Open="@_drawerOpen" Elevation="25" ClipMode="_themeManager.DrawerClipMode" Style="background-color: #202426">
-            <NavMenu/>
-        </MudDrawer>
+    <MudDrawer @bind-Open="@_drawerOpen" Elevation="25" ClipMode="_themeManager.DrawerClipMode" Style="background-color: #202426">
+        <NavMenu/>
+    </MudDrawer>
     <MudMainContent>
         <MudHidden Breakpoint="Breakpoint.SmAndDown">
-        <MudToolBar DisableGutters="true">
-            <MudIconButton Icon="@Icons.Material.Outlined.Menu" Color="Color.Inherit" OnClick="@((e) => DrawerToggle())" Class="ml-3"/>
-        </MudToolBar>
+            <MudToolBar DisableGutters="true">
+                <MudIconButton Icon="@Icons.Material.Outlined.Menu" Color="Color.Inherit" OnClick="@((e) => DrawerToggle())" Class="ml-3"/>
+            </MudToolBar>
         </MudHidden>
-        <MudContainer MaxWidth="MaxWidth.False" Class="mt-4">
+        <MudContainer MaxWidth="MaxWidth.False" Class="mt-4" Style="height: 100vh">
             @Body
         </MudContainer>
     </MudMainContent>
@@ -34,7 +33,6 @@
         <MudFab Color="Color.Tertiary" Icon="@Icons.Filled.ArrowCircleUp"/>
     </MudScrollToTop>
 </MudLayout>
-
 @code{
     private ThemeManagerTheme _themeManager = new ThemeManagerTheme();
     

@@ -1,0 +1,55 @@
+﻿@using HotelServiceSystem.Entities
+@using HotelServiceSystem.Core
+@inject NavigationManager navigationManager
+
+<MudCard Elevation="25">
+    <MudTable T="HotelReservation" Items="HotelReservationList" Dense="@Dense" SelectedItemChanged="@(item => ShowDetails(item.Id))">
+        <HeaderContent>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<HotelReservation, object>(x => x.Id))">Id</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<HotelReservation, object>(x => GetClientValue(x.Client)))">Client</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<HotelReservation, object>(x => x.RoomReservations.Count))">Room List</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<HotelReservation, object>(x => x.NumberOfGuests))">Number of guests</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<HotelReservation, object>(x => x.DateFrom))">Arrival</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<HotelReservation, object>(x => x.DateTo))">Departure</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<HotelReservation, object>(x => x.Price))">Price</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<HotelReservation, object>(x => x.DateOfSubmission))">Date of submission</MudTableSortLabel></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Client">@GetClientValue(context.Client)</MudTd>
+            <MudTd DataLabel="Rooms">@GetRoomValues(context.RoomReservations)</MudTd>
+            <MudTd DataLabel="Number of guests">@context.NumberOfGuests</MudTd>
+            <MudTd DataLabel="Arrival">@context.DateFrom.ToString(DATE_FORMAT)</MudTd>
+            <MudTd DataLabel="Departure">@context.DateTo.ToString(DATE_FORMAT)</MudTd>
+            <MudTd DataLabel="Price">@context.Price</MudTd>
+            <MudTd DataLabel="Date of submission">@context.DateOfSubmission</MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="@HssPagingSize.DefaultPageSize"/>
+        </PagerContent>
+    </MudTable>
+</MudCard>
+
+@code {
+    
+    [Parameter]
+    public List<HotelReservation> HotelReservationList { get; set; }
+    
+    [Parameter]
+    public bool Dense { get; set; }
+    
+    private const string DATE_FORMAT = "dd/MM/yy";
+    
+    private void ShowDetails(int id)
+    {
+        navigationManager.NavigateTo($"hotelReservationDetails/{id}");
+    }
+
+    private static string GetClientValue(Client client) =>
+        $"{client.FirstName} {client.LastName}";
+
+    private static string GetRoomValues(ICollection<RoomReservation> roomReservation)
+    {
+        return string.Join(", ",roomReservation.Select(x => x.Room.RoomIdentifier));
+    }
+}
