@@ -3,23 +3,34 @@
 {
     if (!RoomModel.IsFreeNow)
     {
-        <p style="color: darkred">Occupied</p>
+        <div class="d-flex">
+            <MudIcon Icon="@Icons.Material.Rounded.AssignmentInd"/><MudText style="color: darkred">Occupied</MudText>
+        </div>
+        
     }
     else if(RoomModel.IsOutOfService)
     {
-        <p style="color: red">Out of service</p>
+        <div class="d-flex">
+            <MudIcon Icon="@Icons.Material.Rounded.ReportProblem"/><MudText style="color: red">Out of service</MudText>
+        </div>
     }
     else if(RoomModel.ShouldBeCleaned)
     {
-        <p style="color: tan">Needs cleaning</p>
+        <div class="d-flex">
+            <MudIcon Icon="@Icons.Material.Rounded.CleaningServices"/><MudText Style="color: tan">Cleaning</MudText>    
+        </div>
     }
     else
     {
-        <p style="color: green">Available</p>
+        <div class="d-flex">
+            <MudIcon Icon="@Icons.Material.Rounded.CheckCircle"/><MudText style="color: green">Available</MudText>    
+        </div>
     }
 }
 
 @code {
     [Parameter]
     public Room RoomModel { get; set; }
+    
+    
 }
