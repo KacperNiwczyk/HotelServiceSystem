@@ -1,5 +1,6 @@
 ﻿@using HotelServiceSystem.Entities
 @using HotelServiceSystem.Interfaces.Helpers
+@using HotelServiceSystem.Core.Helpers
 @inject IReservationHelper reservationHelper
 @inject NavigationManager navigationManager
 
@@ -21,8 +22,8 @@
             <MudTd DataLabel="Client">@GetClientValue(context.Client)</MudTd>
             <MudTd DataLabel="Rooms">@GetRoomValues(context.RoomReservations)</MudTd>
             <MudTd DataLabel="Number of guests">@context.NumberOfGuests</MudTd>
-            <MudTd DataLabel="Arrival">@context.DateFrom.ToString(DATE_FORMAT)</MudTd>
-            <MudTd DataLabel="Departure">@context.DateTo.ToString(DATE_FORMAT)</MudTd>
+            <MudTd DataLabel="Arrival">@context.DateFrom.ToString(Constants.DefaultDateFormat)</MudTd>
+            <MudTd DataLabel="Departure">@context.DateTo.ToString(Constants.DefaultDateFormat)</MudTd>
             <MudTd DataLabel="Price">@context.Price</MudTd>
             <MudTd DataLabel="Date of submission">@context.DateOfSubmission</MudTd>
             <MudTd DataLabel="Description">@context.Description</MudTd>
@@ -36,8 +37,6 @@
 @code {
     [Parameter]
     public List<EventReservation> EventReservationsList { get; set; }
-    
-    private const string DATE_FORMAT = "dd/MM/yy";
 
     private string GetClientValue(Client client) => reservationHelper.GetClientFirstNameLastName(client);
 

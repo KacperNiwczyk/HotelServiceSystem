@@ -4,50 +4,27 @@
 @inject IUserService userService
 @inject NavigationManager navigationManager
 
-<div class="col-12">
-    <MudExpansionPanel HideIcon="@true">
-        <TitleContent>
-            <div class="d-flex">
-                <MudIcon Icon="@Icons.Rounded.Add" class="mr3"/>
-                <MudText> Add user</MudText>
-            </div>
-        </TitleContent>
-        <ChildContent>
-            <HssUserInput UserModel="@(new User())" OnSubmit="OnUserAdd"/>
-        </ChildContent>
-    </MudExpansionPanel>
-    <div class="col-10">
-        <table class="table">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>User name</th>
-                <th>Role</th>
-                <th>Last login</th>
-            </tr>
-            </thead>
-            <tbody>
-            @if (UserList != null)
-            {
-                foreach (var user in UserList)
-                {
-                    <tr>
-                        <td>@user.Id</td>
-                        <td>@user.UserName</td>
-                        <td>@user.UserRole</td>
-                        <td>@user.LastLogin</td>
-                        @*<td><MatButton Type="Button" OnClick="@(() => ShowDetails(user.Id))">Detials</MatButton></td>*@
-                    </tr>
-                }
-            }
-            else
-            {
-                <h3>..Loading</h3>
-            }
-            </tbody>
-        </table>
-    </div>
-</div>
+<MudGrid>
+    <MudItem xs="12">
+        <MudCard Elevation="25">
+            <MudExpansionPanel HideIcon="@true">
+                <TitleContent>
+                    <div class="d-flex">
+                        <MudIcon Icon="@Icons.Rounded.Add" class="mr3"/>
+                        <MudText> Add user</MudText>
+                    </div>
+                </TitleContent>
+                <ChildContent>
+                    <HssUserInput UserModel="@(new User())" OnSubmit="OnUserAdd"/>
+                </ChildContent>
+            </MudExpansionPanel>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="12">
+        <HssUserTable UserList="@UserList"/>
+    </MudItem>
+</MudGrid>
+
 
 @code {
     private List<User> UserList { get; set; }

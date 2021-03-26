@@ -1,0 +1,42 @@
+﻿@using HotelServiceSystem.Entities
+@using HotelServiceSystem.Interfaces.Helpers
+@inject NavigationManager navigationManager
+@inject IReservationHelper reservationHelper
+
+<MudCard Elevation="25">
+    <MudTable T="Client" Items="ClientList" Hover="@true" SelectedItemChanged="@(item => ShowDetails(item.Id))" >
+        <HeaderContent>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Client, object>(x => x.Id))">Id</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Client, object>(GetClientValue))">Name</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Client, object>(x => x.CompanyName))">Company name</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Client, object>(x => x.Email))">Email</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Client, object>(x => x.PhoneNumber))">Phone</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Client, object>(x => x.TaxId))">TaxId</MudTableSortLabel></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Name">@GetClientValue(context)</MudTd>
+            <MudTd DataLabel="CompanyName">@context.CompanyName</MudTd>
+            <MudTd DataLabel="Email">@context.Email</MudTd>
+            <MudTd DataLabel="PhoneNumber">@context.PhoneNumber</MudTd>
+            <MudTd DataLabel="TaxId">@context.TaxId</MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="HssPagingSize.DefaultPageSize"/>
+        </PagerContent>
+    </MudTable>
+</MudCard>
+
+@code {
+    [Parameter]
+    public List<Client> ClientList { get; set; }
+
+    public string GetClientValue(Client client) => reservationHelper.GetClientFirstNameLastName(client);
+
+
+
+    private void ShowDetails(int id)
+    {
+        navigationManager.NavigateTo($"clientDetails/{id}");
+    }
+}

@@ -1,0 +1,35 @@
+﻿@using HotelServiceSystem.Entities
+@using HotelServiceSystem.Core.Helpers
+@inject NavigationManager navigationManager
+
+<MudCard Elevation="25">
+    <MudTable T="User" Items="UserList" Hover="@true" SelectedItemChanged="@(item => ShowDetails(item.Id))" >
+        <HeaderContent>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<User, object>(x => x.Id))">Id</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<User, object>(x => x.UserName))">Name</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<User, object>(x => x.UserRole))">Role</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<User, object>(x => x.DateOfRegistration))">Date of registration</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<User, object>(x => x.LastLogin))">Last login</MudTableSortLabel></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Name">@context.UserName</MudTd>
+            <MudTd DataLabel="Role">@context.UserRole</MudTd>
+            <MudTd DataLabel="DateOfRegistration">@context.DateOfRegistration.ToString(Constants.DefaultDateFormat)</MudTd>
+            <MudTd DataLabel="LastLogin">@context.LastLogin.ToString(Constants.DefaultDateTimeFormat)</MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="HssPagingSize.DefaultPageSize"/>
+        </PagerContent>
+    </MudTable>
+</MudCard>
+
+@code {
+    [Parameter]
+    public List<User> UserList { get; set; }
+    
+    private void ShowDetails(int id)
+    {
+        navigationManager.NavigateTo($"userDetails/{id}");
+    }
+}

@@ -4,56 +4,26 @@
 @inject IClientService clientService
 @inject NavigationManager navigationManager
 
-<div class="col-12">
-    <MudExpansionPanel HideIcon="@true">
-        <TitleContent>
-            <div class="d-flex">
-                <MudIcon Icon="@Icons.Rounded.Add" class="mr3"/>
-                <MudText> Add Client</MudText>
-            </div>
-        </TitleContent>
-        <ChildContent>
-            <HssClientsInput ClientModel="@(new Client())" OnSubmit="OnClientAdd"/>
-        </ChildContent>
-    </MudExpansionPanel>
-    <div class="col-10">
-        <h3>Clients</h3>
-        <table class="table">
-            <thead>
-            <tr>
-                <th>First mame</th>
-                <th>Last name</th>
-                <th>Company name</th>
-                <th>Email</th>
-                <th>Phone number</th>
-                <th>Tax Id</th>
-            </tr>
-            </thead>
-            <tbody>
-            @if (ClientList != null)
-            {
-                foreach (var client in ClientList)
-                {
-                    <tr>
-                        <td>@client.FirstName</td>
-                        <td>@client.LastName</td>
-                        <td>@client.CompanyName</td>
-                        <td>@client.Email</td>
-                        <td>@client.PhoneNumber</td>
-                        <td>@client.TaxId</td>
-                        @*<td><MatButton Type="Button" OnClick="@(() => ShowDetails(client.Id))">Details</MatButton></td>*@
-                    </tr>
-                }
-            }
-            else
-            {
-                <h3>..Loading</h3>
-            }
-            </tbody>
-        </table>
-    </div>
-</div>
-
+<MudGrid>
+    <MudItem xs="12">
+        <MudCard Elevation="25">
+            <MudExpansionPanel HideIcon="@true">
+                <TitleContent>
+                    <div class="d-flex">
+                        <MudIcon Icon="@Icons.Rounded.Add" class="mr3"/>
+                        <MudText> Add Client</MudText>
+                    </div>
+                </TitleContent>
+                <ChildContent>
+                    <HssClientsInput ClientModel="@(new Client())" OnSubmit="OnClientAdd"/>
+                </ChildContent>
+            </MudExpansionPanel>  
+        </MudCard>
+    </MudItem>
+    <MudItem xs="12">
+        <HssClientTable ClientList="@ClientList"/>
+    </MudItem>
+</MudGrid>
 
 @code {
     private List<Client> ClientList { get; set; }

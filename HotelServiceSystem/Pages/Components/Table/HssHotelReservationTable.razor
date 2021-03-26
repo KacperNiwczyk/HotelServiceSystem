@@ -22,8 +22,8 @@
             <MudTd DataLabel="Client">@GetClientValue(context.Client)</MudTd>
             <MudTd DataLabel="Rooms">@GetRoomValues(context.RoomReservations)</MudTd>
             <MudTd DataLabel="Number of guests">@context.NumberOfGuests</MudTd>
-            <MudTd DataLabel="Arrival">@context.DateFrom.ToString(DATE_FORMAT)</MudTd>
-            <MudTd DataLabel="Departure">@context.DateTo.ToString(DATE_FORMAT)</MudTd>
+            <MudTd DataLabel="Arrival">@context.DateFrom.ToString(Constants.DefaultDateFormat)</MudTd>
+            <MudTd DataLabel="Departure">@context.DateTo.ToString(Constants.DefaultDateFormat)</MudTd>
             <MudTd DataLabel="Price">@context.Price</MudTd>
             <MudTd DataLabel="Date of submission">@context.DateOfSubmission</MudTd>
         </RowTemplate>
@@ -40,9 +40,7 @@
     
     [Parameter]
     public bool Dense { get; set; }
-    
-    private const string DATE_FORMAT = "dd/MM/yy";
-    
+
     private void ShowDetails(int id)
     {
         navigationManager.NavigateTo($"hotelReservationDetails/{id}");
