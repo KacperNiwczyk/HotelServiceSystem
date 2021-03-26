@@ -1,0 +1,32 @@
+﻿@using HotelServiceSystem.Entities
+@inject NavigationManager navigationManager
+
+<MudCard Elevation="25">
+    <MudTable T="AdditionalService" Items="AdditionalServicesList" Hover="@true" SelectedItemChanged="@(item => ShowServiceDetails(item.Id))" >
+        <HeaderContent>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<AdditionalService,object>(x => x.Id))">Id</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<AdditionalService,object>(x => x.Name))">Name</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<AdditionalService,object>(x => x.Price))">Price</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<AdditionalService,object>(x => x.ServiceType))">Type</MudTableSortLabel></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Price">@context.Price</MudTd>
+            <MudTd DataLabel="Type">@context.ServiceType</MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="HssPagingSize.DefaultPageSize"/>
+        </PagerContent>
+    </MudTable>
+</MudCard>
+
+@code {
+    [Parameter]
+    public List<AdditionalService> AdditionalServicesList { get; set; }
+    
+    private void ShowServiceDetails(int id)
+    {
+        navigationManager.NavigateTo($"additionalServiceDetails/{id}");
+    }
+}

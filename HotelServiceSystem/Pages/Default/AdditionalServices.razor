@@ -5,36 +5,26 @@
 @inject IAdditionalServiceService additionalServiceService
 @inject NavigationManager navigationManager
 
-<div class="col-12">
-    <MudExpansionPanel HideIcon="@true">
-        <TitleContent>
-            <div class="d-flex">
-                <MudIcon Icon="@Icons.Rounded.Add" class="mr3"/>
-                <MudText> Add additonal service</MudText>
-            </div>
-        </TitleContent>
-        <ChildContent>
-            <HssAdditionalServiceInput AdditionalServiceModel="@(new AdditionalService())" AvailableServiceTypes="_serviceTypes" OnSubmit="OnAdditionalServiceAdd"/>
-        </ChildContent>
-    </MudExpansionPanel>
-    <MudTable T="AdditionalService" Items="AdditionalServiceList" Hover="@true" SelectedItemChanged="@(item => ShowServiceDetails(item.Id))" >
-        <HeaderContent>
-            <MudTh Style="background-color: #2b2a29; color: white"><MudTableSortLabel SortBy="@(new Func<AdditionalService,object>(x => x.Id))">Id</MudTableSortLabel></MudTh>
-            <MudTh Style="background-color: #2b2a29; color: white"><MudTableSortLabel SortBy="@(new Func<AdditionalService,object>(x => x.Name))">Name</MudTableSortLabel></MudTh>
-            <MudTh Style="background-color: #2b2a29; color: white"><MudTableSortLabel SortBy="@(new Func<AdditionalService,object>(x => x.Price))">Price</MudTableSortLabel></MudTh>
-            <MudTh Style="background-color: #2b2a29; color: white"><MudTableSortLabel SortBy="@(new Func<AdditionalService,object>(x => x.ServiceType))">Type</MudTableSortLabel></MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="Id">@context.Id</MudTd>
-            <MudTd DataLabel="Name">@context.Name</MudTd>
-            <MudTd DataLabel="Price">@context.Price</MudTd>
-            <MudTd DataLabel="Type">@context.ServiceType</MudTd>
-        </RowTemplate>
-        <PagerContent>
-            <MudTablePager PageSizeOptions="@(new []{10, 25})"/>
-        </PagerContent>
-    </MudTable>
-</div>
+<MudGrid>
+    <MudItem xs="12">
+        <MudCard Elevation="25">
+            <MudExpansionPanel HideIcon="@true">
+                <TitleContent>
+                    <div class="d-flex">
+                        <MudIcon Icon="@Icons.Rounded.Add" class="mr3"/>
+                        <MudText> Add additonal service</MudText>
+                    </div>
+                </TitleContent>
+                <ChildContent>
+                    <HssAdditionalServiceInput AdditionalServiceModel="@(new AdditionalService())" AvailableServiceTypes="_serviceTypes" OnSubmit="OnAdditionalServiceAdd"/>
+                </ChildContent>
+            </MudExpansionPanel>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="12">
+        <HssAdditionalServiceTable AdditionalServicesList="@AdditionalServiceList"/>
+    </MudItem>
+</MudGrid>
 
 
 @code {
@@ -52,10 +42,5 @@
     {
         await additionalServiceService.AddAdditionalServiceAsync(additionalService);
         AdditionalServiceList.Add(additionalService);
-    }
-
-    private void ShowServiceDetails(int id)
-    {
-        navigationManager.NavigateTo($"additionalServiceDetails/{id}");
     }
 }

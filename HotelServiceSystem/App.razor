@@ -1,4 +1,7 @@
-﻿<Router AppAssembly="@typeof(Program).Assembly">
+﻿<MudThemeProvider/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
+<Router AppAssembly="@typeof(Program).Assembly">
     <Found Context="routeData">
         <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
     </Found>
@@ -10,6 +13,3 @@
         </CascadingAuthenticationState>
     </NotFound>
 </Router>
-<MudThemeProvider/>
-<MudDialogProvider/>
-<MudSnackbarProvider/>

@@ -1,8 +1,9 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider Theme="_themeManager.Theme" />
-<MudLayout Style="background-color: #F5F5F5">
-    <MudAppBar Elevation="4" Style="background-color:#8C8C88">
+
+<MudThemeProvider Theme="@_theme"/>
+<MudLayout>
+    <MudAppBar Elevation="4" Style="background-color:#6b705c">
         <MudHidden Breakpoint="Breakpoint.SmAndDown">
             <MudIcon Icon="@Icons.Material.Outlined.Roofing" Size="Size.Large" />
         </MudHidden>
@@ -16,7 +17,7 @@
             <LoginLayout/>
         </MudMenu>
     </MudAppBar>
-    <MudDrawer @bind-Open="@_drawerOpen" Elevation="25" ClipMode="_themeManager.DrawerClipMode" Style="background-color: #202426">
+    <MudDrawer @bind-Open="@_drawerOpen" Elevation="25" ClipMode="@DrawerClipMode.Always" Style="background-color: #202426">
         <NavMenu/>
     </MudDrawer>
     <MudMainContent>
@@ -34,7 +35,7 @@
     </MudScrollToTop>
 </MudLayout>
 @code{
-    private ThemeManagerTheme _themeManager = new ThemeManagerTheme();
+    private MudTheme _theme = new HssTheme();
     
     public bool _drawerOpen = true;
     
@@ -45,11 +46,8 @@
 
     private string AppBarBackground = "#8C8C88";
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        _themeManager.Theme = new HssTheme();
-        _themeManager.DrawerClipMode = DrawerClipMode.Always;
-        _themeManager.FontFamily = "Montserrat";
-        _themeManager.DefaultBorderRadius = 3;
+        await base.OnInitializedAsync();
     }
 }

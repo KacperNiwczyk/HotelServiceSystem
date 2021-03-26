@@ -3,16 +3,16 @@
 @inject NavigationManager navigationManager
 
 <MudCard Elevation="25">
-    <MudTable T="Room" Items="RoomList" Dense="@Dense" Hover="@true" SelectedItemChanged="@(item => ShowDetails(item.Id))">
-            <HeaderContent>
-                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => x.Id))">Id</MudTableSortLabel></MudTh>
-                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => x.RoomIdentifier))">Name</MudTableSortLabel></MudTh>
-                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => BedCount(x, BedType.SingleBed)))">Single Beds</MudTableSortLabel></MudTh>
-                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => BedCount(x, BedType.DoubleBed)))">Double beds</MudTableSortLabel></MudTh>
-                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => x.Floor))">Floor</MudTableSortLabel></MudTh>
-                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => x.Price))">Price</MudTableSortLabel></MudTh>
-                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(GetRoomStatusValue))">Status</MudTableSortLabel></MudTh>
-            </HeaderContent>
+    <MudTable T="Room" Items="RoomList" Dense="@IsDashboard" Hover="@true" SelectedItemChanged="@(item => ShowDetails(item.Id))">
+        <HeaderContent>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => x.Id))">Id</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => x.RoomIdentifier))">Name</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => BedCount(x, BedType.SingleBed)))">Single Beds</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => BedCount(x, BedType.DoubleBed)))">Double beds</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => x.Floor))">Floor</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => x.Price))">Price</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(GetRoomStatusValue))">Status</MudTableSortLabel></MudTh>
+        </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
             <MudTd DataLabel="Name">@context.RoomIdentifier</MudTd>
@@ -33,7 +33,7 @@
     public List<Room> RoomList { get; set; }
     
     [Parameter]
-    public bool Dense { get; set; }
+    public bool IsDashboard { get; set; }
     
     private void ShowDetails(int id)
     {

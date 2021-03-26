@@ -1,9 +1,12 @@
 ﻿@using HotelServiceSystem.Entities
 @using HotelServiceSystem.Core
+@using HotelServiceSystem.Core.Helpers
+@using HotelServiceSystem.Interfaces.Helpers
 @inject NavigationManager navigationManager
+@inject IReservationHelper ReservationHelper
 
 <MudCard Elevation="25">
-    <MudTable T="HotelReservation" Items="HotelReservationList" Dense="@Dense" SelectedItemChanged="@(item => ShowDetails(item.Id))">
+    <MudTable T="HotelReservation" Items="HotelReservationList" Hover="@true" Dense="@Dense" SelectedItemChanged="@(item => ShowDetails(item.Id))">
         <HeaderContent>
             <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<HotelReservation, object>(x => x.Id))">Id</MudTableSortLabel></MudTh>
             <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<HotelReservation, object>(x => GetClientValue(x.Client)))">Client</MudTableSortLabel></MudTh>
@@ -45,11 +48,7 @@
         navigationManager.NavigateTo($"hotelReservationDetails/{id}");
     }
 
-    private static string GetClientValue(Client client) =>
-        $"{client.FirstName} {client.LastName}";
+    private string GetClientValue(Client client) => ReservationHelper.GetClientFirstNameLastName(client);
 
-    private static string GetRoomValues(ICollection<RoomReservation> roomReservation)
-    {
-        return string.Join(", ",roomReservation.Select(x => x.Room.RoomIdentifier));
-    }
+    private string GetRoomValues(ICollection<RoomReservation> roomReservation) => ReservationHelper.GetRoomValues(roomReservation);
 }

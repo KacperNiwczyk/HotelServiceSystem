@@ -52,6 +52,7 @@ namespace HotelServiceSystem
             
             services.AddTransient<IEventReservationRepository, EventReservationRepository>();
             services.AddTransient<IEventReservationService, EventReservationService>();
+            services.AddTransient<IReservationHelper, ReservationHelper>();
             
             services.AddTransient<IAdditionalServiceRepository, AdditionalServiceRepository>();
             services.AddTransient<IAdditionalServiceService, AdditionalServiceService>();

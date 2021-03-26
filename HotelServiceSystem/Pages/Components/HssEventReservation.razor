@@ -6,65 +6,28 @@
 @inject IEventReservationService eventReservationService
 @inject NavigationManager navigationManager
 
-<div class="col-12">
-    <MudExpansionPanel HideIcon="@true">
-        <TitleContent>
-            <div class="d-flex">
-                <MudIcon Icon="@Icons.Rounded.Add" class="mr3"/>
-                <MudText> Add reservation</MudText>
-            </div>
-        </TitleContent>
-        <ChildContent>
-            <HssEventReservationInput EventViewModel="@SetNewEventReservation()" OnSubmit="OnEventReservationAdd"/>
-        </ChildContent>
-    </MudExpansionPanel>
-    <div class="col-10">
-        <h3>Reservations</h3>
-        <br/>
-        <table class="table">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Client</th>
-                <th>Room list</th>
-                <th>Date from</th>
-                <th>Date to</th>
-                <th>Price</th>
-                <th>Date of submission</th>
-                <th>Number of guests</th>
-                <td>Description</td>
-            </tr>
-            </thead>
-            <tbody>
-            @if (EventReservationList != null)
-            {
-                if (EventReservationList.Count > 0)
-                {
-                    foreach (var reservation in EventReservationList)
-                    {
-                        <tr>
-                            <td>@reservation.Id</td>
-                            <td>@GetFirstNameLastName(reservation.Client)</td>
-                            <td>@GetReservedRoomsList(reservation.RoomReservations)</td> 
-                            <td>@reservation.DateFrom</td>
-                            <td>@reservation.DateTo</td>
-                            <td>@reservation.Price</td>
-                            <td>@reservation.DateOfSubmission</td>
-                            <td>@reservation.NumberOfGuests</td>
-                            <td>@reservation.Description</td>
-                            @*<td><MatButton Type="Button" OnClick="@(() => ShowDetails(reservation.Id))">Details</MatButton></td>*@
-                        </tr>
-                    }
-                }
-            }
-            else
-            {
-                <h3>..Loading</h3>
-            }
-            </tbody>
-        </table>
-    </div>
-</div>
+<MudGrid>
+    <MudItem xs="12">
+        <MudCard Elevation="25">
+            <MudExpansionPanel HideIcon="@true">
+                <TitleContent>
+                    <div class="d-flex">
+                        <MudIcon Icon="@Icons.Rounded.Add" class="mr3"/>
+                        <MudText> Add reservation</MudText>
+                    </div>
+                </TitleContent>
+                <ChildContent>
+                    <HssEventReservationInput EventViewModel="@SetNewEventReservation()" OnSubmit="OnEventReservationAdd"/>
+                </ChildContent>
+            </MudExpansionPanel>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="12">
+        <MudCard Elevation="25">
+            <HssEventReservationTable EventReservationsList="@EventReservationList"/>
+        </MudCard>
+    </MudItem>
+</MudGrid>
 
 @code {
     private List<EventReservation> EventReservationList { get; set; }
