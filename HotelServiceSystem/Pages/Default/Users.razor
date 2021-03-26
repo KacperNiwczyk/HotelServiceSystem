@@ -40,10 +40,4 @@
         await userService.AddUserAsync(user);
         UserList.Add(user);
     }
-
-    private void ShowDetails(int id)
-    {
-        navigationManager.NavigateTo($"userDetails/{id}");
-    }
-
 }

@@ -4,34 +4,48 @@
 @using HotelServiceSystem.Interfaces.Services
 @using HotelServiceSystem.Pages.Default
 @using System.Net
+@using HotelServiceSystem.Core.Validations
+@using FluentValidation
+@using Severity = MudBlazor.Severity
+@inject ISnackbar Snackbar
 
-<EditForm Model="@ModelRoom" OnValidSubmit="@Submit">
-    <MudGrid>
-        <MudItem xs="12" sm="4">
+<EditForm Model="@ModelRoom" OnValidSubmit="Submit">
+    <FluentValidationValidator/>
+    <MudGrid Justify="Justify.FlexStart">
+        <MudItem xs="12" sm="6">
             <MudTextField Label="Room identifier" @bind-Value="ModelRoom.RoomIdentifier" Variant="Variant.Filled" Margin="Margin.Dense"/>
+            <ValidationMessage For="@(() => ModelRoom.RoomIdentifier)"/>
         </MudItem>
-        <MudItem xs="12" sm="4">
-            <MudTextField Label="Floor" @bind-Value="ModelRoom.Floor" Variant="Variant.Filled" Margin="Margin.Dense"/>
+        <MudItem xs="12" sm="6">
+            <MudTextField Label="Price" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" @bind-Value="ModelRoom.Price" Variant="Variant.Filled" Margin="Margin.Dense"/>
+            <ValidationMessage For="@(() => ModelRoom.Price)"/>
         </MudItem>
-        <MudItem xs="12" sm="4">
-            <MudTextField Label="Price" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" @bind-Value="ModelRoom.Floor" Variant="Variant.Filled" Margin="Margin.Dense"/>
-        </MudItem>
-        <MudItem xs="8" md="2">
-            <MudFab Color="Color.Dark" Size="Size.Large" Label="@SingleBedLabel" Icon="@Icons.Material.Outlined.SingleBed" OnClick="@(() => AddBed(BedType.SingleBed))"/>
+        <MudItem xs="12" sm="2">
+            <MudFab Color="Color.Inherit" Size="Size.Large" Label="@SingleBedLabel" Icon="@Icons.Material.Outlined.SingleBed" OnClick="@(() => AddBed(BedType.SingleBed))"/>
             <MudFab Color="Color.Error" Icon="@Icons.Material.Filled.Remove" Size="Size.Small" IconSize="Size.Medium" OnClick="@(() => RemoveBeds(BedType.SingleBed))"/>
         </MudItem>
-        <MudItem xs="8" md="2">
-            <MudFab Color="Color.Dark" Size="Size.Large" Label="@DoubleBedLabel" Icon="@Icons.Material.Outlined.KingBed" OnClick="@(() => AddBed(BedType.DoubleBed))"/>
+        <MudItem xs="12" sm="2">
+            <MudFab Color="Color.Inherit" Size="Size.Large" Label="@DoubleBedLabel" Icon="@Icons.Material.Outlined.KingBed" OnClick="@(() => AddBed(BedType.DoubleBed))"/>
             <MudFab Color="Color.Error" Icon="@Icons.Material.Filled.Remove" Size="Size.Small" IconSize="Size.Medium" OnClick="@(() => RemoveBeds(BedType.DoubleBed))"/>
+            <ValidationMessage For="@(() => ModelRoom.Beds)"/>
+        </MudItem>
+        <MudItem xs="12" md="2">
+            <MudTextField Label="Floor" @bind-Value="ModelRoom.Floor" Variant="Variant.Filled" Margin="Margin.Dense"/>
+            <ValidationMessage For="@(() => ModelRoom.Floor)"/>
         </MudItem>
         <MudItem xs="12">
             <HssAdditionalServiceSelect AdditionalServiceList="@AdditionalServiceList" @bind-SelectedAdditionalServices="@_selectedAdditionalServices"/>
         </MudItem>
+        @if (HasReset)
+        {
+            <MudItem xs="6" sm="1">
+                <MudButton EndIcon="@Icons.Material.Rounded.Replay" Color="Color.Warning" Variant="Variant.Filled" OnClick="ResetValues" Size="Size.Large" ButtonType="ButtonType.Reset">Reset</MudButton>
+            </MudItem>
+        }
+        <MudItem xs="6" sm="1">
+            <MudButton EndIcon="@Icons.Material.Rounded.Check" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Large" ButtonType="ButtonType.Submit">Submit</MudButton>
+        </MudItem>
     </MudGrid>
-    <div class="col-12 row">
-        <span class="col-2"></span>
-        <input type="submit" class="form-control col-2 btn btn-primary" value="Submit"/>
-    </div>
 </EditForm>
 
 @code {
@@ -44,11 +58,16 @@
     [Parameter]
     public List<AdditionalService> AdditionalServiceList { get; set; }
 
+    [Parameter]
+    public bool HasReset { get; set; } = true;
+
     private string DoubleBedLabel => $"Double beds x{BedCount(BedType.DoubleBed)}";
 
     private string SingleBedLabel => $"Single beds x{BedCount(BedType.SingleBed)}";
 
     private List<AdditionalService> _selectedAdditionalServices = new List<AdditionalService>();
+    
+    private RoomValidator _validator = new RoomValidator();
 
     protected override async Task OnInitializedAsync()
     {
@@ -97,5 +116,12 @@
         _selectedAdditionalServices = new List<AdditionalService>();
         ModelRoom.AdditionalServiceRooms = additionalServiceRooms;
         await OnSubmit.InvokeAsync(ModelRoom);
+        Snackbar.Add($"New room {ModelRoom.RoomIdentifier} successfully added", Severity.Success);
+    }
+
+    private void ResetValues()
+    {
+        ModelRoom.Beds.Clear();
+        _selectedAdditionalServices.Clear();
     }
 }

@@ -18,6 +18,8 @@ namespace HotelServiceSystem.Theme
                 DrawerBackground = "#FFF",
                 DrawerText = "rgba(0,0,0, 0.7)",
                 Success = "#06d79c",
+                Error = "#ff5764",
+                Warning = "#eab25f"
             };
 
             LayoutProperties = new LayoutProperties()

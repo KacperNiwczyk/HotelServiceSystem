@@ -39,3 +39,7 @@
 .hss-nav-bar a{
     color: #F2F2F2
 }
+
+.validation-message{
+    color: darkred;
+}

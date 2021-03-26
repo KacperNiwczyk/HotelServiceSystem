@@ -4,14 +4,14 @@
 @using System.Linq.Expressions
 @using HotelServiceSystem.Interfaces.Helpers
 
-<MudCard>
+<MudCard Elevation="25">
     <MudCardHeader>
         <CardHeaderContent>
             <MudText>Additional services</MudText>
         </CardHeaderContent>
     </MudCardHeader>
     <MudCardContent>
-            <MudChipSet MultiSelection="@true" UseOrdinaryCheck="@true" Filter="@true" @bind-SelectedChips="@SelectedChips">
+            <MudChipSet @ref="set" MultiSelection="@true" UseOrdinaryCheck="@true" Filter="@true" @bind-SelectedChips="@SelectedChips">
                 @if (AdditionalServiceList != null)
                 {
                     foreach (var additionalService in AdditionalServiceList)
@@ -35,6 +35,8 @@
     
     private List<AdditionalService> _selectedAdditionalServices  = new List<AdditionalService>();
 
+    MudChipSet set;
+
     private MudChip[] SelectedChips
     {
         get => _selectedChips;
@@ -53,6 +55,15 @@
         {
             if (_selectedAdditionalServices == value)
                 return;
+            
+            if (value.Count == 0)
+            {
+                if (set != null)
+                {
+                    set.SelectedChips = new MudChip[AdditionalServiceList.Count];
+                    StateHasChanged();
+                }
+            }
             
             SelectedAdditionalServicesChanged.InvokeAsync(value);
             _selectedAdditionalServices = value;
