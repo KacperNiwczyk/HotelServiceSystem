@@ -56,15 +56,6 @@
             if (_selectedAdditionalServices == value)
                 return;
             
-            if (value.Count == 0)
-            {
-                if (set != null)
-                {
-                    set.SelectedChips = new MudChip[AdditionalServiceList.Count];
-                    StateHasChanged();
-                }
-            }
-            
             SelectedAdditionalServicesChanged.InvokeAsync(value);
             _selectedAdditionalServices = value;
         }

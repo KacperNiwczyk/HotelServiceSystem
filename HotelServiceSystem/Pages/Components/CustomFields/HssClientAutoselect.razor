@@ -14,18 +14,15 @@
             </ResultTemplate>
             <NotFoundTemplate>
                 Client not found
-                @*<MatButton Type="Button" OnClick="@(() => { EnableClientAdd = true;})">Add new +</MatButton>*@
+                <MudFab Icon="@Icons.Material.Rounded.Add" Label="Add new" Size="Size.Medium" DisableElevation="@true" OnClick="@(() => { EnableClientAdd = true;})"/>
             </NotFoundTemplate>
         </BlazoredTypeahead>
     }
     @if (EnableClientAdd)
     {
-        <br/>
-        <div class="card">
-            <div class="card-body">
-                <HssClientsInput ClientModel="@(new Client())" OnSubmit="AddClient"/>
-            </div>
-        </div>
+        <MudPaper Outlined="@true" Elevation="12">
+            <HssClientsInput ClientModel="@(new Client())" OnSubmit="AddClient"/>
+        </MudPaper>
     }
     <div class="form-control-validation">
         <ValidationMessage For="@(() => ClientValue.Id)"/>

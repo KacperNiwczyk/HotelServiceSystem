@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using HotelServiceSystem.Entities;
+using MudBlazor;
 
 namespace HotelServiceSystem.ViewModel
 {
@@ -21,8 +22,8 @@ namespace HotelServiceSystem.ViewModel
 				Id = Id,
 				Client = Client,
 				NumberOfGuests = NumberOfGuests,
-				DateFrom = DateFrom,
-				DateTo = DateTo,
+				DateFrom = DateRange.Start.Value,
+				DateTo = DateRange.End.Value,
 				Price = Price,
 				DateOfSubmission = DateOfSubmission,
 				Discount = Discount,
@@ -51,8 +52,7 @@ namespace HotelServiceSystem.ViewModel
 				Id = reservation.Id,
 				Client = reservation.Client,
 				NumberOfGuests = reservation.NumberOfGuests,
-				DateFrom = reservation.DateFrom,
-				DateTo = reservation.DateTo,
+				DateRange = new DateRange(reservation.DateFrom, reservation.DateTo),
 				DateOfSubmission = reservation.DateOfSubmission,
 				Price = reservation.Price,
 				Discount = reservation.Discount,

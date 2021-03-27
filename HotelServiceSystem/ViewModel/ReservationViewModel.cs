@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using HotelServiceSystem.Entities;
+using MudBlazor;
 
 namespace HotelServiceSystem.ViewModel
 {
@@ -11,10 +12,9 @@ namespace HotelServiceSystem.ViewModel
 		public Client Client { get; set; }
         
 		public int NumberOfGuests { get; set; }
-        
-		public DateTime DateFrom { get; set; }
-		public DateTime DateTo { get; set; }
-        
+		
+		public DateRange DateRange { get; set; }
+		
 		public double Price { get; set; }
         
 		public DateTime DateOfSubmission { get; set; }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using HotelServiceSystem.ViewModel;
 
@@ -10,8 +11,8 @@ namespace HotelServiceSystem.Entities
         {
             Client = reservationViewModel.Client;
             NumberOfGuests = reservationViewModel.NumberOfGuests;
-            DateFrom = reservationViewModel.DateFrom;
-            DateTo = reservationViewModel.DateTo;
+            DateFrom = reservationViewModel.DateRange.Start ?? DateTime.Today.ToLocalTime();
+            DateTo = reservationViewModel.DateRange.End ?? DateTime.Today.ToLocalTime();
             Price = reservationViewModel.Price;
             DateOfSubmission = reservationViewModel.DateOfSubmission;
             Discount = reservationViewModel.Discount;

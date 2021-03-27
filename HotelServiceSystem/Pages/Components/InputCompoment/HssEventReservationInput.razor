@@ -65,13 +65,13 @@
         RoomList = new List<Room>();
         ClientList = clientService.GetAllClients();
         
-        var arrival = EventViewModel.DateFrom;
-        var departure = EventViewModel.DateTo;
+        // var arrival = EventViewModel.DateFrom;
+        // var departure = EventViewModel.DateTo;
         
-        if (arrival != default && departure != default)
-        {
-            await FillAvailableRoomsList(new ReservationSpan(arrival, departure));
-        }
+        // if (arrival != default && departure != default)
+        // {
+        //     await FillAvailableRoomsList(new ReservationSpan(arrival, departure));
+        // }
         
         GetPreselectedRooms(EventViewModel.SelectedRooms);
         await base.OnInitializedAsync();
@@ -108,10 +108,10 @@
         DaysCount = reservationSpan.GetAmountOfDays();
     }
 
-    private DateTime GetMinimalDepartureDate()
-    {
-        return EventViewModel.DateFrom != default ? EventViewModel.DateFrom : DateTime.Now.ToLocalTime().AddDays(-1);
-    }
+    // private DateTime GetMinimalDepartureDate()
+    // {
+    //     return EventViewModel.DateFrom != default ? EventViewModel.DateFrom : DateTime.Now.ToLocalTime().AddDays(-1);
+    // }
     
     private async Task AddClient(Client client)
     {

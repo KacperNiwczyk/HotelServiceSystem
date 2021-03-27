@@ -115,13 +115,14 @@
 
         _selectedAdditionalServices = new List<AdditionalService>();
         ModelRoom.AdditionalServiceRooms = additionalServiceRooms;
+        var message = $"New room {ModelRoom.RoomIdentifier} was successfully added";
         await OnSubmit.InvokeAsync(ModelRoom);
-        Snackbar.Add($"New room {ModelRoom.RoomIdentifier} successfully added", Severity.Success);
+       
+        Snackbar.Add(message, Severity.Success);
     }
 
     private void ResetValues()
     {
         ModelRoom.Beds.Clear();
-        _selectedAdditionalServices.Clear();
     }
 }

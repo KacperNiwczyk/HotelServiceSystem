@@ -15,22 +15,40 @@
 
 <EditForm Model="@ReservationViewModel" OnValidSubmit="@Submit">
     <FluentValidationValidator />
-    <HssClientAutoselect ClientModel="@ReservationViewModel.Client" ClientList="@ClientList" OnClientAdd="@AddClient" ClientValueChanged="@SetClient"/>
-    <br/>
-    <HssInputCustom Caption="Number of guests" @bind-Value="ReservationViewModel.NumberOfGuests" ValidationFor="@(() => ReservationViewModel.NumberOfGuests)"/>
-    <HssTimespanPicker ReservationModel="@ReservationViewModel" OnDatesSelected="@FillAvailableRoomsList"/>
-    <br/>
-    <div class="form-group">
-        <HSSRoomMultiSelector @bind-NotSelected="@RoomList" NotSelectedLabel="Available Rooms" @bind-Selected="@ReservationViewModel.SelectedRooms" SelectedLabel="Selected Rooms" OnRoomsChanged="@CalculatePrice"/>
-    </div>
-    <ValidationMessage For="@(() => ReservationViewModel.SelectedRooms)"/>
-    <HssAdditionalServiceSelect AdditionalServiceList="@_additionalServiceList" @bind-SelectedAdditionalServices="@ReservationViewModel.SelectedAdditionalServices"/>
-    <HssInputCustom Caption="Price" @bind-Value="@Price" ReadOnly="@true"/>
-    <HssInputCustom Caption="Discount" @bind-Value="ReservationViewModel.Discount"/>
-    <div class="col-12 row">
-        <span class="col-2"></span>
-        <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Success" Class="form-control col-2 btn btn-primary">Submit</MudButton>
-    </div>
+    <MudGrid>
+        <MudItem xs="12">
+            <HssClientAutoselect ClientModel="@ReservationViewModel.Client" ClientList="@ClientList" OnClientAdd="@AddClient" ClientValueChanged="@SetClient"/>
+        </MudItem>
+        <MudItem xs="12" sm="6">
+            <MudTextField Label="Number of guests" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Person" @bind-Value="@ReservationViewModel.NumberOfGuests"/>
+            <ValidationMessage For="@(() => ReservationViewModel.NumberOfGuests)"/>
+        </MudItem>
+        <MudItem xs="12" sm="6">
+            <HssTimespanPicker ReservationModel="ReservationViewModel" OnDatesSelected="FillAvailableRoomsList"/>
+        </MudItem>
+        <MudItem xl="12">
+            <HSSRoomMultiSelector @bind-NotSelected="@RoomList" NotSelectedLabel="Available Rooms" @bind-Selected="@ReservationViewModel.SelectedRooms" SelectedLabel="Selected Rooms" OnRoomsChanged="@CalculatePrice"/>
+            <ValidationMessage For="@(() => ReservationViewModel.SelectedRooms)"/>
+        </MudItem>
+        <MudItem xs="12">
+            <HssAdditionalServiceSelect AdditionalServiceList="@_additionalServiceList" @bind-SelectedAdditionalServices="@ReservationViewModel.SelectedAdditionalServices"/>
+        </MudItem>
+        <MudItem xs="12">
+             <MudTextField Label="Discount" @bind-Value="@ReservationViewModel.Discount"/>
+        </MudItem>
+        <MudItem xs="12">
+            <MudTextField Label="Price" ReadOnly="@true" @bind-Value="@Price" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Rounded.Money"/>
+        </MudItem>
+        @if (HasReset)
+        {
+            <MudItem xs="6" sm="1">
+                <MudButton EndIcon="@Icons.Material.Rounded.Replay" Color="Color.Warning" Variant="Variant.Filled" Size="Size.Large" ButtonType="ButtonType.Reset">Reset</MudButton>
+            </MudItem>
+        }
+        <MudItem xs="6" sm="1">
+            <MudButton EndIcon="@Icons.Material.Rounded.Check" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Large" ButtonType="ButtonType.Submit">Submit</MudButton>
+        </MudItem>
+    </MudGrid>
 </EditForm>
 
 @code {
@@ -42,12 +60,16 @@
     
     [Parameter]
     public EventCallback<HotelReservationViewModel> OnSubmit { get; set; }
+
+    [Parameter]
+    public bool HasReset { get; set; } = true;
     
     private bool EnableClientAdd { get; set; }
     private List<Room> RoomList { get; set; }
     private List<Client> ClientList { get; set; }
     private List<AdditionalService> _additionalServiceList = new List<AdditionalService>();
     private int NumberOfDays { get; set; }
+    private static DateTime _today = DateTime.Now.Date;
     private double _price;
 
     private string Price
@@ -69,15 +91,22 @@
         RoomList = new List<Room>();
         ClientList = clientService.GetAllClients();
         _additionalServiceList = additionalServiceService.GetAllAdditionalServices(x => x.ServiceType == ServiceType.Reservation);
-        
-        var arrival = ReservationViewModel.DateFrom;
-        var departure = ReservationViewModel.DateTo;
-        
-        if (arrival != default && departure != default)
+
+        if (ReservationViewModel.DateRange != null)
         {
-            await FillAvailableRoomsList(new ReservationSpan(arrival, departure));
+            var arrival = ReservationViewModel.DateRange.Start;
+            var departure = ReservationViewModel.DateRange.End;
+            
+            if (arrival != null && departure != null)
+            {
+                await FillAvailableRoomsList(new ReservationSpan(arrival.Value, departure.Value));
+            }
         }
-        
+        else
+        {
+            ReservationViewModel.DateRange = new DateRange(_today.Date, _today.Date.AddDays(2));
+        }
+
         GetPreselectedRooms(ReservationViewModel.SelectedRooms);
         await base.OnInitializedAsync();
     }
@@ -122,11 +151,6 @@
         ReservationViewModel.Client = client;
     }
 
-    private DateTime GetMinimalDepartureDate()
-    {
-        return ReservationViewModel.DateFrom != default ? ReservationViewModel.DateFrom : DateTime.Now.ToLocalTime().AddDays(-1);
-    }
-    
     private void CalculatePrice()
     {
         _price = 0d;

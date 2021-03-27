@@ -2,23 +2,8 @@
 @using HotelServiceSystem.Core
 @using HotelServiceSystem.ViewModel
 
-
-<div class="col-12 row">
-        <HssDatePicker Label="Arrival" ChosenDate="@ReservationModel.DateFrom" OnValueChanged="@SetDateFrom" ValidationFor="@(() => ReservationModel.DateFrom)"/>
-        @if (!IsOneDay)
-        {
-            <HssDatePicker Label="Departure" ChosenDate="@ReservationModel.DateTo" OnValueChanged="@SetDateTo" ValidationFor="@(() => ReservationModel.DateTo)" MinimalDate="@GetMinimalDepartureDate()"/>  
-        }
-    </div>
-
+<MudDateRangePicker Label="Pick reservation date" DateRangeChanged="CheckDatesSelected" MinDate="@GetMinimalDepartureDate()"/>
 @code {
-
-    [Parameter]
-    public string ArrivalDateLabel { get; set; } = "Arrival";
-
-    [Parameter]
-    public string DepartureDateLabel { get; set; } = "Departure";
-    
     [Parameter]
     public ReservationViewModel ReservationModel
     {
@@ -26,12 +11,12 @@
         set
         {
             _reservation = value;
+            ReservationModelChanged.InvokeAsync(value);
         } 
     }
-
-    [Parameter]
-    public bool IsOneDay { get; set; } = false;
     
+    private static DateTime _today = DateTime.Now.Date;
+
     [Parameter]
     public EventCallback<ReservationViewModel> ReservationModelChanged { get; set; }
     
@@ -39,30 +24,26 @@
     public EventCallback<ReservationSpan> OnDatesSelected { get; set; }
     
     private ReservationViewModel _reservation { get; set; }
-
-    private void SetDateFrom(DateTime dateTime)
+    
+    private void CheckDatesSelected(DateRange dateRange)
     {
-        ReservationModel.DateFrom = dateTime.ToLocalTime();
-        CheckDatesSelected();
-    }
-
-    private void CheckDatesSelected()
-    {
-        if (ReservationModel.DateFrom != default && ReservationModel.DateTo != default)
+        if (dateRange != null)
         {
-            var reservationSpan = new ReservationSpan(ReservationModel.DateFrom, ReservationModel.DateTo);
+            var reservationSpan = new ReservationSpan(dateRange.Start.Value, dateRange.End.Value);
+            _reservation.DateRange = dateRange;
+            ReservationModelChanged.InvokeAsync(_reservation);
             OnDatesSelected.InvokeAsync(reservationSpan);
         }
     }
 
-    private void SetDateTo(DateTime dateTime)
-    {
-        ReservationModel.DateTo = dateTime.ToLocalTime();
-        CheckDatesSelected();
-    }
-    
     private DateTime GetMinimalDepartureDate()
     {
-        return ReservationModel.DateFrom != default ? ReservationModel.DateFrom : DateTime.Now.ToLocalTime().AddDays(-1);
+        var defaultTime = _today.Date.ToLocalTime().AddDays(-1);
+        if (ReservationModel.DateRange == null)
+        {
+            return defaultTime;
+        }
+
+        return ReservationModel.DateRange.Start ?? defaultTime;
     }
 }
