@@ -43,6 +43,7 @@ namespace HotelServiceSystem.Core.Service
                 .ThenInclude(x => x.AdditionalService)
                 .Include(x => x.RoomReservations)
                 .ThenInclude(x => x.Reservation)
+                .ThenInclude(x => x.Client)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 

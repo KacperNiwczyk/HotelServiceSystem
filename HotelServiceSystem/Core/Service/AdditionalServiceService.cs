@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using HotelServiceSystem.Core.Helpers;
 using HotelServiceSystem.Entities;
 using HotelServiceSystem.Interfaces.Services;
-using Microsoft.EntityFrameworkCore;
 
 namespace HotelServiceSystem.Core.Service
 {
