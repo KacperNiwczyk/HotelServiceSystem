@@ -3,16 +3,50 @@
 
 <EditForm Model="@ClientModel" OnValidSubmit="@Submit">
     <FluentValidationValidator/>
-    <HssInputCustom Caption="First name" @bind-Value="ClientModel.FirstName" ValidationFor="@(() => ClientModel.FirstName)"/>
-    <HssInputCustom Caption="Last name" @bind-Value="ClientModel.LastName" ValidationFor="@(() => ClientModel.LastName)"/>
-    <HssInputCustom Caption="Company name" @bind-Value="ClientModel.CompanyName" ValidationFor="@(() => ClientModel.CompanyName)"/>
-    <HssInputCustom Caption="Email" @bind-Value="ClientModel.Email" ValidationFor="@(() => ClientModel.Email)"/>
-    <HssInputCustom Caption="Phone number" @bind-Value="ClientModel.PhoneNumber" ValidationFor="@(() => ClientModel.PhoneNumber)"/>
-    <HssInputCustom Caption="Tax Id" @bind-Value="ClientModel.TaxId" ValidationFor="@(() => ClientModel.TaxId)"/>
-    <div class="col-12 row">
-        <span class="col-2"></span>
-        <input type="submit" class="form-control col-1 btn btn-primary" value="Submit"/>
-    </div>
+    <MudGrid>
+        <MudItem xs="6" sm="3">
+            <MudTextField Label="First name*" @bind-Value="@ClientModel.FirstName" Variant="Variant.Filled"/>
+            <ValidationMessage For="@(() => ClientModel.FirstName)"/>
+        </MudItem>
+        <MudItem xs="6" sm="3">
+            <MudTextField Label="Last name*" @bind-Value="@ClientModel.LastName" Variant="Variant.Filled"/>
+            <ValidationMessage For="@(() => ClientModel.LastName)"/>
+        </MudItem>
+        <MudItem xs="6" sm="6">
+            <MudHidden Breakpoint="Breakpoint.Xs"/>
+        </MudItem>
+        <MudItem xs="6" sm="3">
+            <MudTextField Label="Phone number*" @bind-Value="@ClientModel.PhoneNumber" Variant="Variant.Filled"/>
+            <ValidationMessage For="@(() => ClientModel.PhoneNumber)"/>
+        </MudItem>
+        <MudItem xs="6" sm="3">
+            <MudTextField Label="Email*" @bind-Value="@ClientModel.Email" Variant="Variant.Filled"/>
+            <ValidationMessage For="@(() => ClientModel.Email)"/>
+        </MudItem>
+        <MudItem xs="6" sm="6">
+            <MudHidden Breakpoint="Breakpoint.Xs"/>
+        </MudItem>
+        <MudItem xs="6" sm="3">
+            <MudTextField Label="Company name" @bind-Value="@ClientModel.CompanyName" Variant="Variant.Filled"/>
+            <ValidationMessage For="@(() => ClientModel.CompanyName)"/>
+        </MudItem>
+        <MudItem xs="6" sm="3">
+            <MudTextField Label="Tax Id" @bind-Value="@ClientModel.TaxId" Variant="Variant.Filled"/>
+            <ValidationMessage For="@(() => ClientModel.TaxId)"/>
+        </MudItem>
+        <MudItem xs="12">
+            <MudHidden Breakpoint="Breakpoint.Xs"/>
+        </MudItem>
+         @if (HasReset)
+         {
+             <MudItem xs="6" sm="1">
+                 <MudButton EndIcon="@Icons.Material.Rounded.Replay" Color="Color.Warning" Variant="Variant.Filled" Size="Size.Large" ButtonType="ButtonType.Reset">Reset</MudButton>
+             </MudItem>
+         }
+         <MudItem xs="6" sm="1">
+             <MudButton EndIcon="@Icons.Material.Rounded.Check" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Large" ButtonType="ButtonType.Submit">Submit</MudButton>
+         </MudItem>
+    </MudGrid>
 </EditForm>
 
 @code {
@@ -21,6 +55,9 @@
     
     [Parameter]
     public EventCallback<Client> OnSubmit { get; set; }
+
+    [Parameter]
+    public bool HasReset { get; set; } = true;
     
     private async Task Submit()
     {

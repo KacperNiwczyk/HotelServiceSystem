@@ -43,3 +43,7 @@
 .validation-message{
     color: darkred;
 }
+
+.hss-table-icon{
+    position: relative; top: 4px
+}

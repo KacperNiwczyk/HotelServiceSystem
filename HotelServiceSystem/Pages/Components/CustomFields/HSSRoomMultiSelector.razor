@@ -13,8 +13,8 @@
                     <div style="justify-content: space-between">
                         <MudText>Room number: @item.RoomIdentifier</MudText>
                         <MudText Class="flex-d">
-                           Beds: <MudIcon Icon="@Icons.Material.Rounded.SingleBed" Size="Size.Small"/>x @item.Beds.Count(SingleBeds)
-                               <MudIcon Icon="@Icons.Material.Rounded.KingBed" Size="Size.Small"/>x @item.Beds.Count(DoubleBeds)
+                           Beds: <MudIcon Class="hss-table-icon" Icon="@Icons.Material.Rounded.SingleBed" Size="Size.Small"/>x @item.Beds.Count(SingleBeds)
+                               <MudIcon Class="hss-table-icon" Icon="@Icons.Material.Rounded.KingBed" Size="Size.Small"/>x @item.Beds.Count(DoubleBeds)
                         </MudText>
                         <MudText>Floor: @item.Floor</MudText>
                         <MudText>Price: @item.Price</MudText>
@@ -30,15 +30,13 @@
             {
                 <li @onclick="@(() => Deselect(item))">
                     <div style="justify-content: space-between">
-                        <a>Room number: @item.RoomIdentifier</a>
-                        <MudDivider Vertical="@true" DividerType="DividerType.Inset"/>
-                        <a>Beds: <MudIcon Icon="@Icons.Material.Rounded.SingleBed"/>x @item.Beds.Count(SingleBeds)</a>
-                            <a><MudIcon Icon="@Icons.Material.Rounded.KingBed"/>x @item.Beds.Count(DoubleBeds)</a>
-                        <MudDivider Vertical="@true" DividerType="DividerType.Inset"/>
-                        <a>Floor: @item.Floor</a>
-                        <MudDivider Vertical="@true" DividerType="DividerType.Inset"/>
-                        <a>Price: @item.Price</a>
-                        <MudDivider Vertical="@true" DividerType="DividerType.Inset"/>
+                        <MudText>Room number: @item.RoomIdentifier</MudText>
+                        <MudText Class="flex-d">
+                           Beds: <MudIcon Class="hss-table-icon" Icon="@Icons.Material.Rounded.SingleBed" Size="Size.Small"/>x @item.Beds.Count(SingleBeds)
+                               <MudIcon Class="hss-table-icon" Icon="@Icons.Material.Rounded.KingBed" Size="Size.Small"/>x @item.Beds.Count(DoubleBeds)
+                        </MudText>
+                        <MudText>Floor: @item.Floor</MudText>
+                        <MudText>Price: @item.Price</MudText>
                     </div>
                 </li>
             }
