@@ -4,17 +4,48 @@
 @inject IRoomService RoomService
 
 <MudGrid>
-    <MudItem xs="6">
-        <HssRoomTable RoomList="@_rooms" IsDashboard="@true"/>
+    <MudItem xs="12" sm="6">
+        <HssRoomTable RoomList="@_shouldBeCleaned" IsDashboard="@true"/>
+    </MudItem>
+    <MudItem xs="12" sm="6">
+        <MudCard Elevation="25">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">Rooms statistics</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudChart ChartType="ChartType.Pie" ChartOptions="@_chartOptions" InputData="@roomsData" InputLabels="@roomsLabels" Width="25%" Height="25%"/>
+            </MudCardContent>
+        </MudCard>
     </MudItem>
 </MudGrid>
 
 @code{
     private List<Room> _rooms = new List<Room>();
+    private List<Room> _shouldBeCleaned = new List<Room>();
+    private double[] roomsData;
+    private string[] roomsLabels;
+    private ChartOptions _chartOptions = new ChartOptions();
+    
+    private string greenColor = "#5bc06c";
+    private string redColor = "#ec521c";
+    private string darkRedColor = "#d00707";
+    private string yellowColor = "#ebeb39";
 
     protected override async Task OnInitializedAsync()
     {
-        _rooms = RoomService.GetAllRoomsAsync().Where(x => x.ShouldBeCleaned).Take(5).ToList();
+        _chartOptions.ChartPalette = new[] {greenColor, redColor, darkRedColor, yellowColor};
+        _rooms = RoomService.GetAllRoomsAsync();
+        _shouldBeCleaned = _rooms.Where(x => x.ShouldBeCleaned).Take(5).ToList();
+        
+        var availableCount = (double)_rooms.Where(x => x.IsFreeNow).Count();
+        var occupiedCount = (double)_rooms.Where(x => !x.IsFreeNow).Count();
+        var outOfServiceCount = (double)_rooms.Where(x => x.IsOutOfService).Count();
+        var cleanedCount = (double)_rooms.Where(x => x.ShouldBeCleaned).Count();
+        
+        roomsData = new[] {availableCount, occupiedCount, outOfServiceCount, cleanedCount};
+        roomsLabels = new[] {$"Available ({availableCount})", $"Occupied ({occupiedCount})", $"Out of service ({outOfServiceCount})", $"Should be cleaned ({cleanedCount})"};
         await base.OnInitializedAsync();
     }
 }
