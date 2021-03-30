@@ -5,10 +5,12 @@
 @using HotelServiceSystem.Interfaces.Helpers
 @using HotelServiceSystem.ViewModel
 @using System.Globalization
+
 @inject IEventReservationService eventEventService
 @inject IClientService clientService
 @inject IRoomService roomService
-@inject IRoomHelper _roomHelper 
+@inject IRoomHelper _roomHelper
+@inject ISnackbar Snackbar
 
 <EditForm Model="@EventViewModel" OnValidSubmit="@Submit">
     <FluentValidationValidator/>
@@ -36,7 +38,7 @@
          <MudItem xs="12">
              <MudTextField T="string" Label="Description" Variant="Variant.Text" @bind-Value="@EventViewModel.Description" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Description"/>
          </MudItem>
-            @if (HasReset)
+            @if (!IsEdit)
             {
                 <MudItem xs="6" sm="1">
                     <MudButton EndIcon="@Icons.Material.Rounded.Replay" Color="Color.Warning" Variant="Variant.Filled" Size="Size.Large" ButtonType="ButtonType.Reset">Reset</MudButton>
@@ -51,14 +53,11 @@
 @code {
     [Parameter]
     public EventReservationViewModel EventViewModel { get; set; }
-    
-    [Parameter]
-    public bool IsUpdate { get; set; }
-    
+
     private List<Room> RoomList { get; set; }
 
     [Parameter]
-    public bool HasReset { get; set; } = true;
+    public bool IsEdit { get; set; }
     
     private List<Client> ClientList { get; set; }
     
@@ -124,9 +123,14 @@
         EventViewModel.DateOfSubmission = DateTime.Today.ToLocalTime();
         EventViewModel.Price = _price;
 
-        if (!IsUpdate)
+        if (IsEdit)
         {
             RoomList = new List<Room>();
+            Snackbar.Add($"Reservation number '{EventViewModel.Id}' was successfully edited", Severity.Warning);
+        }
+        else
+        {
+            Snackbar.Add($"New reservation with number '{EventViewModel.Id}' was successfully added", Severity.Success);
         }
         
         await OnSubmit.InvokeAsync(EventViewModel);
@@ -141,6 +145,7 @@
 
     private async Task AddClient(Client client)
     {
+        Snackbar.Add($"New client {client.FirstName} {client.LastName} was successfully added", Severity.Success);
         await clientService.AddClientAsync(client);
     }
     

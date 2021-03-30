@@ -1,50 +1,85 @@
 ﻿@using HotelServiceSystem.Interfaces.Services
 @using HotelServiceSystem.Entities
 @using HotelServiceSystem.Features.Enums
+@using InputType = MudBlazor.InputType
+@inject ISnackbar Snackbar
 
 <EditForm Model="@UserModel" OnValidSubmit="@Submit">
     <FluentValidationValidator/>
-    <HssInputCustom Caption="Name" @bind-Value="UserModel.UserName" ValidationFor="@(() => UserModel.UserName)"/>
-    <HssInputCustom Caption="Password" @bind-Value="UserModel.Password" ValidationFor="@(() => UserModel.Password)"/>
-    <HssSelectCustom Label="Role" @bind-Value="SelectedRole" ValidationFor="@(() => SelectedRole)">
-        @foreach (var role in AvailableRoles)
-        {
-            <option value="@role">@role.ToString()</option>
-        }
-    </HssSelectCustom>
-    <div class="col-12 row">
-        <span class="col-2"></span>
-        <input type="submit" class="form-control col-2 btn btn-primary" value="Submit"/>
-    </div>
+    <MudGrid>
+        <MudItem xs="12" sm="6">
+            <MudTextField Label="Username*" Variant="Variant.Filled" @bind-Value="@UserModel.UserName"/>
+            <ValidationMessage For="@(() => UserModel.UserName)"/>
+        </MudItem>
+        <MudItem xs="12" sm="6">
+            <MudTextField Label="Password*" Variant="Variant.Filled" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="OnIconClick" @bind-Value="@UserModel.Password"/>
+            <ValidationMessage For="@(() => UserModel.Password)"/>
+        </MudItem>
+        <MudItem xs="12">
+            <MudSelect Lable="Select user role" @bind-Value="@UserModel.UserRole" Variant="Variant.Filled">
+                @foreach (UserRole item in Enum.GetValues(typeof(UserRole)))
+                {
+                    <MudSelectItem Value="@item">@item</MudSelectItem>
+                }
+            </MudSelect>
+            <ValidationMessage For="@(() => UserModel.UserRole)"></ValidationMessage>
+        </MudItem>
+        <MudItem xs="12">
+            <MudHidden Breakpoint="Breakpoint.Xs"/>
+        </MudItem>
+         @if (!IsEdit)
+         {
+             <MudItem xs="6" sm="1">
+                 <MudButton EndIcon="@Icons.Material.Rounded.Replay" Color="Color.Warning" Variant="Variant.Filled" Size="Size.Large" ButtonType="ButtonType.Reset">Reset</MudButton>
+             </MudItem>
+         }
+         <MudItem xs="6" sm="1">
+             <MudButton EndIcon="@Icons.Material.Rounded.Check" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Large" ButtonType="ButtonType.Submit">Submit</MudButton>
+         </MudItem>
+    </MudGrid>
 </EditForm>
 
 @code {
     
     [Parameter]
     public User UserModel { get; set; }
-    
-    private UserRole SelectedRole { get; set; }
+
+    [Parameter]
+    public bool IsEdit { get; set; }
     
     [Parameter]
     public EventCallback<User> OnSubmit { get; set; }
     
-    private List<UserRole> AvailableRoles { get; set; }
-    
-    protected override async Task OnInitializedAsync()
-    {
-        
-        AvailableRoles = GetAvailableRoles();
-        await base.OnInitializedAsync();
-    }
+    private bool isShow;
+    private InputType PasswordInput = InputType.Password;
+    private string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
 
-    private List<UserRole> GetAvailableRoles()
+    private void OnIconClick()
     {
-        return new List<UserRole> {UserRole.Standard, UserRole.Manager, UserRole.Admin};
+        @if (isShow)
+        {
+            isShow = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else {
+            isShow = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
     }
 
     private async Task Submit()
     {
-        UserModel.UserRole = SelectedRole;
+        if (IsEdit)
+        {
+            Snackbar.Add($"User '{UserModel.UserName}' was successfully edited", Severity.Warning);
+        }
+        else
+        {
+            Snackbar.Add($"New user '{UserModel.UserName}' was successfully added", Severity.Success);
+        }
+        
         await OnSubmit.InvokeAsync(UserModel);
     }
 }

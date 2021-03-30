@@ -6,12 +6,14 @@
 @using HotelServiceSystem.Core.Validations
 @using HotelServiceSystem.Interfaces.Helpers
 @using HotelServiceSystem.ViewModel
+
 @inject IHotelReservationService hotelReservationService
 @inject IClientService clientService
 @inject IRoomService roomService
 @inject IRoomHelper _roomHelper
 @inject IAdditionalServiceService additionalServiceService
-@inject IServiceProvider _serviceProvider;
+@inject IServiceProvider _serviceProvider
+@inject ISnackbar Snackbar
 
 <EditForm Model="@ReservationViewModel" OnValidSubmit="@Submit">
     <FluentValidationValidator />
@@ -39,7 +41,7 @@
         <MudItem xs="12">
             <MudTextField Label="Price" ReadOnly="@true" @bind-Value="@Price" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Rounded.Money"/>
         </MudItem>
-        @if (HasReset)
+        @if (!IsEdit)
         {
             <MudItem xs="6" sm="1">
                 <MudButton EndIcon="@Icons.Material.Rounded.Replay" Color="Color.Warning" Variant="Variant.Filled" Size="Size.Large" ButtonType="ButtonType.Reset">Reset</MudButton>
@@ -53,16 +55,13 @@
 
 @code {
     [Parameter]
-    public bool IsUpdate { get; set; }
-    
-    [Parameter]
     public HotelReservationViewModel ReservationViewModel { get; set; }
     
     [Parameter]
     public EventCallback<HotelReservationViewModel> OnSubmit { get; set; }
 
     [Parameter]
-    public bool HasReset { get; set; } = true;
+    public bool IsEdit { get; set; }
     
     private bool EnableClientAdd { get; set; }
     private List<Room> RoomList { get; set; }
@@ -125,10 +124,15 @@
     {;
         ReservationViewModel.Price = _price;
         ReservationViewModel.DateOfSubmission = DateTime.Today.ToLocalTime();
-        
-        if (!IsUpdate)
+
+        if (IsEdit)
         {
             RoomList = new List<Room>();
+            Snackbar.Add($"Reservation number '{ReservationViewModel.Id}' was successfully edited", Severity.Warning);
+        }
+        else
+        {
+            Snackbar.Add($"New reservation with number '{ReservationViewModel.Id}' was successfully added", Severity.Success);
         }
         
         await OnSubmit.InvokeAsync(ReservationViewModel);
@@ -143,6 +147,7 @@
 
     private async Task AddClient(Client client)
     {
+        Snackbar.Add($"New client {client.FirstName} {client.LastName} was successfully added", Severity.Success);
         await clientService.AddClientAsync(client);
     }
 

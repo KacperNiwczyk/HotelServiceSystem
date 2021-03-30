@@ -1,21 +1,41 @@
 ﻿@using HotelServiceSystem.Interfaces.Services
 @using HotelServiceSystem.Entities
 @using HotelServiceSystem.Core
+@inject ISnackbar Snackbar
 
 <EditForm Model="@AdditionalServiceModel" OnValidSubmit="@Submit">
     <FluentValidationValidator/>
-    <HssInputCustom Caption="Name" @bind-Value="AdditionalServiceModel.Name" ValidationFor="@(() => AdditionalServiceModel.Name)"/>
-    <HssInputCustom Caption="Price" @bind-Value="AdditionalServiceModel.Price" ValidationFor="@(() => AdditionalServiceModel.Price)"/>
-    <HssSelectCustom Label="Service Type" @bind-Value="AdditionalServiceModel.ServiceType" ValidationFor="@(() => AdditionalServiceModel.ServiceType)">
-        @foreach (var service in AvailableServiceTypes)
-        {
-            <option value="@service">@service.ToString()</option>
-        }
-    </HssSelectCustom>
-    <div class="col-12 row">
-        <span class="col-2"></span>
-        <input type="submit" class="form-control col-2 btn btn-primary" value="Submit"/>
-    </div>
+    <MudGrid>
+        <MudItem xs="12">
+            <MudTextField Label="Name" Variant="Variant.Filled" @bind-Value="@AdditionalServiceModel.Name"/>
+            <ValidationMessage For="@(() => AdditionalServiceModel.Name)"/>
+        </MudItem>
+        <MudItem xs="12" sm="6">
+            <MudTextField Label="Price" Variant="Variant.Filled" @bind-Value="@AdditionalServiceModel.Price"/>
+            <ValidationMessage For="@(() => AdditionalServiceModel.Price)"/>
+        </MudItem>
+        <MudItem xs="12" sm="6">
+            <MudSelect @bind-Value="@AdditionalServiceModel.ServiceType" Label="Select additional service type" Variant="Variant.Filled">
+                @foreach (var item in AvailableServiceTypes)
+                {
+                    <MudSelectItem Value="@item">@item</MudSelectItem>
+                }
+            </MudSelect>
+            <ValidationMessage For="@(() => AdditionalServiceModel.ServiceType)"/>
+        </MudItem>
+        <MudItem xs="12">
+            <MudHidden Breakpoint="Breakpoint.Xs"/>
+        </MudItem>
+         @if (!IsEdit)
+         {
+             <MudItem xs="6" sm="1">
+                 <MudButton EndIcon="@Icons.Material.Rounded.Replay" Color="Color.Warning" Variant="Variant.Filled" Size="Size.Large" ButtonType="ButtonType.Reset">Reset</MudButton>
+             </MudItem>
+         }
+         <MudItem xs="6" sm="1">
+             <MudButton EndIcon="@Icons.Material.Rounded.Check" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Large" ButtonType="ButtonType.Submit">Submit</MudButton>
+         </MudItem>
+    </MudGrid>
 </EditForm>
 
 @code {
@@ -23,7 +43,12 @@
     [Parameter]
     public List<ServiceType> AvailableServiceTypes { get; set; }
     
+    private ServiceType EnumValue { get; set; }
+    
     private ServiceType SelectedType { get; set; }
+
+    [Parameter]
+    public bool IsEdit { get; set; }
     
     [Parameter]
     public AdditionalService AdditionalServiceModel { get; set; }
@@ -39,6 +64,15 @@
 
     private async Task Submit()
     {
+        if (IsEdit)
+        {
+            Snackbar.Add($"Additional service '{AdditionalServiceModel.Name}' was successfully edited", Severity.Warning);
+        }
+        else
+        {
+            Snackbar.Add($"New additional service '{AdditionalServiceModel.Name}' was successfully added", Severity.Success);
+        }
+        
         await OnSubmit.InvokeAsync(AdditionalServiceModel);
     }
 }

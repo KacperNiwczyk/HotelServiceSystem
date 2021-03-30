@@ -1,6 +1,8 @@
 ﻿@using HotelServiceSystem.Entities
 @using HotelServiceSystem.Interfaces.Services
 
+@inject ISnackbar Snackbar
+
 <EditForm Model="@ClientModel" OnValidSubmit="@Submit">
     <FluentValidationValidator/>
     <MudGrid>
@@ -37,7 +39,7 @@
         <MudItem xs="12">
             <MudHidden Breakpoint="Breakpoint.Xs"/>
         </MudItem>
-         @if (HasReset)
+         @if (!IsEdit)
          {
              <MudItem xs="6" sm="1">
                  <MudButton EndIcon="@Icons.Material.Rounded.Replay" Color="Color.Warning" Variant="Variant.Filled" Size="Size.Large" ButtonType="ButtonType.Reset">Reset</MudButton>
@@ -57,10 +59,19 @@
     public EventCallback<Client> OnSubmit { get; set; }
 
     [Parameter]
-    public bool HasReset { get; set; } = true;
+    public bool IsEdit { get; set; }
     
     private async Task Submit()
     {
+        if (IsEdit)
+        {
+            Snackbar.Add($"Client '{ClientModel.FirstName} {ClientModel.LastName}' was successfully edited", Severity.Warning);
+        }
+        else
+        {
+            Snackbar.Add($"New client '{ClientModel.FirstName} {ClientModel.LastName}' was successfully added", Severity.Success);
+        }
+        
         await OnSubmit.InvokeAsync(ClientModel);
     }
 }

@@ -36,7 +36,7 @@
         <MudItem xs="12">
             <HssAdditionalServiceSelect AdditionalServiceList="@AdditionalServiceList" @bind-SelectedAdditionalServices="@_selectedAdditionalServices"/>
         </MudItem>
-        @if (HasReset)
+        @if (!IsEdit)
         {
             <MudItem xs="6" sm="1">
                 <MudButton EndIcon="@Icons.Material.Rounded.Replay" Color="Color.Warning" Variant="Variant.Filled" OnClick="ResetValues" Size="Size.Large" ButtonType="ButtonType.Reset">Reset</MudButton>
@@ -59,7 +59,7 @@
     public List<AdditionalService> AdditionalServiceList { get; set; }
 
     [Parameter]
-    public bool HasReset { get; set; } = true;
+    public bool IsEdit { get; set; }
 
     private string DoubleBedLabel => $"Double beds x{BedCount(BedType.DoubleBed)}";
 
@@ -115,10 +115,17 @@
 
         _selectedAdditionalServices = new List<AdditionalService>();
         ModelRoom.AdditionalServiceRooms = additionalServiceRooms;
-        var message = $"New room {ModelRoom.RoomIdentifier} was successfully added";
+        
+        if (IsEdit)
+        {
+            Snackbar.Add($"Room '{ModelRoom.RoomIdentifier}' was successfully edited", Severity.Warning);
+        }
+        else
+        {
+            Snackbar.Add($"New room '{ModelRoom.RoomIdentifier}' was successfully added", Severity.Success);
+        }
+        
         await OnSubmit.InvokeAsync(ModelRoom);
-       
-        Snackbar.Add(message, Severity.Success);
     }
 
     private void ResetValues()
