@@ -107,13 +107,10 @@
                                                             <MudItem xs="12" sm="4">
                                                                 <MudText>Price @item.Price</MudText>
                                                             </MudItem>
-                                                            <MudItem xs="12" sm="6">
-                                                                <MudText>Price @item.Price</MudText>
-                                                            </MudItem>
-                                                            <MudItem xs="12" sm="6">
+                                                            <MudItem xs="8">
                                                                 <MudText>Arrival: @item.DateFrom.ToString(Constants.DefaultDateFormat)</MudText>
                                                             </MudItem>
-                                                            <MudItem xs="12" sm="6">
+                                                            <MudItem xs="4">
                                                                 <MudText>Departure @item.DateTo.ToString(Constants.DefaultDateFormat)</MudText>
                                                             </MudItem>
                                                         </MudGrid>
@@ -147,32 +144,39 @@
                         </MudGrid>
                     </CardHeaderContent>
                 </MudCardHeader>
-            <MudCardContent>
-                @if (ActiveReservation == null)
-                {
-                    <MudItem xs="12">
-                      <MudText Typo="Typo.h6">There is no active reservation for client: @ReservationHelper.GetClientFirstNameLastName(ClientModel)</MudText>  
-                    </MudItem>
-                }
-                else
-                {
-                    <MudItem xs="12">
-                        <MudField Label="Reference" Variant="Variant.Outlined">@ActiveReservation.Id</MudField>
-                    </MudItem> 
-                    <MudItem xs="12" sm="6">
-                        <MudField Label="Arrival" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.FlightLand">@ActiveReservation.DateFrom.ToString(Constants.DefaultDateFormat)</MudField>
-                    </MudItem>
-                    <MudItem xs="12" sm="6">
-                        <MudField Label="Departure" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.DirectionsRun">@ActiveReservation.DateTo.ToString(Constants.DefaultDateFormat)</MudField>
-                    </MudItem>
-                    <MudItem xs="12" sm="6">
-                        <MudField Label="Number of guests" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.People">@ActiveReservation.NumberOfGuests</MudField>
-                    </MudItem>
-                    <MudItem xs="12" sm="6">
-                        <MudField Label="Number of reserved rooms" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.MeetingRoom">@ActiveReservation.RoomReservations.Count</MudField>
-                    </MudItem>
-                }
-            </MudCardContent>
+                <MudCardContent>
+                    <MudGrid>
+                    @if (ActiveReservation == null)
+                    {
+                        <MudItem xs="12">
+                            <MudText Typo="Typo.h6">There is no active reservation for client: @ReservationHelper.GetClientFirstNameLastName(ClientModel)</MudText>
+                        </MudItem>
+                    }
+                    else
+                    {
+                        <MudItem xs="12">
+                            <MudField Label="Reference" Variant="Variant.Outlined">@ActiveReservation.Id</MudField>
+                        </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <MudField Label="Arrival" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.FlightLand">@ActiveReservation.DateFrom.ToString(Constants.DefaultDateFormat)</MudField>
+                        </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <MudField Label="Departure" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.DirectionsRun">@ActiveReservation.DateTo.ToString(Constants.DefaultDateFormat)</MudField>
+                        </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <MudField Label="Number of guests" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.People">@ActiveReservation.NumberOfGuests</MudField>
+                        </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <MudField Label="Number of rooms" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.MeetingRoom">@ActiveReservation.RoomReservations.Count</MudField>
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudButton Variant="Variant.Outlined" OnClick="@(() => Select(ActiveReservation))" Color="Color.Primary">
+                                Go to reservation
+                            </MudButton>
+                        </MudItem>
+                    }
+                    </MudGrid>
+                </MudCardContent>
             </MudCard>
         </MudItem>
     </MudGrid>
