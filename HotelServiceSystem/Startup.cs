@@ -50,6 +50,8 @@ namespace HotelServiceSystem
 
             services.AddScoped<AuthenticationStateProvider, HotelServiceAuthenticationStateProvider>();
             services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
+
+            services.AddTransient<IDateManager, DateManager>();
             
             services.AddTransient<IRoomRepository, RoomRepository>();
             services.AddTransient<IRoomService, RoomService>();

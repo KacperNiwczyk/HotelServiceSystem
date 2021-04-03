@@ -21,12 +21,12 @@
             <ValidationMessage For="@(() => ModelRoom.Price)"/>
         </MudItem>
         <MudItem xs="12" sm="2">
-            <MudFab Color="Color.Inherit" Size="Size.Large" Label="@SingleBedLabel" Icon="@Icons.Material.Outlined.SingleBed" OnClick="@(() => AddBed(BedType.SingleBed))"/>
-            <MudFab Color="Color.Error" Icon="@Icons.Material.Filled.Remove" Size="Size.Small" IconSize="Size.Medium" OnClick="@(() => RemoveBeds(BedType.SingleBed))"/>
+            <MudFab Color="Color.Inherit" Size="Size.Large" DisableElevation="@true" Label="@SingleBedLabel" Icon="@Icons.Material.Outlined.SingleBed" OnClick="@(() => AddBed(BedType.SingleBed))"/>
+            <MudFab Color="Color.Error" Icon="@Icons.Material.Filled.Remove" DisableElevation="@true" Size="Size.Small" IconSize="Size.Medium" OnClick="@(() => RemoveBeds(BedType.SingleBed))"/>
         </MudItem>
         <MudItem xs="12" sm="2">
-            <MudFab Color="Color.Inherit" Size="Size.Large" Label="@DoubleBedLabel" Icon="@Icons.Material.Outlined.KingBed" OnClick="@(() => AddBed(BedType.DoubleBed))"/>
-            <MudFab Color="Color.Error" Icon="@Icons.Material.Filled.Remove" Size="Size.Small" IconSize="Size.Medium" OnClick="@(() => RemoveBeds(BedType.DoubleBed))"/>
+            <MudFab Color="Color.Inherit" DisableElevation="@true" Size="Size.Large" Label="@DoubleBedLabel" Icon="@Icons.Material.Outlined.KingBed" OnClick="@(() => AddBed(BedType.DoubleBed))"/>
+            <MudFab Color="Color.Error" DisableElevation="@true" Icon="@Icons.Material.Filled.Remove" Size="Size.Small" IconSize="Size.Medium" OnClick="@(() => RemoveBeds(BedType.DoubleBed))"/>
             <ValidationMessage For="@(() => ModelRoom.Beds)"/>
         </MudItem>
         <MudItem xs="12" md="2">

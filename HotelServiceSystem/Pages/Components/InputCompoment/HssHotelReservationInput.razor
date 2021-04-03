@@ -41,7 +41,7 @@
         <MudItem xs="12">
             <MudTextField Label="Price" ReadOnly="@true" @bind-Value="@Price" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Rounded.Money"/>
         </MudItem>
-        @if (!IsEdit)
+        @if (!IsUpdate)
         {
             <MudItem xs="6" sm="1">
                 <MudButton EndIcon="@Icons.Material.Rounded.Replay" Color="Color.Warning" Variant="Variant.Filled" Size="Size.Large" ButtonType="ButtonType.Reset">Reset</MudButton>
@@ -61,7 +61,7 @@
     public EventCallback<HotelReservationViewModel> OnSubmit { get; set; }
 
     [Parameter]
-    public bool IsEdit { get; set; }
+    public bool IsUpdate { get; set; }
     
     private bool EnableClientAdd { get; set; }
     private List<Room> RoomList { get; set; }
@@ -125,7 +125,7 @@
         ReservationViewModel.Price = _price;
         ReservationViewModel.DateOfSubmission = DateTime.Today.ToLocalTime();
 
-        if (IsEdit)
+        if (IsUpdate)
         {
             RoomList = new List<Room>();
             Snackbar.Add($"Reservation number '{ReservationViewModel.Id}' was successfully edited", Severity.Warning);

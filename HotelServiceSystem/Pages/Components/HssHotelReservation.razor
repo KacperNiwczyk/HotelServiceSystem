@@ -31,7 +31,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ReservationList = hotelReservationService.GetAllHotelReservations();
+        ReservationList = hotelReservationService.GetAllHotelReservations().Where(x => !x.HasFinished).ToList();
         await base.OnInitializedAsync();
     }
     

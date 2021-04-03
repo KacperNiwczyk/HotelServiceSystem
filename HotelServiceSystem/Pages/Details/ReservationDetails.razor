@@ -2,50 +2,114 @@
 @using HotelServiceSystem.Entities
 @using HotelServiceSystem.Interfaces.Services
 @using HotelServiceSystem.ViewModel
+@using HotelServiceSystem.Core
+@using HotelServiceSystem.Interfaces.Helpers
+@using HotelServiceSystem.Core.Helpers
+
 @inject IHotelReservationService hotelReservationService
 @inject NavigationManager navigationManager
+@inject IReservationHelper ReservationHelper
+@inject IDateManager DateManager;
+@inject NavigationManager NavigationManager
 
 @if (ReservationModel != null)
 {
-    <MudExpansionPanel HideIcon="@true" IsExpanded="PanelExpanded">
-        <TitleContent>
-            <div class="d-flex">
-                <MudIcon Icon="@Icons.Rounded.Edit" class="mr3"/>
-                <MudText> Edit reservation</MudText>
-            </div>
-        </TitleContent>
-        <ChildContent>
-            <HssHotelReservationInput ReservationViewModel="ReservationModel" IsEdit="@true" OnSubmit="OnReservationUpdate" IsUpdate="@true"/>
-        </ChildContent>
-    </MudExpansionPanel>
-    <div class="card">
-        <div class="card-body">
-            <p>Client : @ReservationModel.Client.FirstName @ReservationModel.Client.LastName</p>
-            <p>Price : @ReservationModel.Price</p>
-            @*<p>Date from : @ReservationModel.DateFrom Date to : @ReservationModel.DateTo</p>*@
-            <p>Reserved rooms : </p>
-            @if (_reservedRooms.Any())
-            {
-                foreach (var room in _reservedRooms)
-                {
-                    <MatListItem>@room.RoomIdentifier</MatListItem>
-                    <MatDivider Padded="@true"/>
-                }
-            }
-            <p>Additional Services</p>
-            @if (_selectedAdditionalServices != null && _selectedAdditionalServices.Count > 0)
-            {
-                foreach (var addService in ReservationModel.SelectedAdditionalServices)
-                {
-                    <MatChip Label="@addService.Name" IsCheckable="@false"/>
-                }
-            }
-            else
-            {
-                <p>theres no additional services</p>
-            }
-        </div>
-    </div>
+    <MudGrid>
+        <MudItem xs="12">
+            <MudCard Elevation="25">
+                <MudExpansionPanel HideIcon="@true" IsExpanded="PanelExpanded">
+                    <TitleContent>
+                        <div class="d-flex">
+                            <MudIcon Icon="@Icons.Rounded.Edit" class="mr3"/>
+                            <MudText> Edit reservation</MudText>
+                        </div>
+                    </TitleContent>
+                    <ChildContent>
+                        <HssHotelReservationInput ReservationViewModel="ReservationModel" IsUpdate="@true" OnSubmit="OnReservationUpdate"/>
+                    </ChildContent>
+                </MudExpansionPanel>
+            </MudCard>
+        </MudItem>
+        <MudItem xs="8">
+            <MudCard Elevation="25">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudGrid Justify="Justify.SpaceEvenly">
+                            <MudItem xs="12" sm="4">
+                                <MudText Align="Align.Center" Typo="Typo.h6" Inline="@true" GutterBottom="@true">Reservation <strong><u>@ReservationModel.Id</u></strong> Details</MudText>
+                            </MudItem>
+                            <MudItem xs="12" sm="4">
+                                <MudHidden Breakpoint="Breakpoint.Xs"/>
+                            </MudItem>
+                            <MudItem xs="12" sm="4">
+                                @if (IsActive)
+                                {
+                                    <MudText Typo="Typo.h6" Color="Color.Secondary"> Active </MudText>
+                                }
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudDivider DividerType="DividerType.Middle"/>
+                            </MudItem>
+                        </MudGrid>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudGrid>
+                        <MudItem xs="12" sm="6">
+                            <MudField Label="Client" Variant="Variant.Outlined">@GetClientValue(ReservationModel.Client)</MudField>
+                        </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <MudField Label="Date of submission" Variant="Variant.Outlined">@ReservationModel.DateOfSubmission.ToString(Constants.DefaultDateTimeFormat)</MudField>
+                        </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <MudField Label="Arrival" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.FlightLand">@ReservationModel.DateRange.Start.Value.ToString(Constants.DefaultDateFormat)</MudField>
+                        </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <MudField Label="Departure" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.DirectionsRun">@ReservationModel.DateRange.End.Value.ToString(Constants.DefaultDateFormat)</MudField>
+                        </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <MudField Label="Price" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.AttachMoney">@ReservationModel.Price</MudField>
+                        </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <MudField Label="Discount" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.LocalOffer">% @ReservationModel.Discount</MudField>
+                        </MudItem>
+                        <MudItem xs="12">
+                            <MudField Variant="Variant.Outlined" Label="Additional services">
+                                @foreach (var addService in ReservationModel.SelectedAdditionalServices)
+                                {
+                                    <MudChip Text="@addService.Name"/>
+                                }
+                            </MudField>
+                        </MudItem>
+                        <MudItem xs="10">
+                            <MudField Label="Selected rooms" Variant="Variant.Outlined">
+                            <ul class="selectable-ul" style="border: none; width:inherit">
+                             @foreach (var item in _reservedRooms)
+                             {
+                                 <li @onclick="@(() => Select(item.Id))">
+                                     <div style="justify-content: space-between">
+                                         <MudGrid Spacing="0">
+                                             <MudItem xs="12" sm="6">
+                                                 <MudText>Number @item.RoomIdentifier</MudText>
+                                             </MudItem>
+                                             <MudItem xs="12" sm="6">
+                                                 <MudText>Floor: @item.Floor</MudText>
+                                             </MudItem>
+                                             <MudItem xs="12" sm="6">
+                                                 <MudText>Price @item.Price</MudText>
+                                             </MudItem>
+                                         </MudGrid>
+                                     </div>
+                                 </li>
+                             }
+                            </ul>
+                           </MudField>
+                        </MudItem>
+                    </MudGrid>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
 }
 else
 {
@@ -58,19 +122,19 @@ else
     public int Id { get; set; }
     
     private HotelReservationViewModel ReservationModel { get; set; }
-    
     private HotelReservation ReservationReference { get; set; }
-    
     private bool PanelExpanded { get; set; }
-    
-    private List<Room> _reservedRooms = new List<Room>();
+    private bool IsActive { get; set; }
     
     private List<AdditionalService> _selectedAdditionalServices = new List<AdditionalService>();
+    private List<Room> _reservedRooms = new List<Room>();
 
     protected override async Task OnInitializedAsync()
     {
         ReservationReference = await hotelReservationService.GetById(Id);
         ReservationModel = HotelReservationViewModel.FromHotelReservation(ReservationReference);
+
+        IsActive = ReservationModel.DateRange.Start <= DateManager.Today && !ReservationModel.HasFinished;
         _reservedRooms = ReservationModel.SelectedRooms;
         _selectedAdditionalServices = ReservationModel.SelectedAdditionalServices;
         await base.OnInitializedAsync();
@@ -81,5 +145,12 @@ else
         ReservationReference.UpdateFrom(hotelReservation);
         await hotelReservationService.UpdateHotelReservationAsync(ReservationReference);
         PanelExpanded = false;
+    }
+
+    private string GetClientValue(Client client) => ReservationHelper.GetClientFirstNameLastName(client);
+    
+    private void Select(int id)
+    {
+        NavigationManager.NavigateTo($"roomDetails/{id}");
     }
 }

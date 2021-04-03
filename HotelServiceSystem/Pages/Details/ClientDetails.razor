@@ -1,22 +1,182 @@
 ﻿@page "/clientDetails/{Id:int}"
 @using HotelServiceSystem.Entities
+@using HotelServiceSystem.Interfaces.Helpers
 @using HotelServiceSystem.Interfaces.Services
+@using HotelServiceSystem.Core
+@using HotelServiceSystem.Core.Helpers
+@using System.Reflection.Metadata
 @inject IClientService clientService
 @inject NavigationManager navigationManager
+@inject IReservationHelper ReservationHelper
+@inject IDateManager DateManager
 
 @if (ClientModel != null)
 {
-    <MudExpansionPanel HideIcon="@true" IsExpanded="PanelExpanded">
-        <TitleContent>
-            <div class="d-flex">
-                <MudIcon Icon="@Icons.Rounded.Edit" class="mr3"/>
-                <MudText> Edit Client</MudText>
-            </div>
-        </TitleContent>
-        <ChildContent>
-            <HssClientsInput ClientModel="@ClientModel" IsEdit="@true" OnSubmit="OnClientEdit"/>
-        </ChildContent>
-    </MudExpansionPanel>
+    <MudGrid>
+        <MudItem xs="12">
+            <MudCard Elevation="25">
+                <MudExpansionPanel HideIcon="@true" IsExpanded="PanelExpanded">
+                    <TitleContent>
+                        <div class="d-flex">
+                            <MudIcon Icon="@Icons.Rounded.Edit" class="mr3"/>
+                            <MudText> Edit Client</MudText>
+                        </div>
+                    </TitleContent>
+                    <ChildContent>
+                        <HssClientsInput ClientModel="@ClientModel" IsEdit="@true" OnSubmit="OnClientEdit"/>
+                    </ChildContent>
+                </MudExpansionPanel>
+            </MudCard>
+        </MudItem>
+        <MudItem xs="8">
+            <MudCard Elevation="25">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudGrid Justify="Justify.SpaceEvenly">
+                            <MudItem xs="12">
+                                <MudText Align="Align.Center" Typo="Typo.h6" Inline="@true" GutterBottom="@true">Client <strong><u>@ReservationHelper.GetClientFirstNameLastName(ClientModel)</u></strong> details</MudText>
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudDivider DividerType="DividerType.Middle"/>
+                            </MudItem>
+                        </MudGrid>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudGrid>
+                        <MudItem xs="12" sm="6">
+                            <MudField Label="Phone number" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Call">@ClientModel.PhoneNumber</MudField>
+                        </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <MudField Label="Email" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.AlternateEmail">@ClientModel.Email</MudField>
+                        </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <MudField Label="Company name" Variant="Variant.Outlined">@ClientModel.CompanyName</MudField>
+                        </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <MudField Label="Tax ID" Variant="Variant.Outlined">@ClientModel.TaxId</MudField>
+                        </MudItem>
+                        <MudGrid>
+                            <MudItem xs="10">
+                                <MudField Label="Finished reservations" Variant="Variant.Outlined">
+                                    @if (FinishedReservations.Any())
+                                    {
+                                        <ul class="selectable-ul" style="border: none; width:inherit">
+                                            @foreach (var item in FinishedReservations)
+                                            {
+                                                <li @onclick="@(() => Select(item))">
+                                                    <div style="justify-content: space-between">
+                                                        <MudGrid Spacing="0">
+                                                            <MudItem xs="12" sm="4">
+                                                                <MudText>Reference: @item.Id</MudText>
+                                                            </MudItem>
+                                                            <MudItem xs="12" sm="4">
+                                                                <MudText>Type: @(item is HotelReservation ? "Hotel" : "Event") </MudText>
+                                                            </MudItem>
+                                                            <MudItem xs="12" sm="4">
+                                                                <MudText>Price @item.Price</MudText>
+                                                            </MudItem>
+                                                        </MudGrid>
+                                                    </div>
+                                                </li>
+                                            }
+                                        </ul>  
+                                    }
+                                    else
+                                    {
+                                        @("This client has no finished reservations")
+                                    }
+                                </MudField>
+                            </MudItem>
+                            <MudItem xs="10">
+                                <MudField Label="Future reservations" Variant="Variant.Outlined">
+                                    @if (FutureReservations.Any())
+                                    {
+                                        <ul class="selectable-ul" style="border: none; width:inherit">
+                                            @foreach (var item in FutureReservations)
+                                            {
+                                                <li @onclick="@(() => Select(item))">
+                                                    <div style="justify-content: space-between">
+                                                        <MudGrid Spacing="0">
+                                                            <MudItem xs="12" sm="4">
+                                                                <MudText>Reference: @item.Id</MudText>
+                                                            </MudItem>
+                                                            <MudItem xs="12" sm="4">
+                                                                <MudText>Type: @(item is HotelReservation ? "Hotel" : "Event") </MudText>
+                                                            </MudItem>
+                                                            <MudItem xs="12" sm="4">
+                                                                <MudText>Price @item.Price</MudText>
+                                                            </MudItem>
+                                                            <MudItem xs="12" sm="6">
+                                                                <MudText>Price @item.Price</MudText>
+                                                            </MudItem>
+                                                            <MudItem xs="12" sm="6">
+                                                                <MudText>Arrival: @item.DateFrom.ToString(Constants.DefaultDateFormat)</MudText>
+                                                            </MudItem>
+                                                            <MudItem xs="12" sm="6">
+                                                                <MudText>Departure @item.DateTo.ToString(Constants.DefaultDateFormat)</MudText>
+                                                            </MudItem>
+                                                        </MudGrid>
+                                                    </div>
+                                                </li>
+                                            }
+                                        </ul>  
+                                    }
+                                    else
+                                    {
+                                        @("This client has no future reservations")
+                                    }
+                                </MudField>
+                            </MudItem>
+                        </MudGrid>
+                    </MudGrid>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+        <MudItem xl="4">
+            <MudCard Elevation="25">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudGrid>
+                            <MudItem xs="12">
+                                <MudText Typo="Typo.h6">Active reservation</MudText>
+                            </MudItem>
+                            <MudItem>
+                                <MudDivider DividerType="DividerType.Middle"/>
+                            </MudItem>
+                        </MudGrid>
+                    </CardHeaderContent>
+                </MudCardHeader>
+            <MudCardContent>
+                @if (ActiveReservation == null)
+                {
+                    <MudItem xs="12">
+                      <MudText Typo="Typo.h6">There is no active reservation for client: @ReservationHelper.GetClientFirstNameLastName(ClientModel)</MudText>  
+                    </MudItem>
+                }
+                else
+                {
+                    <MudItem xs="12">
+                        <MudField Label="Reference" Variant="Variant.Outlined">@ActiveReservation.Id</MudField>
+                    </MudItem> 
+                    <MudItem xs="12" sm="6">
+                        <MudField Label="Arrival" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.FlightLand">@ActiveReservation.DateFrom.ToString(Constants.DefaultDateFormat)</MudField>
+                    </MudItem>
+                    <MudItem xs="12" sm="6">
+                        <MudField Label="Departure" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.DirectionsRun">@ActiveReservation.DateTo.ToString(Constants.DefaultDateFormat)</MudField>
+                    </MudItem>
+                    <MudItem xs="12" sm="6">
+                        <MudField Label="Number of guests" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.People">@ActiveReservation.NumberOfGuests</MudField>
+                    </MudItem>
+                    <MudItem xs="12" sm="6">
+                        <MudField Label="Number of reserved rooms" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.MeetingRoom">@ActiveReservation.RoomReservations.Count</MudField>
+                    </MudItem>
+                }
+            </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+
     <div class="card">
         <div class="card-body">
             <p>First name  : @ClientModel.FirstName</p>
@@ -53,12 +213,18 @@ else
     private Client ClientModel { get; set; }
     
     private bool PanelExpanded { get; set; }
+    
+    private Reservation ActiveReservation { get; set; }
+    private List<Reservation> FutureReservations { get; set; }
+    private List<Reservation> FinishedReservations { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         ClientModel = clientService.GetById(Id);
-
-
+        var allReservations = ClientModel.Reservations;
+        FinishedReservations = allReservations.Where(x => x.HasFinished).ToList();
+        FutureReservations = allReservations.Except(FinishedReservations).ToList();
+        ActiveReservation = FutureReservations.FirstOrDefault(x => x.DateFrom <= DateManager.Today);
         await base.OnInitializedAsync();
     }
 
@@ -67,5 +233,15 @@ else
         await clientService.UpdateClientAsync(client);
         PanelExpanded = false;
     }
-
+    
+    private void Select(Reservation reservation)
+    {
+        if (reservation is HotelReservation)
+        {
+            navigationManager.NavigateTo($"hotelReservationDetails/{reservation.Id}");
+            return;
+        }
+        
+        navigationManager.NavigateTo($"eventReservationDetails/{reservation.Id}");
+    }
 }
