@@ -33,6 +33,8 @@ namespace HotelServiceSystem
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
+            services.AddControllers();
+            services.AddSwaggerGen();
             services.AddServerSideBlazor();
 
             //MudBlazor
@@ -108,7 +110,8 @@ namespace HotelServiceSystem
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            
+            app.UseSwagger();
+            app.UseSwaggerUI(x => x.SwaggerEndpoint("/swagger/v1/swagger.json", "MyHotel.io API"));
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();

@@ -180,29 +180,6 @@
             </MudCard>
         </MudItem>
     </MudGrid>
-
-    <div class="card">
-        <div class="card-body">
-            <p>First name  : @ClientModel.FirstName</p>
-            <p>Last name  : @ClientModel.LastName</p>
-            <p>Company name  : @ClientModel.CompanyName</p>
-            <p>Email  : @ClientModel.Email</p>
-            <p>Phone  : @ClientModel.PhoneNumber</p>
-            <p>Tax ID  : @ClientModel.TaxId</p>
-            @if (ClientModel.Reservations is {} reservations&& reservations.Count > 0)
-            {
-                foreach (var reservation in reservations)
-                {
-                    <MatListItem>@reservation.Id | @reservation.DateFrom | @reservation.DateTo </MatListItem>
-                    <MatDivider Padded="@true"/>
-                }
-            }
-            else
-            {
-                <p>Client does not have any resevations yet</p>
-            }
-        </div>
-    </div>
 }
 else
 {
