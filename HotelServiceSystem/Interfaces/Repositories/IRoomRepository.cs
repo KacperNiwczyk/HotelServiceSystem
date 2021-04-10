@@ -7,5 +7,7 @@ namespace HotelServiceSystem.Core
     public interface IRoomRepository : IRepository<Room>
     {
         Task<List<Room>> GetFreeRooms(ReservationSpan reservationSpan);
+
+        Task<List<Room>> GetApiRoomsAsync();
     }
 }

@@ -11,6 +11,8 @@ namespace HotelServiceSystem.Interfaces.Services
     {
         List<Room> GetAllRoomsAsync();
 
+        Task<List<Room>> GetAllRoomsAPI();
+
         Task<List<Room>> GetAvailableRooms(ReservationSpan timeSpan);
         List<Room> GetAllRoomsWithRelations(params Expression<Func<Room, object>>[] navigationProperties);
         Task<Room> GetRoomById(int id);

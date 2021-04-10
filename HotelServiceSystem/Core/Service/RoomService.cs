@@ -30,6 +30,11 @@ namespace HotelServiceSystem.Core.Service
                 .ToList();
         }
 
+        public async Task<List<Room>> GetAllRoomsAPI()
+        {
+            return await _roomRepository.GetApiRoomsAsync();
+        }
+
         public async Task<List<Room>> GetAvailableRooms(ReservationSpan reservationSpan)
         {
             return await _roomRepository.GetFreeRooms(reservationSpan);

@@ -20,5 +20,14 @@ namespace HotelServiceSystem.Core.Repositories
             return await  HotelServiceDatabaseContext.Set<Room>()
                 .Include(x => x.RoomReservations).ToListAsync();
         }
+
+        public async Task<List<Room>> GetApiRoomsAsync()
+        {
+            return await HotelServiceDatabaseContext.Set<Room>()
+                .Include(x => x.Beds)
+                .Include(x => x.AdditionalServiceRooms)
+                .ThenInclude(x => x.AdditionalService)
+                .ToListAsync();
+        }
     }
 }
