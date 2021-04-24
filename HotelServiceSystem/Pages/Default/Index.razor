@@ -1,8 +1,10 @@
 ﻿@page "/dashboard"
 @using HotelServiceSystem.Interfaces.Services
 @using HotelServiceSystem.Entities
-@using HotelServiceSystem.DtoModel
+@using HotelServiceSystem.Core.Helpers
 @inject IRoomService RoomService
+@inject IHotelReservationService HotelReservationService;
+@inject IEventReservationService EventReservationService;
 
 <MudGrid>
     <MudItem xs="12" sm="6">
@@ -20,15 +22,66 @@
             </MudCardContent>
         </MudCard>
     </MudItem>
+    <MudItem xs="12" sm="6">
+        <MudCard Elevation="25">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">Expected income in next @_selectedOption days startng from @dateFrom.ToString(Constants.DefaultDateFormat) - @totalIncome<MudIcon Class="hss-table-icon" Icon="@Icons.Material.Filled.AttachMoney"/> </MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem xs="12">
+                        <MudChart ChartType="ChartType.Bar" XAxisLabels="@xAxisLables" Height="100%" Width="100%" ChartOptions="_reservationChartOptions" ChartSeries="_chartSeriesList"></MudChart>
+                    </MudItem>
+                </MudGrid>
+            </MudCardContent>
+            <MudCardActions>
+                <MudGrid>
+                    <MudItem xs="12" sm="6">
+                        <MudDatePicker Label="Select first date" @bind-Value="@dateFrom" DateChanged="ChangeDate"/>
+                    </MudItem>
+                    <MudItem xs="12" sm="6">
+                        <MudSelect Label="Number of days" @bind-Value="@selectedDayOption">
+                            @foreach (var option in daysOptions)
+                            {
+                                <MudSelectItem Value="@option">@option</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+                </MudGrid>
+            </MudCardActions>
+        </MudCard>
+    </MudItem>
 </MudGrid>
 
 @code{
     private List<Room> _rooms = new List<Room>();
     private List<Room> _shouldBeCleaned = new List<Room>();
+    private List<HotelReservation> _reservations = new List<HotelReservation>();
+    private List<EventReservation> _eventReservations = new List<EventReservation>();
+    private string[] xAxisLables;
     private double[] roomsData;
+    private double[] reservationPriceData;
     private string[] roomsLabels;
+    private ChartOptions _reservationChartOptions = new ChartOptions();
+    private List<ChartSeries> _chartSeriesList;
     private ChartOptions _chartOptions = new ChartOptions();
-    
+    private DateTime dateFrom;
+    private double totalIncome;
+    private int[] daysOptions = {7, 14};
+
+    private int selectedDayOption
+    {
+        get => _selectedOption;
+        set
+        {
+            _selectedOption = value;
+            InitializeReservationData();
+        } 
+    }
+    private int _selectedOption = 7;
+
     private string greenColor = "#5bc06c";
     private string redColor = "#ec521c";
     private string darkRedColor = "#d00707";
@@ -36,20 +89,86 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _chartOptions.ChartPalette = new[] {greenColor, redColor, darkRedColor, yellowColor};
-        _rooms = RoomService.GetAllRoomsAsync();
-        _shouldBeCleaned = _rooms.Where(x => x.ShouldBeCleaned).Take(5).ToList();
-        
-        var availableCount = (double)_rooms.Where(x => x.IsFreeNow).Count();
-        var occupiedCount = (double)_rooms.Where(x => !x.IsFreeNow).Count();
-        var outOfServiceCount = (double)_rooms.Where(x => x.IsOutOfService).Count();
-        var cleanedCount = (double)_rooms.Where(x => x.ShouldBeCleaned).Count();
-        
-        roomsData = new[] {availableCount, occupiedCount, outOfServiceCount, cleanedCount};
-        roomsLabels = new[] {$"Available ({availableCount})", $"Occupied ({occupiedCount})", $"Out of service ({outOfServiceCount})", $"Should be cleaned ({cleanedCount})"};
+        dateFrom = DateTime.Today.ToLocalTime();
+        _reservationChartOptions.YAxisTicks = 250;
+        InitializeRoomData();
+        InitializeReservationData();
         await base.OnInitializedAsync();
     }
 
+    private void ChangeDate(DateTime? dateTime)
+    {
+        dateFrom = dateTime.Value;
+        InitializeReservationData();
+    }
+
+    private void InitializeReservationData()
+    {
+        _chartSeriesList = new List<ChartSeries>();
+        bool GetReservationInTimespan(Reservation reservation) => !reservation.HasFinished && reservation.DateFrom >= dateFrom && reservation.DateFrom <= dateFrom.AddDays(_selectedOption) && reservation.Price > 0;
+        _reservations = HotelReservationService.GetAllHotelReservations().Where(GetReservationInTimespan).ToList();
+        _eventReservations = EventReservationService.GetAllEvents().Where(GetReservationInTimespan).ToList();
+        
+        totalIncome = _reservations.Sum(x => x.Price) + _eventReservations.Sum(x => x.Price);
+        
+        
+        var dates = new List<DateTime>();
+        
+        dates.Add(dateFrom);
+        for (int i = 1; i <= _selectedOption ; i++)
+        {
+            dates.Add(dateFrom.AddDays(i));
+        }
+        
+        var hotelReservationsChartData = GetChartData(dates, _reservations);
+        var eventReservationChartData = GetChartData(dates, _eventReservations);
+        xAxisLables = dates.Select(x => x.ToString(Constants.DayMonth)).ToArray();
+        var hotelSeries = new ChartSeries() {Name = "Hotel Reservations", Data = hotelReservationsChartData.Values.ToArray()};
+        var eventSeries = new ChartSeries() {Name = "Event Reservations", Data = eventReservationChartData.Values.ToArray()};
+        _chartSeriesList.Add(hotelSeries);
+        _chartSeriesList.Add(eventSeries);
+    }
+
+    private Dictionary<DateTime, double> GetChartData<T>(List<DateTime> dates, List<T> reservations) where T: Reservation
+    {
+        var dictionary = new Dictionary<DateTime, double>();
+
+        foreach (var date in dates)
+        {
+            dictionary.Add(date, 0);
+        }
+
+        foreach (var reservation in reservations)
+        {
+            var reservationDate = reservation.DateFrom;
+            if (dictionary.ContainsKey(reservationDate))
+            {
+                dictionary[reservationDate] += reservation.Price;
+            }
+        }
+        
+        return dictionary;
+    }
+
+    private void InitializeRoomData()
+    {
+        _chartOptions.ChartPalette = new[] {greenColor, redColor, darkRedColor, yellowColor};
+        _rooms = RoomService.GetAllRoomsAsync();
+        _shouldBeCleaned = _rooms.Where(x => x.ShouldBeCleaned).Take(5).ToList();
+
+        var availableCount = (double) _rooms.Where(x => x.IsFreeNow).Count();
+        var occupiedCount = (double) _rooms.Where(x => !x.IsFreeNow).Count();
+        var outOfServiceCount = (double) _rooms.Where(x => x.IsOutOfService).Count();
+        var cleanedCount = (double) _rooms.Where(x => x.ShouldBeCleaned).Count();
+
+        roomsData = new[] {availableCount, occupiedCount, outOfServiceCount, cleanedCount};
+        roomsLabels = new[]
+        {
+            $"Available ({availableCount})", $"Occupied ({occupiedCount})", $"Out of service ({outOfServiceCount})",
+            $"Should be cleaned ({cleanedCount})"
+        };
+    }
+    
     private async Task CleanRoom(Room room)
     {
         room.ShouldBeCleaned = false;
