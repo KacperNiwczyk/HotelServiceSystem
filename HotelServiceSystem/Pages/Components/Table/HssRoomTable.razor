@@ -1,9 +1,14 @@
 ﻿@using HotelServiceSystem.Entities
 @using HotelServiceSystem.Core
+@using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal
 @inject NavigationManager navigationManager
 
 <MudCard Elevation="25">
-    <MudTable T="Room" Items="RoomList" Dense="@IsDashboard" Hover="@true" SelectedItemChanged="@(item => ShowDetails(item.Id))">
+    <MudTable T="Room" Items="RoomList" Dense="@IsDashboard" Filter="@(new Func<Room,bool>(FilterFunc))" Hover="@true" SelectedItemChanged="@(item => ShowDetails(item.Id))">
+        <ToolBarContent>
+            <MudToolBarSpacer />
+            <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
         <HeaderContent>
             <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => x.Id))">Id</MudTableSortLabel></MudTh>
             <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => x.RoomIdentifier))">Name</MudTableSortLabel></MudTh>
@@ -34,6 +39,8 @@
     
     [Parameter]
     public bool IsDashboard { get; set; }
+
+    private string searchString = string.Empty;
     
     private void ShowDetails(int id)
     {
@@ -43,6 +50,19 @@
     private int BedCount(Room room, BedType bedType)
     {
         return room.Beds.Count(x => x.BedType == bedType);
+    }
+    
+    public bool FilterFunc(Room room)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (room.Id.ToString().Equals(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (room.RoomIdentifier.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (GetRoomStatusValue(room).Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
     }
     
     private string GetRoomStatusValue(Room room)

@@ -37,7 +37,7 @@
             <HssAdditionalServiceSelect AdditionalServiceList="@_additionalServiceList" @bind-SelectedAdditionalServices="@ReservationViewModel.SelectedAdditionalServices"/>
         </MudItem>
         <MudItem xs="12">
-             <MudTextField Label="Discount" @bind-Value="@ReservationViewModel.Discount"/>
+             <MudTextField Label="Discount" @bind-Value="@ReservationViewModel.Discount" Adornment="Adornment.Start" AdornmentText="%"/>
         </MudItem>
         <MudItem xs="12">
             <MudTextField Label="Price" ReadOnly="@true" @bind-Value="@Price" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Rounded.Money"/>
@@ -159,6 +159,6 @@
 
     private void CalculatePrice()
     {
-        _price = _reservationHelper.GetReservationPrice(ReservationViewModel.SelectedRooms, ReservationViewModel.SelectedAdditionalServices, NumberOfDays);
+        _price = _reservationHelper.GetReservationPrice(ReservationViewModel.SelectedRooms, ReservationViewModel.SelectedAdditionalServices, NumberOfDays, (int)ReservationViewModel.Discount);
     }
 }

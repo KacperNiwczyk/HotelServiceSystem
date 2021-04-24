@@ -5,7 +5,11 @@
 @inject NavigationManager navigationManager
 
 <MudCard Elevation="25">
-    <MudTable T="EventReservation" Items="EventReservationsList" Hover="@true"  SelectedItemChanged="@(item => ShowDetails(item.Id))">
+    <MudTable T="EventReservation" Items="EventReservationsList" Filter="@(new Func<EventReservation,bool>(FilterFunc))" Hover="@true" SelectedItemChanged="@(item => ShowDetails(item.Id))">
+        <ToolBarContent>
+            <MudToolBarSpacer />
+            <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
         <HeaderContent>
             <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<EventReservation, object>(x => x.Id))">Id</MudTableSortLabel></MudTh>
             <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<EventReservation, object>(x => GetClientValue(x.Client)))">Client</MudTableSortLabel></MudTh>
@@ -37,6 +41,19 @@
 @code {
     [Parameter]
     public List<EventReservation> EventReservationsList { get; set; }
+    
+    private string searchString = string.Empty;
+
+    public bool FilterFunc(EventReservation eventReservation)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (eventReservation.Id.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (GetClientValue(eventReservation.Client).Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
 
     private string GetClientValue(Client client) => reservationHelper.GetClientFirstNameLastName(client);
 

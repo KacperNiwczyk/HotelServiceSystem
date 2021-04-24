@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using HotelServiceSystem.Entities;
 using HotelServiceSystem.Interfaces.Helpers;
@@ -14,7 +15,7 @@ namespace HotelServiceSystem.Core.Helpers
 			return string.Join(", ",roomReservation.Select(x => x.Room.RoomIdentifier));
 		}
 
-		public double GetReservationPrice(List<Room> rooms, List<AdditionalService> additionalService, int numberOfDays)
+		public double GetReservationPrice(List<Room> rooms, List<AdditionalService> additionalService, int numberOfDays, int discount = 0)
 		{
 			var price = 0d;
 			
@@ -28,7 +29,15 @@ namespace HotelServiceSystem.Core.Helpers
 				price += additionalService.Sum(x => x.Price);
 			}
 
-			return price *= numberOfDays;
+			if (discount != 0)
+			{
+				var discountValue = (double)Math.Round(discount / 100m, 2);
+				var totalPrice = price * numberOfDays;
+				var discountTotal = totalPrice * discountValue;
+				return totalPrice - discountTotal;
+			}
+
+			return price * numberOfDays;
 		}
 	}
 }

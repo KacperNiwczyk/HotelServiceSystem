@@ -4,7 +4,11 @@
 @inject IReservationHelper reservationHelper
 
 <MudCard Elevation="25">
-    <MudTable T="Client" Items="ClientList" Hover="@true" SelectedItemChanged="@(item => ShowDetails(item.Id))" >
+    <MudTable T="Client" Items="ClientList" Hover="@true" Filter="@(new Func<Client, bool>(FilterFunc))" SelectedItemChanged="@(item => ShowDetails(item.Id))" >
+                <ToolBarContent>
+                    <MudToolBarSpacer />
+                    <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                </ToolBarContent>
         <HeaderContent>
             <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Client, object>(x => x.Id))">Id</MudTableSortLabel></MudTh>
             <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Client, object>(GetClientValue))">Name</MudTableSortLabel></MudTh>
@@ -33,7 +37,20 @@
 
     public string GetClientValue(Client client) => reservationHelper.GetClientFirstNameLastName(client);
 
+    private string searchString = string.Empty;
 
+    private bool FilterFunc(Client client)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (client.Id.ToString().Equals(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (GetClientValue(client).Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (client.PhoneNumber.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
 
     private void ShowDetails(int id)
     {

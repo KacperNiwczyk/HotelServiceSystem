@@ -2,12 +2,16 @@
 @inject NavigationManager navigationManager
 
 <MudCard Elevation="25">
-    <MudTable T="AdditionalService" Items="AdditionalServicesList" Hover="@true" SelectedItemChanged="@(item => ShowServiceDetails(item.Id))" >
+    <MudTable T="AdditionalService" Items="AdditionalServicesList" Hover="@true" Filter="@(new Func<AdditionalService, bool>(FilterFunc))" SelectedItemChanged="@(item => ShowServiceDetails(item.Id))">
+            <ToolBarContent>
+                <MudToolBarSpacer />
+                <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            </ToolBarContent>
         <HeaderContent>
-            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<AdditionalService,object>(x => x.Id))">Id</MudTableSortLabel></MudTh>
-            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<AdditionalService,object>(x => x.Name))">Name</MudTableSortLabel></MudTh>
-            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<AdditionalService,object>(x => x.Price))">Price</MudTableSortLabel></MudTh>
-            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<AdditionalService,object>(x => x.ServiceType))">Type</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<AdditionalService, object>(x => x.Id))">Id</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<AdditionalService, object>(x => x.Name))">Name</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<AdditionalService, object>(x => x.Price))">Price</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<AdditionalService, object>(x => x.ServiceType))">Type</MudTableSortLabel></MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
@@ -24,6 +28,19 @@
 @code {
     [Parameter]
     public List<AdditionalService> AdditionalServicesList { get; set; }
+
+    private string searchString = string.Empty;
+
+    private bool FilterFunc(AdditionalService additionalService)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (additionalService.Id.ToString().Equals(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (additionalService.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
     
     private void ShowServiceDetails(int id)
     {

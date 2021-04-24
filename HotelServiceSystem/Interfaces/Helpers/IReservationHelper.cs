@@ -9,6 +9,6 @@ namespace HotelServiceSystem.Interfaces.Helpers
 
 		string GetRoomValues(IEnumerable<RoomReservation> roomReservation);
 
-		double GetReservationPrice(List<Room> rooms, List<AdditionalService> additionalService, int numberOfDays);
+		double GetReservationPrice(List<Room> rooms, List<AdditionalService> additionalService, int numberOfDays, int discount = 0);
 	}
 }
