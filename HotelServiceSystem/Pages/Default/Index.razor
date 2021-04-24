@@ -1,11 +1,12 @@
-﻿@page "/"
+﻿@page "/dashboard"
 @using HotelServiceSystem.Interfaces.Services
 @using HotelServiceSystem.Entities
+@using HotelServiceSystem.DtoModel
 @inject IRoomService RoomService
 
 <MudGrid>
     <MudItem xs="12" sm="6">
-        <HssRoomTable RoomList="@_shouldBeCleaned" IsDashboard="@true"/>
+        <HssRoomsToCleanTable RoomList="@_shouldBeCleaned" OnRoomCleaned="@CleanRoom"/>
     </MudItem>
     <MudItem xs="12" sm="6">
         <MudCard Elevation="25">
@@ -47,5 +48,12 @@
         roomsData = new[] {availableCount, occupiedCount, outOfServiceCount, cleanedCount};
         roomsLabels = new[] {$"Available ({availableCount})", $"Occupied ({occupiedCount})", $"Out of service ({outOfServiceCount})", $"Should be cleaned ({cleanedCount})"};
         await base.OnInitializedAsync();
+    }
+
+    private async Task CleanRoom(Room room)
+    {
+        room.ShouldBeCleaned = false;
+        await RoomService.UpdateRoomAsync(room);
+        _shouldBeCleaned = _rooms.Where(x => x.ShouldBeCleaned).Take(5).ToList();
     }
 }

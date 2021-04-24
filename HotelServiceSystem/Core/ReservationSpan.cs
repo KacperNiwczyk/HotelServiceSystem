@@ -15,7 +15,7 @@ namespace HotelServiceSystem.Core
 
         public int GetAmountOfDays()
         {
-            return (int) (DateFrom - DateTo).TotalDays;
+            return (int) (DateTo - DateFrom).TotalDays;
         }
     }
 }

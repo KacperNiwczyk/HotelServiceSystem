@@ -11,6 +11,7 @@
 @inject IClientService clientService
 @inject IRoomService roomService
 @inject IRoomHelper _roomHelper
+@inject IReservationHelper _reservationHelper
 @inject IAdditionalServiceService additionalServiceService
 @inject IServiceProvider _serviceProvider
 @inject ISnackbar Snackbar
@@ -158,20 +159,6 @@
 
     private void CalculatePrice()
     {
-        _price = 0d;
-
-        var selectedRooms = ReservationViewModel.SelectedRooms;
-        if (selectedRooms != null && selectedRooms.Count > 0)
-        {
-            _price += selectedRooms.Sum(room => room.Price);
-        }
-
-        var selectedAdditionalService = ReservationViewModel.SelectedAdditionalServices;
-        if (selectedAdditionalService != null && selectedAdditionalService.Count > 0)
-        {
-            _price += selectedAdditionalService.Sum(x => x.Price);
-        }
-
-        _price *= NumberOfDays;
+        _price = _reservationHelper.GetReservationPrice(ReservationViewModel.SelectedRooms, ReservationViewModel.SelectedAdditionalServices, NumberOfDays);
     }
 }
