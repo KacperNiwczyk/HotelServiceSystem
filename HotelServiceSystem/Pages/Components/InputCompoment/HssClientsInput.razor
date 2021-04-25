@@ -7,18 +7,18 @@
     <FluentValidationValidator/>
     <MudGrid>
         <MudItem xs="6" sm="3">
-            <MudTextField Label="First name*" @bind-Value="@ClientModel.FirstName" Variant="Variant.Filled"/>
+            <MudTextField Label="Imię*" @bind-Value="@ClientModel.FirstName" Variant="Variant.Filled"/>
             <ValidationMessage For="@(() => ClientModel.FirstName)"/>
         </MudItem>
         <MudItem xs="6" sm="3">
-            <MudTextField Label="Last name*" @bind-Value="@ClientModel.LastName" Variant="Variant.Filled"/>
+            <MudTextField Label="Nazwisko*" @bind-Value="@ClientModel.LastName" Variant="Variant.Filled"/>
             <ValidationMessage For="@(() => ClientModel.LastName)"/>
         </MudItem>
         <MudItem xs="6" sm="6">
             <MudHidden Breakpoint="Breakpoint.Xs"/>
         </MudItem>
         <MudItem xs="6" sm="3">
-            <MudTextField Label="Phone number*" @bind-Value="@ClientModel.PhoneNumber" Variant="Variant.Filled"/>
+            <MudTextField Label="Numer telefonu*" @bind-Value="@ClientModel.PhoneNumber" Variant="Variant.Filled"/>
             <ValidationMessage For="@(() => ClientModel.PhoneNumber)"/>
         </MudItem>
         <MudItem xs="6" sm="3">
@@ -29,11 +29,11 @@
             <MudHidden Breakpoint="Breakpoint.Xs"/>
         </MudItem>
         <MudItem xs="6" sm="3">
-            <MudTextField Label="Company name" @bind-Value="@ClientModel.CompanyName" Variant="Variant.Filled"/>
+            <MudTextField Label="Firma" @bind-Value="@ClientModel.CompanyName" Variant="Variant.Filled"/>
             <ValidationMessage For="@(() => ClientModel.CompanyName)"/>
         </MudItem>
         <MudItem xs="6" sm="3">
-            <MudTextField Label="Tax Id" @bind-Value="@ClientModel.TaxId" Variant="Variant.Filled"/>
+            <MudTextField Label="NIP" @bind-Value="@ClientModel.TaxId" Variant="Variant.Filled"/>
             <ValidationMessage For="@(() => ClientModel.TaxId)"/>
         </MudItem>
         <MudItem xs="12">
@@ -42,11 +42,11 @@
          @if (!IsEdit)
          {
              <MudItem xs="6" sm="1">
-                 <MudButton EndIcon="@Icons.Material.Rounded.Replay" Color="Color.Warning" Variant="Variant.Filled" Size="Size.Large" ButtonType="ButtonType.Reset">Reset</MudButton>
+                 <MudButton EndIcon="@Icons.Material.Rounded.Replay" Color="Color.Warning" Variant="Variant.Filled" Size="Size.Large" ButtonType="ButtonType.Reset">Resetuj</MudButton>
              </MudItem>
          }
          <MudItem xs="6" sm="1">
-             <MudButton EndIcon="@Icons.Material.Rounded.Check" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Large" ButtonType="ButtonType.Submit">Submit</MudButton>
+             <MudButton EndIcon="@Icons.Material.Rounded.Check" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Large" ButtonType="ButtonType.Submit">Wyślij</MudButton>
          </MudItem>
     </MudGrid>
 </EditForm>
@@ -65,11 +65,11 @@
     {
         if (IsEdit)
         {
-            Snackbar.Add($"Client '{ClientModel.FirstName} {ClientModel.LastName}' was successfully edited", Severity.Warning);
+            Snackbar.Add($"Klient '{ClientModel.FirstName} {ClientModel.LastName}' został zaaktualizowany", Severity.Warning);
         }
         else
         {
-            Snackbar.Add($"New client '{ClientModel.FirstName} {ClientModel.LastName}' was successfully added", Severity.Success);
+            Snackbar.Add($"Nowy klient '{ClientModel.FirstName} {ClientModel.LastName}' został dodany", Severity.Success);
         }
         
         await OnSubmit.InvokeAsync(ClientModel);

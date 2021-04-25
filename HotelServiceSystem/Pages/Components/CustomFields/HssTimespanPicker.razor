@@ -2,7 +2,7 @@
 @using HotelServiceSystem.Core
 @using HotelServiceSystem.ViewModel
 
-<MudDateRangePicker Label="Pick reservation date" DateRangeChanged="CheckDatesSelected" MinDate="@GetMinimalDepartureDate()"/>
+<MudDateRangePicker Label="Wybierz date rezerwacji" DateRangeChanged="CheckDatesSelected" MinDate="@GetMinimalDepartureDate()"/>
 @code {
     [Parameter]
     public ReservationViewModel ReservationModel

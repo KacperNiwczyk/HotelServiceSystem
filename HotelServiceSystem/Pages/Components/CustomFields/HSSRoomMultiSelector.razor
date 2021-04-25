@@ -11,13 +11,13 @@
             {
                 <li @onclick="@(() => Select(item))">
                     <div style="justify-content: space-between">
-                        <MudText>Room number: @item.RoomIdentifier</MudText>
+                        <MudText>Numer: @item.RoomIdentifier</MudText>
                         <MudText Class="flex-d">
-                           Beds: <MudIcon Class="hss-table-icon" Icon="@Icons.Material.Rounded.SingleBed" Size="Size.Small"/>x @item.Beds.Count(SingleBeds)
+                           Łóżka: <MudIcon Class="hss-table-icon" Icon="@Icons.Material.Rounded.SingleBed" Size="Size.Small"/>x @item.Beds.Count(SingleBeds)
                                <MudIcon Class="hss-table-icon" Icon="@Icons.Material.Rounded.KingBed" Size="Size.Small"/>x @item.Beds.Count(DoubleBeds)
                         </MudText>
-                        <MudText>Floor: @item.Floor</MudText>
-                        <MudText>Price: @item.Price</MudText>
+                        <MudText>Piętro: @item.Floor</MudText>
+                        <MudText>Cena: @item.Price</MudText>
                     </div>
                 </li>
             }
@@ -30,13 +30,13 @@
             {
                 <li @onclick="@(() => Deselect(item))">
                     <div style="justify-content: space-between">
-                        <MudText>Room number: @item.RoomIdentifier</MudText>
+                        <MudText>Numer: @item.RoomIdentifier</MudText>
                         <MudText Class="flex-d">
-                           Beds: <MudIcon Class="hss-table-icon" Icon="@Icons.Material.Rounded.SingleBed" Size="Size.Small"/>x @item.Beds.Count(SingleBeds)
+                           Łóżka: <MudIcon Class="hss-table-icon" Icon="@Icons.Material.Rounded.SingleBed" Size="Size.Small"/>x @item.Beds.Count(SingleBeds)
                                <MudIcon Class="hss-table-icon" Icon="@Icons.Material.Rounded.KingBed" Size="Size.Small"/>x @item.Beds.Count(DoubleBeds)
                         </MudText>
-                        <MudText>Floor: @item.Floor</MudText>
-                        <MudText>Price: @item.Price</MudText>
+                        <MudText>Piętro: @item.Floor</MudText>
+                        <MudText>Cena: @item.Price</MudText>
                     </div>
                 </li>
             }

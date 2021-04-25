@@ -19,7 +19,7 @@
                     <TitleContent>
                         <div class="d-flex">
                             <MudIcon Icon="@Icons.Rounded.Edit" class="mr3"/>
-                            <MudText> Edit Client</MudText>
+                            <MudText> Edytuj klienta</MudText>
                         </div>
                     </TitleContent>
                     <ChildContent>
@@ -34,7 +34,7 @@
                     <CardHeaderContent>
                         <MudGrid Justify="Justify.SpaceEvenly">
                             <MudItem xs="12">
-                                <MudText Align="Align.Center" Typo="Typo.h6" Inline="@true" GutterBottom="@true">Client <strong><u>@ReservationHelper.GetClientFirstNameLastName(ClientModel)</u></strong> details</MudText>
+                                <MudText Align="Align.Center" Typo="Typo.h6" Inline="@true" GutterBottom="@true">Klient <strong><u>@ReservationHelper.GetClientFirstNameLastName(ClientModel)</u></strong> szczegóły</MudText>
                             </MudItem>
                             <MudItem xs="12">
                                 <MudDivider DividerType="DividerType.Middle"/>
@@ -45,20 +45,20 @@
                 <MudCardContent>
                     <MudGrid>
                         <MudItem xs="12" sm="6">
-                            <MudField Label="Phone number" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Call">@ClientModel.PhoneNumber</MudField>
+                            <MudField Label="Numer telefonu" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Call">@ClientModel.PhoneNumber</MudField>
                         </MudItem>
                         <MudItem xs="12" sm="6">
                             <MudField Label="Email" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.AlternateEmail">@ClientModel.Email</MudField>
                         </MudItem>
                         <MudItem xs="12" sm="6">
-                            <MudField Label="Company name" Variant="Variant.Outlined">@ClientModel.CompanyName</MudField>
+                            <MudField Label="Firma" Variant="Variant.Outlined">@ClientModel.CompanyName</MudField>
                         </MudItem>
                         <MudItem xs="12" sm="6">
-                            <MudField Label="Tax ID" Variant="Variant.Outlined">@ClientModel.TaxId</MudField>
+                            <MudField Label="NIP" Variant="Variant.Outlined">@ClientModel.TaxId</MudField>
                         </MudItem>
                         <MudGrid>
                             <MudItem xs="10">
-                                <MudField Label="Finished reservations" Variant="Variant.Outlined">
+                                <MudField Label="Zakończone rezerwacje" Variant="Variant.Outlined">
                                     @if (FinishedReservations.Any())
                                     {
                                         <ul class="selectable-ul" style="border: none; width:inherit">
@@ -68,13 +68,13 @@
                                                     <div style="justify-content: space-between">
                                                         <MudGrid Spacing="0">
                                                             <MudItem xs="12" sm="4">
-                                                                <MudText>Reference: @item.Id</MudText>
+                                                                <MudText>Numer: @item.Id</MudText>
                                                             </MudItem>
                                                             <MudItem xs="12" sm="4">
-                                                                <MudText>Type: @(item is HotelReservation ? "Hotel" : "Event") </MudText>
+                                                                <MudText>Typ: @(item is HotelReservation ? "Hotel" : "Wydarzenie") </MudText>
                                                             </MudItem>
                                                             <MudItem xs="12" sm="4">
-                                                                <MudText>Price @item.Price</MudText>
+                                                                <MudText>Cena @item.Price</MudText>
                                                             </MudItem>
                                                         </MudGrid>
                                                     </div>
@@ -84,12 +84,12 @@
                                     }
                                     else
                                     {
-                                        @("This client has no finished reservations")
+                                        @("Ten klient nie posiada zakończonych rezerwacji")
                                     }
                                 </MudField>
                             </MudItem>
                             <MudItem xs="10">
-                                <MudField Label="Future reservations" Variant="Variant.Outlined">
+                                <MudField Label="Rezerwacje" Variant="Variant.Outlined">
                                     @if (FutureReservations.Any())
                                     {
                                         <ul class="selectable-ul" style="border: none; width:inherit">
@@ -99,19 +99,19 @@
                                                     <div style="justify-content: space-between">
                                                         <MudGrid Spacing="0">
                                                             <MudItem xs="12" sm="4">
-                                                                <MudText>Reference: @item.Id</MudText>
+                                                                <MudText>Numer: @item.Id</MudText>
                                                             </MudItem>
                                                             <MudItem xs="12" sm="4">
-                                                                <MudText>Type: @(item is HotelReservation ? "Hotel" : "Event") </MudText>
+                                                                <MudText>Typ: @(item is HotelReservation ? "Hotel" : "Wydarzenie") </MudText>
                                                             </MudItem>
                                                             <MudItem xs="12" sm="4">
-                                                                <MudText>Price @item.Price</MudText>
+                                                                <MudText>Cena @item.Price</MudText>
                                                             </MudItem>
                                                             <MudItem xs="8">
-                                                                <MudText>Arrival: @item.DateFrom.ToString(Constants.DefaultDateFormat)</MudText>
+                                                                <MudText>Przybycie: @item.DateFrom.ToString(Constants.DefaultDateFormat)</MudText>
                                                             </MudItem>
                                                             <MudItem xs="4">
-                                                                <MudText>Departure @item.DateTo.ToString(Constants.DefaultDateFormat)</MudText>
+                                                                <MudText>Wymeldowanie: @item.DateTo.ToString(Constants.DefaultDateFormat)</MudText>
                                                             </MudItem>
                                                         </MudGrid>
                                                     </div>
@@ -121,7 +121,7 @@
                                     }
                                     else
                                     {
-                                        @("This client has no future reservations")
+                                        @("Ten klient nie posiada rezerwacji")
                                     }
                                 </MudField>
                             </MudItem>
@@ -136,7 +136,7 @@
                     <CardHeaderContent>
                         <MudGrid>
                             <MudItem xs="12">
-                                <MudText Typo="Typo.h6">Active reservation</MudText>
+                                <MudText Typo="Typo.h6">Aktywna rezerwacja</MudText>
                             </MudItem>
                             <MudItem>
                                 <MudDivider DividerType="DividerType.Middle"/>
@@ -149,29 +149,29 @@
                     @if (ActiveReservation == null)
                     {
                         <MudItem xs="12">
-                            <MudText Typo="Typo.h6">There is no active reservation for client: @ReservationHelper.GetClientFirstNameLastName(ClientModel)</MudText>
+                            <MudText Typo="Typo.h6">Ten klient nie ma aktywnej rezerwacji: @ReservationHelper.GetClientFirstNameLastName(ClientModel)</MudText>
                         </MudItem>
                     }
                     else
                     {
                         <MudItem xs="12">
-                            <MudField Label="Reference" Variant="Variant.Outlined">@ActiveReservation.Id</MudField>
+                            <MudField Label="Numer" Variant="Variant.Outlined">@ActiveReservation.Id</MudField>
                         </MudItem>
                         <MudItem xs="12" sm="6">
-                            <MudField Label="Arrival" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.FlightLand">@ActiveReservation.DateFrom.ToString(Constants.DefaultDateFormat)</MudField>
+                            <MudField Label="Przybycie" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.FlightLand">@ActiveReservation.DateFrom.ToString(Constants.DefaultDateFormat)</MudField>
                         </MudItem>
                         <MudItem xs="12" sm="6">
-                            <MudField Label="Departure" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.DirectionsRun">@ActiveReservation.DateTo.ToString(Constants.DefaultDateFormat)</MudField>
+                            <MudField Label="Wymeldowanie" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.DirectionsRun">@ActiveReservation.DateTo.ToString(Constants.DefaultDateFormat)</MudField>
                         </MudItem>
                         <MudItem xs="12" sm="6">
-                            <MudField Label="Number of guests" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.People">@ActiveReservation.NumberOfGuests</MudField>
+                            <MudField Label="Liczba gości" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.People">@ActiveReservation.NumberOfGuests</MudField>
                         </MudItem>
                         <MudItem xs="12" sm="6">
-                            <MudField Label="Number of rooms" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.MeetingRoom">@ActiveReservation.RoomReservations.Count</MudField>
+                            <MudField Label="Liczba pokoi" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.MeetingRoom">@ActiveReservation.RoomReservations.Count</MudField>
                         </MudItem>
                         <MudItem xs="6">
                             <MudButton Variant="Variant.Outlined" OnClick="@(() => Select(ActiveReservation))" Color="Color.Primary">
-                                Go to reservation
+                                Idź do rezerwacji
                             </MudButton>
                         </MudItem>
                     }

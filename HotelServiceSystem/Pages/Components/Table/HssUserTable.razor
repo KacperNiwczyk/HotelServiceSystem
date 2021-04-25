@@ -6,10 +6,10 @@
     <MudTable T="User" Items="UserList" Hover="@true" SelectedItemChanged="@(item => ShowDetails(item.Id))" >
         <HeaderContent>
             <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<User, object>(x => x.Id))">Id</MudTableSortLabel></MudTh>
-            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<User, object>(x => x.UserName))">Name</MudTableSortLabel></MudTh>
-            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<User, object>(x => x.UserRole))">Role</MudTableSortLabel></MudTh>
-            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<User, object>(x => x.DateOfRegistration))">Date of registration</MudTableSortLabel></MudTh>
-            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<User, object>(x => x.LastLogin))">Last login</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<User, object>(x => x.UserName))">Nazwa</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<User, object>(x => x.UserRole))">Rola</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<User, object>(x => x.DateOfRegistration))">Data założenia</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<User, object>(x => x.LastLogin))">Ostatnie logowanie</MudTableSortLabel></MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>

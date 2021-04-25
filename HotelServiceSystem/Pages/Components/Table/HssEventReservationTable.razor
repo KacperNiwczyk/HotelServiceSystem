@@ -13,25 +13,25 @@
         </ToolBarContent>
         <HeaderContent>
             <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<EventReservation, object>(x => x.Id))">Id</MudTableSortLabel></MudTh>
-            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<EventReservation, object>(x => GetClientValue(x.Client)))">Client</MudTableSortLabel></MudTh>
-            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<EventReservation, object>(x => x.RoomReservations.Count))">Room List</MudTableSortLabel></MudTh>
-            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<EventReservation, object>(x => x.NumberOfGuests))">Number of guests</MudTableSortLabel></MudTh>
-            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<EventReservation, object>(x => x.DateFrom))">Arrival</MudTableSortLabel></MudTh>
-            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<EventReservation, object>(x => x.DateTo))">Departure</MudTableSortLabel></MudTh>
-            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<EventReservation, object>(x => x.Price))">Price</MudTableSortLabel></MudTh>
-            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<EventReservation, object>(x => x.DateOfSubmission))">Date of submission</MudTableSortLabel></MudTh>
-            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<EventReservation, object>(x => x.Description))">Description</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<EventReservation, object>(x => GetClientValue(x.Client)))">Klient</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<EventReservation, object>(x => x.RoomReservations.Count))">Pokoje</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<EventReservation, object>(x => x.NumberOfGuests))">Liczba gości</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<EventReservation, object>(x => x.DateFrom))">Przybycie</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<EventReservation, object>(x => x.DateTo))">Wymeldowanie</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<EventReservation, object>(x => x.Price))">Cena</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<EventReservation, object>(x => x.DateOfSubmission))">Data złożenia</MudTableSortLabel></MudTh>
+            <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<EventReservation, object>(x => x.Description))">Opis</MudTableSortLabel></MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Id">@context.Id</MudTd>
-            <MudTd DataLabel="Client">@GetClientValue(context.Client)</MudTd>
-            <MudTd DataLabel="Rooms">@GetRoomValues(context.RoomReservations)</MudTd>
-            <MudTd DataLabel="Number of guests">@context.NumberOfGuests</MudTd>
-            <MudTd DataLabel="Arrival">@context.DateFrom.ToString(Constants.DefaultDateFormat)</MudTd>
-            <MudTd DataLabel="Departure">@context.DateTo.ToString(Constants.DefaultDateFormat)</MudTd>
-            <MudTd DataLabel="Price">@context.Price</MudTd>
-            <MudTd DataLabel="Date of submission">@context.DateOfSubmission</MudTd>
-            <MudTd DataLabel="Description">@context.Description</MudTd>
+            <MudTd DataLabel="Klient">@GetClientValue(context.Client)</MudTd>
+            <MudTd DataLabel="Pokoje">@GetRoomValues(context.RoomReservations)</MudTd>
+            <MudTd DataLabel="Liczba gości">@context.NumberOfGuests</MudTd>
+            <MudTd DataLabel="Przybycie">@context.DateFrom.ToString(Constants.DefaultDateFormat)</MudTd>
+            <MudTd DataLabel="Wymeldowanie">@context.DateTo.ToString(Constants.DefaultDateFormat)</MudTd>
+            <MudTd DataLabel="Cena">@context.Price</MudTd>
+            <MudTd DataLabel="Data założenia">@context.DateOfSubmission</MudTd>
+            <MudTd DataLabel="Opis">@context.Description</MudTd>
         </RowTemplate>
         <PagerContent>
             <MudTablePager PageSizeOptions="@HssPagingSize.DefaultPageSize"/>

@@ -4,26 +4,26 @@
     if (!RoomModel.IsFreeNow)
     {
         <div class="d-flex">
-            <MudIcon Icon="@Icons.Material.Rounded.AssignmentInd"/><MudText style="color: darkred">Occupied</MudText>
+            <MudIcon Icon="@Icons.Material.Rounded.AssignmentInd"/><MudText style="color: darkred">Zajęty</MudText>
         </div>
         
     }
     else if(RoomModel.IsOutOfService)
     {
         <div class="d-flex">
-            <MudIcon Icon="@Icons.Material.Rounded.ReportProblem"/><MudText style="color: red">Out of service</MudText>
+            <MudIcon Icon="@Icons.Material.Rounded.ReportProblem"/><MudText style="color: red">Niedostępny</MudText>
         </div>
     }
     else if(RoomModel.ShouldBeCleaned)
     {
         <div class="d-flex">
-            <MudIcon Icon="@Icons.Material.Rounded.CleaningServices"/><MudText Style="color: tan">Cleaning</MudText>    
+            <MudIcon Icon="@Icons.Material.Rounded.CleaningServices"/><MudText Style="color: tan">Do sprzątania</MudText>    
         </div>
     }
     else
     {
         <div class="d-flex">
-            <MudIcon Icon="@Icons.Material.Rounded.CheckCircle"/><MudText style="color: green">Available</MudText>    
+            <MudIcon Icon="@Icons.Material.Rounded.CheckCircle"/><MudText style="color: green">Dostępny</MudText>    
         </div>
     }
 }

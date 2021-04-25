@@ -20,20 +20,20 @@
     {
         <MudTable T="Room" Items="RoomList" Hover="@true" Dense="@true" SelectedItemChanged="@(item => ShowDetails(item.Id))">
             <HeaderContent>
-                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => x.RoomIdentifier))">Name</MudTableSortLabel></MudTh>
-                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => BedCount(x, BedType.SingleBed)))">Single Beds</MudTableSortLabel></MudTh>
-                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => BedCount(x, BedType.DoubleBed)))">Double beds</MudTableSortLabel></MudTh>
-                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => x.Floor))">Floor</MudTableSortLabel></MudTh>
+                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => x.RoomIdentifier))">Nazwa</MudTableSortLabel></MudTh>
+                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => BedCount(x, BedType.SingleBed)))">Łóżka pojedyńcze</MudTableSortLabel></MudTh>
+                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => BedCount(x, BedType.DoubleBed)))">Łóżka podwójne</MudTableSortLabel></MudTh>
+                <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(x => x.Floor))">Piętro</MudTableSortLabel></MudTh>
                 <MudTh Class="hss-table-header"><MudTableSortLabel SortBy="@(new Func<Room, object>(GetRoomStatusValue))">Status</MudTableSortLabel></MudTh>
                 <MudTh Class="hss-table-header">Action</MudTh>
             </HeaderContent>
             <RowTemplate>
-                <MudTd DataLabel="Name">@context.RoomIdentifier</MudTd>
-                <MudTd DataLabel="Single beds">@BedCount(context, BedType.SingleBed)</MudTd>
-                <MudTd DataLabel="Double beds">@BedCount(context, BedType.DoubleBed)</MudTd>
-                <MudTd DataLabel="Floor">@context.Floor</MudTd>
+                <MudTd DataLabel="Nazwa">@context.RoomIdentifier</MudTd>
+                <MudTd DataLabel="Łóżka pojedyńcze">@BedCount(context, BedType.SingleBed)</MudTd>
+                <MudTd DataLabel="Łóżka podwójne">@BedCount(context, BedType.DoubleBed)</MudTd>
+                <MudTd DataLabel="Piętro">@context.Floor</MudTd>
                 <MudTd DataLabel="Status"><HssRoomStatus RoomModel="@context"/></MudTd>
-                <MudTd DataLabel="Action"><MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="@(() => OnRoomCleaned.InvokeAsync(context))">Cleaned</MudButton></MudTd>
+                <MudTd DataLabel="Akcja"><MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="@(() => OnRoomCleaned.InvokeAsync(context))">Posprzątany</MudButton></MudTd>
             </RowTemplate>
         </MudTable>
     }

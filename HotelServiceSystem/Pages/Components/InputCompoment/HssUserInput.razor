@@ -8,15 +8,15 @@
     <FluentValidationValidator/>
     <MudGrid>
         <MudItem xs="12" sm="6">
-            <MudTextField Label="Username*" Variant="Variant.Filled" @bind-Value="@UserModel.UserName"/>
+            <MudTextField Label="Nazwa użytkownika*" Variant="Variant.Filled" @bind-Value="@UserModel.UserName"/>
             <ValidationMessage For="@(() => UserModel.UserName)"/>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <MudTextField Label="Password*" Variant="Variant.Filled" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="OnIconClick" @bind-Value="@UserModel.Password"/>
+            <MudTextField Label="Hasło*" Variant="Variant.Filled" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="OnIconClick" @bind-Value="@UserModel.Password"/>
             <ValidationMessage For="@(() => UserModel.Password)"/>
         </MudItem>
         <MudItem xs="12">
-            <MudSelect Lable="Select user role" @bind-Value="@UserModel.UserRole" Variant="Variant.Filled">
+            <MudSelect Lable="Rola" @bind-Value="@UserModel.UserRole" Variant="Variant.Filled">
                 @foreach (UserRole item in Enum.GetValues(typeof(UserRole)))
                 {
                     <MudSelectItem Value="@item">@item</MudSelectItem>
@@ -30,11 +30,11 @@
          @if (!IsEdit)
          {
              <MudItem xs="6" sm="1">
-                 <MudButton EndIcon="@Icons.Material.Rounded.Replay" Color="Color.Warning" Variant="Variant.Filled" Size="Size.Large" ButtonType="ButtonType.Reset">Reset</MudButton>
+                 <MudButton EndIcon="@Icons.Material.Rounded.Replay" Color="Color.Warning" Variant="Variant.Filled" Size="Size.Large" ButtonType="ButtonType.Reset">Resetuj</MudButton>
              </MudItem>
          }
          <MudItem xs="6" sm="1">
-             <MudButton EndIcon="@Icons.Material.Rounded.Check" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Large" ButtonType="ButtonType.Submit">Submit</MudButton>
+             <MudButton EndIcon="@Icons.Material.Rounded.Check" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Large" ButtonType="ButtonType.Submit">Wyślij</MudButton>
          </MudItem>
     </MudGrid>
 </EditForm>
@@ -73,11 +73,11 @@
     {
         if (IsEdit)
         {
-            Snackbar.Add($"User '{UserModel.UserName}' was successfully edited", Severity.Warning);
+            Snackbar.Add($"Użytkownik '{UserModel.UserName}' został zaaktualizowany", Severity.Warning);
         }
         else
         {
-            Snackbar.Add($"New user '{UserModel.UserName}' was successfully added", Severity.Success);
+            Snackbar.Add($"Nowy użytkownik '{UserModel.UserName}' został dodany", Severity.Success);
         }
         
         await OnSubmit.InvokeAsync(UserModel);

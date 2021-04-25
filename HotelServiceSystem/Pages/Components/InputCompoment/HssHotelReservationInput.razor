@@ -23,33 +23,33 @@
             <HssClientAutoselect ClientModel="@ReservationViewModel.Client" ClientList="@ClientList" OnClientAdd="@AddClient" ClientValueChanged="@SetClient"/>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <MudTextField Label="Number of guests" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Person" @bind-Value="@ReservationViewModel.NumberOfGuests"/>
+            <MudTextField Label="Liczba gości" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Person" @bind-Value="@ReservationViewModel.NumberOfGuests"/>
             <ValidationMessage For="@(() => ReservationViewModel.NumberOfGuests)"/>
         </MudItem>
         <MudItem xs="12" sm="6">
             <HssTimespanPicker ReservationModel="ReservationViewModel" OnDatesSelected="FillAvailableRoomsList"/>
         </MudItem>
         <MudItem xl="12">
-            <HSSRoomMultiSelector @bind-NotSelected="@RoomList" NotSelectedLabel="Available Rooms" @bind-Selected="@ReservationViewModel.SelectedRooms" SelectedLabel="Selected Rooms" OnRoomsChanged="@CalculatePrice"/>
+            <HSSRoomMultiSelector @bind-NotSelected="@RoomList" NotSelectedLabel="Dostępne pokoje" @bind-Selected="@ReservationViewModel.SelectedRooms" SelectedLabel="Wybrane pokoje" OnRoomsChanged="@CalculatePrice"/>
             <ValidationMessage For="@(() => ReservationViewModel.SelectedRooms)"/>
         </MudItem>
         <MudItem xs="12">
             <HssAdditionalServiceSelect AdditionalServiceList="@_additionalServiceList" @bind-SelectedAdditionalServices="@ReservationViewModel.SelectedAdditionalServices"/>
         </MudItem>
         <MudItem xs="12">
-             <MudTextField Label="Discount" @bind-Value="@ReservationViewModel.Discount" Adornment="Adornment.Start" AdornmentText="%"/>
+             <MudTextField Label="Zniżka" @bind-Value="@ReservationViewModel.Discount" Adornment="Adornment.Start" AdornmentText="%"/>
         </MudItem>
         <MudItem xs="12">
-            <MudTextField Label="Price" ReadOnly="@true" @bind-Value="@Price" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Rounded.Money"/>
+            <MudTextField Label="Cena" ReadOnly="@true" @bind-Value="@Price" Adornment="Adornment.End" AdornmentText="PLN"/>
         </MudItem>
         @if (!IsUpdate)
         {
             <MudItem xs="6" sm="1">
-                <MudButton EndIcon="@Icons.Material.Rounded.Replay" Color="Color.Warning" Variant="Variant.Filled" Size="Size.Large" ButtonType="ButtonType.Reset">Reset</MudButton>
+                <MudButton EndIcon="@Icons.Material.Rounded.Replay" Color="Color.Warning" Variant="Variant.Filled" Size="Size.Large" ButtonType="ButtonType.Reset">Resetuj</MudButton>
             </MudItem>
         }
         <MudItem xs="6" sm="1">
-            <MudButton EndIcon="@Icons.Material.Rounded.Check" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Large" ButtonType="ButtonType.Submit">Submit</MudButton>
+            <MudButton EndIcon="@Icons.Material.Rounded.Check" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Large" ButtonType="ButtonType.Submit">Wyślij</MudButton>
         </MudItem>
     </MudGrid>
 </EditForm>

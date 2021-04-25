@@ -19,33 +19,33 @@
                 <HssClientAutoselect ClientModel="@EventViewModel.Client" ClientList="@ClientList" OnClientAdd="@AddClient" ClientValueChanged="@SetClient"/>
             </MudItem>
             <MudItem xs="12" sm="6">
-                <MudTextField Label="Number of guests" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Person" @bind-Value="@EventViewModel.NumberOfGuests"/>
+                <MudTextField Label="Liczba gości" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Person" @bind-Value="@EventViewModel.NumberOfGuests"/>
                 <ValidationMessage For="@(() => EventViewModel.NumberOfGuests)"/>
             </MudItem>
             <MudItem xs="12" sm="6">
                 <HssTimespanPicker ReservationModel="EventViewModel" OnDatesSelected="FillAvailableRoomsList"/>
             </MudItem>
             <MudItem xl="12">
-                <HSSRoomMultiSelector @bind-NotSelected="@RoomList" NotSelectedLabel="Available Rooms" @bind-Selected="@EventViewModel.SelectedRooms" SelectedLabel="Selected Rooms" OnRoomsChanged="@CalculatePrice"/>
+                <HSSRoomMultiSelector @bind-NotSelected="@RoomList" NotSelectedLabel="Dostępne pokoje" @bind-Selected="@EventViewModel.SelectedRooms" SelectedLabel="Wybrane pokoje" OnRoomsChanged="@CalculatePrice"/>
                 <ValidationMessage For="@(() => EventViewModel.SelectedRooms)"/>
             </MudItem>
          <MudItem xs="12">
-                 <MudTextField Label="Discount" @bind-Value="@EventViewModel.Discount"/>
+                 <MudTextField Label="Zniżka" @bind-Value="@EventViewModel.Discount"/>
             </MudItem>
          <MudItem xs="12">
-             <MudTextField Label="Price" ReadOnly="@true" @bind-Value="@Price" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Rounded.AttachMoney"/>
+             <MudTextField Label="Cena" ReadOnly="@true" @bind-Value="@Price" Adornment="Adornment.End" AdornmentText="PLN"/>
          </MudItem>
          <MudItem xs="12">
-             <MudTextField T="string" Label="Description" Variant="Variant.Text" @bind-Value="@EventViewModel.Description" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Description"/>
+             <MudTextField T="string" Label="Opis" Variant="Variant.Text" @bind-Value="@EventViewModel.Description" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.Description"/>
          </MudItem>
             @if (!IsUpdate)
             {
                 <MudItem xs="6" sm="1">
-                    <MudButton EndIcon="@Icons.Material.Rounded.Replay" Color="Color.Warning" Variant="Variant.Filled" Size="Size.Large" ButtonType="ButtonType.Reset">Reset</MudButton>
+                    <MudButton EndIcon="@Icons.Material.Rounded.Replay" Color="Color.Warning" Variant="Variant.Filled" Size="Size.Large" ButtonType="ButtonType.Reset">Resetuj</MudButton>
                 </MudItem>
             }
             <MudItem xs="6" sm="1">
-                <MudButton EndIcon="@Icons.Material.Rounded.Check" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Large" ButtonType="ButtonType.Submit">Submit</MudButton>
+                <MudButton EndIcon="@Icons.Material.Rounded.Check" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Large" ButtonType="ButtonType.Submit">Wyślij</MudButton>
             </MudItem>
         </MudGrid>
 </EditForm>
@@ -126,11 +126,11 @@
         if (IsUpdate)
         {
             RoomList = new List<Room>();
-            Snackbar.Add($"Reservation number '{EventViewModel.Id}' was successfully edited", Severity.Warning);
+            Snackbar.Add($"Rezerwacja numer '{EventViewModel.Id}' została zaaktualizowana", Severity.Warning);
         }
         else
         {
-            Snackbar.Add($"New reservation with number '{EventViewModel.Id}' was successfully added", Severity.Success);
+            Snackbar.Add($"Nowa rezerwacja została dodana", Severity.Success);
         }
         
         await OnSubmit.InvokeAsync(EventViewModel);
@@ -145,7 +145,7 @@
 
     private async Task AddClient(Client client)
     {
-        Snackbar.Add($"New client {client.FirstName} {client.LastName} was successfully added", Severity.Success);
+        Snackbar.Add($"Nowy klient {client.FirstName} {client.LastName} został dodany", Severity.Success);
         await clientService.AddClientAsync(client);
     }
     

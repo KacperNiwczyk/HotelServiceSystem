@@ -14,7 +14,7 @@
                     <TitleContent>
                         <div class="d-flex">
                             <MudIcon Icon="@Icons.Rounded.Edit" class="mr3"/>
-                            <MudText> Edit user</MudText>
+                            <MudText> Edytuj użytkownika</MudText>
                         </div>
                     </TitleContent>
                     <ChildContent>
@@ -29,7 +29,7 @@
                     <CardHeaderContent>
                         <MudGrid>
                             <MudItem xs="12">
-                                <MudText Align="Align.Center" Typo="Typo.h6" Inline="@true" GutterBottom="@true">Room <strong><u>@UserModel.UserName</u></strong> Details</MudText>    
+                                <MudText Align="Align.Center" Typo="Typo.h6" Inline="@true" GutterBottom="@true">Użytkownik <strong><u>@UserModel.UserName</u></strong> szczegóły</MudText>    
                             </MudItem>
                             <MudItem xs="12">
                                 <MudDivider DividerType="DividerType.Middle"/>
@@ -40,16 +40,16 @@
                 <MudCardContent>
                     <MudGrid>
                         <MudItem xs="12" sm="6">
-                            <MudField Label="Username" Variant="Variant.Outlined">@UserModel.UserName</MudField>
+                            <MudField Label="Nazwa użytkownika" Variant="Variant.Outlined">@UserModel.UserName</MudField>
                         </MudItem>
                         <MudItem xs="12" sm="6">
-                            <MudField Label="User role" Variant="Variant.Outlined">@UserModel.UserRole</MudField>
+                            <MudField Label="Rola" Variant="Variant.Outlined">@UserModel.UserRole</MudField>
                         </MudItem>
                         <MudItem xs="12" sm="6">
-                            <MudField Label="Date of registration" Variant="Variant.Outlined">@UserModel.DateOfRegistration.ToString(Constants.DefaultDateFormat)</MudField>
+                            <MudField Label="Data rejestracji" Variant="Variant.Outlined">@UserModel.DateOfRegistration.ToString(Constants.DefaultDateFormat)</MudField>
                         </MudItem>
                         <MudItem xs="12" sm="6">
-                            <MudField Label="Last login" Variant="Variant.Outlined">@UserModel.LastLogin.ToString(Constants.DefaultDateTimeFormat)</MudField>
+                            <MudField Label="Ostatnie logowanie" Variant="Variant.Outlined">@UserModel.LastLogin.ToString(Constants.DefaultDateTimeFormat)</MudField>
                         </MudItem>
                     </MudGrid>
                 </MudCardContent>

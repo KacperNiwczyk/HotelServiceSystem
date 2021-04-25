@@ -13,11 +13,11 @@
     <FluentValidationValidator/>
     <MudGrid Justify="Justify.FlexStart">
         <MudItem xs="12" sm="6">
-            <MudTextField Label="Room identifier" @bind-Value="ModelRoom.RoomIdentifier" Variant="Variant.Filled" Margin="Margin.Dense"/>
+            <MudTextField Label="Identyfikator pokoju" @bind-Value="ModelRoom.RoomIdentifier" Variant="Variant.Filled" Margin="Margin.Dense"/>
             <ValidationMessage For="@(() => ModelRoom.RoomIdentifier)"/>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <MudTextField Label="Price" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" @bind-Value="ModelRoom.Price" Variant="Variant.Filled" Margin="Margin.Dense"/>
+            <MudTextField Label="Cena" Adornment="Adornment.Start" AdornmentText="PLN" @bind-Value="ModelRoom.Price" Variant="Variant.Filled" Margin="Margin.Dense"/>
             <ValidationMessage For="@(() => ModelRoom.Price)"/>
         </MudItem>
         <MudItem xs="12" sm="2">
@@ -30,7 +30,7 @@
             <ValidationMessage For="@(() => ModelRoom.Beds)"/>
         </MudItem>
         <MudItem xs="12" md="2">
-            <MudTextField Label="Floor" @bind-Value="ModelRoom.Floor" Variant="Variant.Filled" Margin="Margin.Dense"/>
+            <MudTextField Label="Piętro" @bind-Value="ModelRoom.Floor" Variant="Variant.Filled" Margin="Margin.Dense"/>
             <ValidationMessage For="@(() => ModelRoom.Floor)"/>
         </MudItem>
         <MudItem xs="12">
@@ -39,11 +39,11 @@
         @if (!IsEdit)
         {
             <MudItem xs="6" sm="1">
-                <MudButton EndIcon="@Icons.Material.Rounded.Replay" Color="Color.Warning" Variant="Variant.Filled" OnClick="ResetValues" Size="Size.Large" ButtonType="ButtonType.Reset">Reset</MudButton>
+                <MudButton EndIcon="@Icons.Material.Rounded.Replay" Color="Color.Warning" Variant="Variant.Filled" OnClick="ResetValues" Size="Size.Large" ButtonType="ButtonType.Reset">Resetuj</MudButton>
             </MudItem>
         }
         <MudItem xs="6" sm="1">
-            <MudButton EndIcon="@Icons.Material.Rounded.Check" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Large" ButtonType="ButtonType.Submit">Submit</MudButton>
+            <MudButton EndIcon="@Icons.Material.Rounded.Check" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Large" ButtonType="ButtonType.Submit">Wyślij</MudButton>
         </MudItem>
     </MudGrid>
 </EditForm>
@@ -61,9 +61,9 @@
     [Parameter]
     public bool IsEdit { get; set; }
 
-    private string DoubleBedLabel => $"Double beds x{BedCount(BedType.DoubleBed)}";
+    private string DoubleBedLabel => $"Łóżka pojedyńcze x{BedCount(BedType.DoubleBed)}";
 
-    private string SingleBedLabel => $"Single beds x{BedCount(BedType.SingleBed)}";
+    private string SingleBedLabel => $"Łóżka podwójne x{BedCount(BedType.SingleBed)}";
 
     private List<AdditionalService> _selectedAdditionalServices = new List<AdditionalService>();
     
@@ -118,11 +118,11 @@
         
         if (IsEdit)
         {
-            Snackbar.Add($"Room '{ModelRoom.RoomIdentifier}' was successfully edited", Severity.Warning);
+            Snackbar.Add($"Pokój '{ModelRoom.RoomIdentifier}' został zaaktualizowany", Severity.Warning);
         }
         else
         {
-            Snackbar.Add($"New room '{ModelRoom.RoomIdentifier}' was successfully added", Severity.Success);
+            Snackbar.Add($"Nowy pokój '{ModelRoom.RoomIdentifier}' został dodany", Severity.Success);
         }
         
         await OnSubmit.InvokeAsync(ModelRoom);

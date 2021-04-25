@@ -19,7 +19,7 @@
                     <TitleContent>
                         <div class="d-flex">
                             <MudIcon Icon="@Icons.Rounded.Edit" class="mr3"/>
-                            <MudText> Edit reservation</MudText>
+                            <MudText> Edytuj rezerwacje</MudText>
                         </div>
                     </TitleContent>
                     <ChildContent>
@@ -34,7 +34,7 @@
                                 <CardHeaderContent>
                                     <MudGrid Justify="Justify.SpaceEvenly">
                                         <MudItem xs="12" sm="4">
-                                            <MudText Align="Align.Center" Typo="Typo.h6" Inline="@true" GutterBottom="@true">Reservation <strong><u>@EventReservationModel.Id</u></strong> Details</MudText>
+                                            <MudText Align="Align.Center" Typo="Typo.h6" Inline="@true" GutterBottom="@true">Rezerwacja <strong><u>@EventReservationModel.Id</u></strong> Szczegóły</MudText>
                                         </MudItem>
                                         <MudItem xs="12" sm="4">
                                             <MudHidden Breakpoint="Breakpoint.Xs"/>
@@ -42,7 +42,7 @@
                                         <MudItem xs="12" sm="4">
                                             @if (IsActive)
                                             {
-                                                <MudText Typo="Typo.h6" Color="Color.Secondary"> Active </MudText>
+                                                <MudText Typo="Typo.h6" Color="Color.Secondary"> Aktywna </MudText>
                                             }
                                         </MudItem>
                                         <MudItem xs="12">
@@ -54,28 +54,28 @@
                             <MudCardContent>
                                 <MudGrid>
                                     <MudItem xs="12" sm="6">
-                                        <MudField Label="Client" Variant="Variant.Outlined">@GetClientValue(EventReservationModel.Client)</MudField>
+                                        <MudField Label="Klient" Variant="Variant.Outlined">@GetClientValue(EventReservationModel.Client)</MudField>
                                     </MudItem>
                                     <MudItem xs="12" sm="6">
-                                        <MudField Label="Date of submission" Variant="Variant.Outlined">@EventReservationModel.DateOfSubmission.ToString(Constants.DefaultDateTimeFormat)</MudField>
+                                        <MudField Label="Data złożenia" Variant="Variant.Outlined">@EventReservationModel.DateOfSubmission.ToString(Constants.DefaultDateTimeFormat)</MudField>
                                     </MudItem>
                                     <MudItem xs="12" sm="6">
-                                        <MudField Label="Arrival" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.FlightLand">@EventReservationModel.DateRange.Start.Value.ToString(Constants.DefaultDateFormat)</MudField>
+                                        <MudField Label="Przybycie" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.FlightLand">@EventReservationModel.DateRange.Start.Value.ToString(Constants.DefaultDateFormat)</MudField>
                                     </MudItem>
                                     <MudItem xs="12" sm="6">
-                                        <MudField Label="Departure" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.DirectionsRun">@EventReservationModel.DateRange.End.Value.ToString(Constants.DefaultDateFormat)</MudField>
+                                        <MudField Label="Wymeldowanie" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.DirectionsRun">@EventReservationModel.DateRange.End.Value.ToString(Constants.DefaultDateFormat)</MudField>
                                     </MudItem>
                                     <MudItem xs="12" sm="6">
-                                        <MudField Label="Price" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.AttachMoney">@EventReservationModel.Price</MudField>
+                                        <MudField Label="Cena" Adornment="Adornment.Start" AdornmentText="PLN">@EventReservationModel.Price</MudField>
                                     </MudItem>
                                     <MudItem xs="12" sm="6">
-                                        <MudField Label="Discount" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.LocalOffer">% @EventReservationModel.Discount</MudField>
+                                        <MudField Label="Zniżka" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Rounded.LocalOffer">% @EventReservationModel.Discount</MudField>
                                     </MudItem>
                                      <MudItem xs="12">
-                                         <MudField Label="Description">@EventReservationModel.Description</MudField>
+                                         <MudField Label="Opis">@EventReservationModel.Description</MudField>
                                      </MudItem>
                                     <MudItem xs="12">
-                                        <MudField Variant="Variant.Outlined" Label="Additional services">
+                                        <MudField Variant="Variant.Outlined" Label="Serwisy dodatkowe">
                                             @foreach (var addService in EventReservationModel.SelectedAdditionalServices)
                                             {
                                                 <MudChip Text="@addService.Name"/>
@@ -83,7 +83,7 @@
                                         </MudField>
                                     </MudItem>
                                     <MudItem xs="10">
-                                        <MudField Label="Selected rooms" Variant="Variant.Outlined">
+                                        <MudField Label="Wybrane pokoje" Variant="Variant.Outlined">
                                             <ul class="selectable-ul" style="border: none; width:inherit">
                                                 @foreach (var item in _reservedRooms)
                                                 {
@@ -91,13 +91,13 @@
                                                         <div style="justify-content: space-between">
                                                             <MudGrid Spacing="0">
                                                                 <MudItem xs="12" sm="6">
-                                                                    <MudText>Number @item.RoomIdentifier</MudText>
+                                                                    <MudText>Numer @item.RoomIdentifier</MudText>
                                                                 </MudItem>
                                                                 <MudItem xs="12" sm="6">
-                                                                    <MudText>Floor: @item.Floor</MudText>
+                                                                    <MudText>Piętro: @item.Floor</MudText>
                                                                 </MudItem>
                                                                 <MudItem xs="12" sm="6">
-                                                                    <MudText>Price @item.Price</MudText>
+                                                                    <MudText>Kwota @item.Price</MudText>
                                                                 </MudItem>
                                                             </MudGrid>
                                                         </div>
