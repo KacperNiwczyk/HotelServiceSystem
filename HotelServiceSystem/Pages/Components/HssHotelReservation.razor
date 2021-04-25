@@ -38,6 +38,15 @@
     private async Task OnReservationAdd(HotelReservationViewModel hotelReservation)
     {
         var parsedReservation = hotelReservation.ToHotelReservation();
+        if (parsedReservation.DateFrom == DateTime.Today.ToLocalTime())
+        {
+            foreach (var room in parsedReservation.RoomReservations.Select(x => x.Room))
+            {
+                room.IsFreeNow = false;
+                await roomService.UpdateRoomAsync(room);
+            }
+        }
+        
         await hotelReservationService.AddHotelReservationAsync(parsedReservation);
         ReservationList.Add(parsedReservation);
     }

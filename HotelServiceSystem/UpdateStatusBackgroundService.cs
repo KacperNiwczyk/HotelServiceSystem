@@ -29,7 +29,7 @@ namespace HotelServiceSystem
 
 				while (!stoppingToken.IsCancellationRequested)
 				{
-					await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
+					await Task.Delay(TimeSpan.FromMinutes(15), stoppingToken);
 					await _updateStatusWorker.UpdateReservationsStatus(context);
 				}
 			}

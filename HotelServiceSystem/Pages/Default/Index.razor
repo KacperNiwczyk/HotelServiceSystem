@@ -38,16 +38,38 @@
             </MudCardContent>
             <MudCardActions>
                 <MudGrid>
-                    <MudItem xs="12" sm="6">
-                        <MudDatePicker Label="Select first date" @bind-Value="@dateFrom" DateChanged="ChangeDate"/>
+                    <MudItem xs="5">
+                        <MudDatePicker Label="Select first date" @bind-Value="@dateFrom" MinDate="DateTime.Today.ToLocalTime()" DateChanged="ChangeDate"/>
                     </MudItem>
-                    <MudItem xs="12" sm="6">
+                    <MudItem xs="5">
                         <MudSelect Label="Number of days" @bind-Value="@selectedDayOption">
                             @foreach (var option in daysOptions)
                             {
                                 <MudSelectItem Value="@option">@option</MudSelectItem>
                             }
                         </MudSelect>
+                    </MudItem>
+                    <MudItem xs="2">
+                        <MudTextField T="int" Label="Set ticks" @bind-value="@NearTicks"/>
+                    </MudItem>
+                </MudGrid>
+            </MudCardActions>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="12" sm="6">
+        <MudCard Elevation="25">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">Expected yearly Income</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudChart ChartType="ChartType.Bar" XAxisLabels="@yearlyXAxisLabels" ChartSeries="@_yearlyChartSeriesList" Height="100%" Width="100%" ChartOptions="@_yearlyChartOptions"/>
+            </MudCardContent>
+            <MudCardActions>
+                <MudGrid>
+                    <MudItem xs="2">
+                        <MudTextField T="int" Label="Set ticks" @bind-Value="@YearlyTicks"/>
                     </MudItem>
                 </MudGrid>
             </MudCardActions>
@@ -64,12 +86,43 @@
     private double[] roomsData;
     private double[] reservationPriceData;
     private string[] roomsLabels;
-    private ChartOptions _reservationChartOptions = new ChartOptions();
     private List<ChartSeries> _chartSeriesList;
+    private List<ChartSeries> _yearlyChartSeriesList = new List<ChartSeries>();
     private ChartOptions _chartOptions = new ChartOptions();
+    private ChartOptions _reservationChartOptions = new ChartOptions();
+    private ChartOptions _yearlyChartOptions = new ChartOptions();
+    private int _nearTicks;
+
+    private int NearTicks
+    {
+        get => _nearTicks;
+        set
+        {
+            _nearTicks = value;
+            UpdateNearChartTicks();
+        }
+    }
+
+    private int _yearlyTicks;
+    private int YearlyTicks
+    {
+        get => _yearlyTicks;
+        set
+        {
+            _yearlyTicks = value;
+            UpdateYearlyChartTicks();
+        }
+    }
+
+    private void UpdateYearlyChartTicks()
+    {
+        _yearlyChartOptions.YAxisTicks = _yearlyTicks;
+    }
+
     private DateTime dateFrom;
     private double totalIncome;
     private int[] daysOptions = {7, 14};
+    private string[] yearlyXAxisLabels = new[] {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
     private int selectedDayOption
     {
@@ -77,7 +130,7 @@
         set
         {
             _selectedOption = value;
-            InitializeReservationData();
+            InitializeNearReservationData();
         } 
     }
     private int _selectedOption = 7;
@@ -91,42 +144,68 @@
     {
         dateFrom = DateTime.Today.ToLocalTime();
         _reservationChartOptions.YAxisTicks = 250;
+        _yearlyChartOptions.YAxisTicks = 250;
+        _reservations = HotelReservationService.GetAllHotelReservations();
+        _eventReservations = EventReservationService.GetAllEvents();
+        InitializeYearlyData();
         InitializeRoomData();
-        InitializeReservationData();
+        InitializeNearReservationData();
         await base.OnInitializedAsync();
+    }
+
+    private void InitializeYearlyData()
+    {
+        var months = Enumerable.Range(1, 12);
+        var hotelReservationsMonthlyCosts = new double[12];
+        var eventReservationsMonthlyCosts = new double[12];
+
+        bool MonthIs(Reservation reservation, int monthNumber) => reservation.DateFrom.Month == monthNumber;
+        foreach (var monthNumber in months)
+        {
+            hotelReservationsMonthlyCosts[monthNumber - 1] = _reservations.Where(x => MonthIs(x, monthNumber) && x.Price > 0).Sum(x => x.Price);
+            eventReservationsMonthlyCosts[monthNumber - 1] = _eventReservations.Where(x => MonthIs(x, monthNumber) && x.Price >0).Sum(x => x.Price);
+        }
+
+        _yearlyChartSeriesList.Add(new ChartSeries() {Name = "Hotel Reservations", Data = hotelReservationsMonthlyCosts});
+        _yearlyChartSeriesList.Add(new ChartSeries() {Name = "Event Reservations", Data = eventReservationsMonthlyCosts});
     }
 
     private void ChangeDate(DateTime? dateTime)
     {
         dateFrom = dateTime.Value;
-        InitializeReservationData();
+        InitializeNearReservationData();
     }
 
-    private void InitializeReservationData()
+    private void InitializeNearReservationData()
     {
         _chartSeriesList = new List<ChartSeries>();
         bool GetReservationInTimespan(Reservation reservation) => !reservation.HasFinished && reservation.DateFrom >= dateFrom && reservation.DateFrom <= dateFrom.AddDays(_selectedOption) && reservation.Price > 0;
-        _reservations = HotelReservationService.GetAllHotelReservations().Where(GetReservationInTimespan).ToList();
-        _eventReservations = EventReservationService.GetAllEvents().Where(GetReservationInTimespan).ToList();
+        var futureHotelReservations = _reservations.Where(GetReservationInTimespan).ToList();
+        var futureEventReservations = _eventReservations.Where(GetReservationInTimespan).ToList();
         
-        totalIncome = _reservations.Sum(x => x.Price) + _eventReservations.Sum(x => x.Price);
+        totalIncome = futureHotelReservations.Sum(x => x.Price) + futureEventReservations.Sum(x => x.Price);
+
+        var dates = GetDaysList();
+        xAxisLables = dates.Select(x => x.ToString(Constants.DayMonth)).ToArray();
         
+        var hotelReservationsChartData = GetChartData(dates, futureHotelReservations);
+        var eventReservationChartData = GetChartData(dates, futureEventReservations);
         
-        var dates = new List<DateTime>();
+        var hotelSeries = new ChartSeries { Name = "Hotel Reservations", Data = hotelReservationsChartData.Values.ToArray()};
+        var eventSeries = new ChartSeries { Name = "Event Reservations", Data = eventReservationChartData.Values.ToArray()};
         
-        dates.Add(dateFrom);
-        for (int i = 1; i <= _selectedOption ; i++)
+        _chartSeriesList.Add(hotelSeries);
+        _chartSeriesList.Add(eventSeries);
+    }
+
+    private List<DateTime> GetDaysList()
+    {
+        var dates = new List<DateTime> {dateFrom};
+        for (var i = 1; i < _selectedOption; i++)
         {
             dates.Add(dateFrom.AddDays(i));
         }
-        
-        var hotelReservationsChartData = GetChartData(dates, _reservations);
-        var eventReservationChartData = GetChartData(dates, _eventReservations);
-        xAxisLables = dates.Select(x => x.ToString(Constants.DayMonth)).ToArray();
-        var hotelSeries = new ChartSeries() {Name = "Hotel Reservations", Data = hotelReservationsChartData.Values.ToArray()};
-        var eventSeries = new ChartSeries() {Name = "Event Reservations", Data = eventReservationChartData.Values.ToArray()};
-        _chartSeriesList.Add(hotelSeries);
-        _chartSeriesList.Add(eventSeries);
+        return dates;
     }
 
     private Dictionary<DateTime, double> GetChartData<T>(List<DateTime> dates, List<T> reservations) where T: Reservation
@@ -174,5 +253,10 @@
         room.ShouldBeCleaned = false;
         await RoomService.UpdateRoomAsync(room);
         _shouldBeCleaned = _rooms.Where(x => x.ShouldBeCleaned).Take(5).ToList();
+    }
+    
+    private void UpdateNearChartTicks()
+    {
+        _reservationChartOptions.YAxisTicks = _nearTicks;
     }
 }
