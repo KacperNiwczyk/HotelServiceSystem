@@ -14,7 +14,7 @@
         <MudCard Elevation="25">
             <MudCardHeader>
                 <CardHeaderContent>
-                    <MudText Typo="Typo.h6">Rooms statistics</MudText>
+                    <MudText Typo="Typo.h6">Statystyki pokoi</MudText>
                 </CardHeaderContent>
             </MudCardHeader>
             <MudCardContent>
@@ -26,7 +26,7 @@
         <MudCard Elevation="25">
             <MudCardHeader>
                 <CardHeaderContent>
-                    <MudText Typo="Typo.h6">Expected income in next @_selectedOption days startng from @dateFrom.ToString(Constants.DefaultDateFormat) - @totalIncome<MudIcon Class="hss-table-icon" Icon="@Icons.Material.Filled.AttachMoney"/> </MudText>
+                    <MudText Typo="Typo.h6">Szacowany przychód w przeciagu @_selectedOption dni zaczynając od @dateFrom.ToString(Constants.DefaultDateFormat) - @totalIncome PLN </MudText>
                 </CardHeaderContent>
             </MudCardHeader>
             <MudCardContent>
@@ -39,10 +39,10 @@
             <MudCardActions>
                 <MudGrid>
                     <MudItem xs="5">
-                        <MudDatePicker Label="Select first date" @bind-Value="@dateFrom" MinDate="DateTime.Today.ToLocalTime()" DateChanged="ChangeDate"/>
+                        <MudDatePicker Label="Wybierz datę" @bind-Value="@dateFrom" MinDate="DateTime.Today.ToLocalTime()" DateChanged="ChangeDate"/>
                     </MudItem>
                     <MudItem xs="5">
-                        <MudSelect Label="Number of days" @bind-Value="@selectedDayOption">
+                        <MudSelect Label="Ilość dni" @bind-Value="@selectedDayOption">
                             @foreach (var option in daysOptions)
                             {
                                 <MudSelectItem Value="@option">@option</MudSelectItem>
@@ -50,7 +50,7 @@
                         </MudSelect>
                     </MudItem>
                     <MudItem xs="2">
-                        <MudTextField T="int" Label="Set ticks" @bind-value="@NearTicks"/>
+                        <MudTextField T="int" Label="Ustaw przedział" @bind-value="@NearTicks"/>
                     </MudItem>
                 </MudGrid>
             </MudCardActions>
@@ -60,7 +60,7 @@
         <MudCard Elevation="25">
             <MudCardHeader>
                 <CardHeaderContent>
-                    <MudText Typo="Typo.h6">Expected yearly Income</MudText>
+                    <MudText Typo="Typo.h6">Szacowany przychód roczny</MudText>
                 </CardHeaderContent>
             </MudCardHeader>
             <MudCardContent>
@@ -69,7 +69,7 @@
             <MudCardActions>
                 <MudGrid>
                     <MudItem xs="2">
-                        <MudTextField T="int" Label="Set ticks" @bind-Value="@YearlyTicks"/>
+                        <MudTextField T="int" Label="Ustaw przedział" @bind-Value="@YearlyTicks"/>
                     </MudItem>
                 </MudGrid>
             </MudCardActions>
@@ -122,7 +122,7 @@
     private DateTime dateFrom;
     private double totalIncome;
     private int[] daysOptions = {7, 14};
-    private string[] yearlyXAxisLabels = new[] {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+    private string[] yearlyXAxisLabels = new[] {"Sty", "Lut", "Mar", "Kwi", "Maj", "Cze", "Lip", "Sie", "Wrz", "Paź", "Lis", "Gru"};
 
     private int selectedDayOption
     {
@@ -166,8 +166,8 @@
             eventReservationsMonthlyCosts[monthNumber - 1] = _eventReservations.Where(x => MonthIs(x, monthNumber) && x.Price >0).Sum(x => x.Price);
         }
 
-        _yearlyChartSeriesList.Add(new ChartSeries() {Name = "Hotel Reservations", Data = hotelReservationsMonthlyCosts});
-        _yearlyChartSeriesList.Add(new ChartSeries() {Name = "Event Reservations", Data = eventReservationsMonthlyCosts});
+        _yearlyChartSeriesList.Add(new ChartSeries() {Name = "Rezerwacje hotelowe", Data = hotelReservationsMonthlyCosts});
+        _yearlyChartSeriesList.Add(new ChartSeries() {Name = "Rezerwacje wydarzeń", Data = eventReservationsMonthlyCosts});
     }
 
     private void ChangeDate(DateTime? dateTime)
@@ -191,8 +191,8 @@
         var hotelReservationsChartData = GetChartData(dates, futureHotelReservations);
         var eventReservationChartData = GetChartData(dates, futureEventReservations);
         
-        var hotelSeries = new ChartSeries { Name = "Hotel Reservations", Data = hotelReservationsChartData.Values.ToArray()};
-        var eventSeries = new ChartSeries { Name = "Event Reservations", Data = eventReservationChartData.Values.ToArray()};
+        var hotelSeries = new ChartSeries { Name = "Rezerwacje hotelowe", Data = hotelReservationsChartData.Values.ToArray()};
+        var eventSeries = new ChartSeries { Name = "Rezerwacje wydarzeń", Data = eventReservationChartData.Values.ToArray()};
         
         _chartSeriesList.Add(hotelSeries);
         _chartSeriesList.Add(eventSeries);
@@ -243,8 +243,8 @@
         roomsData = new[] {availableCount, occupiedCount, outOfServiceCount, cleanedCount};
         roomsLabels = new[]
         {
-            $"Available ({availableCount})", $"Occupied ({occupiedCount})", $"Out of service ({outOfServiceCount})",
-            $"Should be cleaned ({cleanedCount})"
+            $"Dostępne ({availableCount})", $"Zajętę ({occupiedCount})", $"Niedostępne ({outOfServiceCount})",
+            $"Do sprzątątania ({cleanedCount})"
         };
     }
     
