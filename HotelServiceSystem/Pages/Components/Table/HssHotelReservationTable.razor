@@ -8,7 +8,7 @@
 <MudCard Elevation="25">
     <MudTable T="HotelReservation" Items="HotelReservationList" Filter="@(new Func<HotelReservation,bool>(FilterFunc))" Hover="@true" Dense="@Dense" SelectedItemChanged="@(item => ShowDetails(item.Id))">
         <ToolBarContent>
-            <MudText Typo="Typo.h6">Hotel reservations</MudText>
+            <MudText Typo="Typo.h6">Rezerwacje hotelowe</MudText>
             <MudToolBarSpacer/>
             <MudTextField @bind-Value="searchString" Placeholder="Szukaj" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>

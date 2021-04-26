@@ -12,11 +12,11 @@ namespace HotelServiceSystem.Core.Validations
 		public AdditionalServiceValidator()
 		{
 			RuleFor(x => x.Name).NotEmpty()
-				.WithMessage("Additional service name cannot be empty");
+				.WithMessage("Nazwa dodatkowej usuługi nie może być pusta");
 			RuleFor(x => x.Price).GreaterThanOrEqualTo(MinPrice).LessThan(MaxPrice)
-				.WithMessage($"Additional service Price should be higher than {MinPrice} and less than {MaxPrice}");
+				.WithMessage($"Kosz dodatkowej usługi nie może być mniejszy niż {MinPrice} oraz większy od {MaxPrice}");
 			RuleFor(x => x.ServiceType).NotNull()
-				.WithMessage("Additional service type cannot be empty");
+				.WithMessage("Typ dodatkowej usługi nie może być pusty");
 		}
 	}
 }

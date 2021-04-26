@@ -13,17 +13,17 @@ namespace HotelServiceSystem.Core.Validations
 		{
 			RuleFor(x => x).NotNull();
 			RuleFor(x => x.FirstName).MaximumLength(25).NotEmpty()
-				.WithMessage($"First name cannot be empty or longer than {FirstNameLastNameMaxLength}");
+				.WithMessage($"Imię nie może być puste ani dłuższe niż {FirstNameLastNameMaxLength} znaków");
 			RuleFor(x => x.LastName).MaximumLength(25).NotEmpty()
-				.WithMessage($"Last name cannot be empty or longer than {FirstNameLastNameMaxLength}");
+				.WithMessage($"Nazwisko nie może być puste ani dłuższe niż {FirstNameLastNameMaxLength} zanków");
 			RuleFor(x => x.CompanyName).MaximumLength(100)
-				.WithMessage($"Company name cannot be longer than {CompanyNameMaxLength} characters");
+				.WithMessage($"Nazwa firmy nie może być dłuższa niż {CompanyNameMaxLength} znaków");
 			RuleFor(x => x.Email).NotEmpty().EmailAddress()
-				.WithMessage("Email address cannot be empty and must have valid email format");
+				.WithMessage("Adres email nie może być pusty i musi posiadać poprawny format");
 			RuleFor(x => x.PhoneNumber).NotEmpty()
-				.WithMessage("Phone number cannot be empty");
+				.WithMessage("Numer telefonu nie może być pusty");
 			RuleFor(x => x.TaxId).Must(BeNumber)
-				.WithMessage("Tax ID should contain only digits");
+				.WithMessage("NIP może zawierać tylko cyfry");
 		}
 
 		private static bool BeNumber(string taxId)

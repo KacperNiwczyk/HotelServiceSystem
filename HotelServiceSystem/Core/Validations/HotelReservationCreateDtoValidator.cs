@@ -8,17 +8,17 @@ namespace HotelServiceSystem.Core.Validations
 {
 	public class HotelReservationCreateDtoValidator : AbstractValidator<HotelReservationCreateDto>
 	{
-		private static readonly string IncorrectDateFormatMessage = $"Date must be provided in proper format {Constants.DefaultDateFormat}";
+		private static readonly string IncorrectDateFormatMessage = $"Data musi być podana w poprawnym formacie {Constants.DefaultDateFormat}";
 
 		public HotelReservationCreateDtoValidator()
 		{
 			RuleFor(x => x.ClientDto).SetValidator(new ClientDtoValidator());
 			RuleFor(x => x.DateFrom).Must(BeProperArrivalDate)
-				.WithMessage(IncorrectDateFormatMessage + " and has to be higher or equal to today's date");
+				.WithMessage(IncorrectDateFormatMessage + " i być późniejsza lub równa dziś.");
 			RuleFor(x => x.DateTo).Must(BeProperDate)
 				.WithMessage(IncorrectDateFormatMessage);
 			RuleFor(x => x).Must(HaveProperDates)
-				.WithMessage($"Date of arrival must be lower then date of departure");
+				.WithMessage($"Data przybycia musi być mniejsza niż data wymeldowania");
 		}
 
 		private bool BeProperArrivalDate(string date)
