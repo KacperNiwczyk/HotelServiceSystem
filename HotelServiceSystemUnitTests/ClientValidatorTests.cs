@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using HotelServiceSystem.Core.Validations;
-using HotelServiceSystem.Entities;
+using HotelServiceSystem.Domain.Entities;
+using HotelServiceSystem.Logic.Features.Validations;
 using NUnit.Framework;
 
 namespace HotelServiceSystemUnitTests

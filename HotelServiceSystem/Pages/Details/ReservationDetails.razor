@@ -1,10 +1,10 @@
 ﻿@page "/hotelReservationDetails/{Id:int}"
-@using HotelServiceSystem.Entities
-@using HotelServiceSystem.Interfaces.Services
 @using HotelServiceSystem.ViewModel
-@using HotelServiceSystem.Core
-@using HotelServiceSystem.Interfaces.Helpers
-@using HotelServiceSystem.Core.Helpers
+@using HotelServiceSystem.Logic.Interfaces.Services
+@using HotelServiceSystem.Logic.Interfaces.Helpers
+@using HotelServiceSystem.Data_access.Core
+@using HotelServiceSystem.Domain.Entities
+@using HotelServiceSystem.Logic.Features.Helpers
 
 @inject IHotelReservationService hotelReservationService
 @inject NavigationManager navigationManager

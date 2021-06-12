@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using HotelServiceSystem.Entities;
+using HotelServiceSystem.Domain.Entities;
 using MudBlazor;
 
 namespace HotelServiceSystem.ViewModel

@@ -1,17 +1,16 @@
-using HotelServiceSystem.Core;
-using HotelServiceSystem.Core.BackgroundWorkers;
-using HotelServiceSystem.Core.Helpers;
-using HotelServiceSystem.Core.Repositories;
-using HotelServiceSystem.Core.Service;
-using HotelServiceSystem.Interfaces.Helpers;
-using HotelServiceSystem.Interfaces.Repositories;
+using HotelServiceSystem.Data_access.Core;
+using HotelServiceSystem.Data_access.Core.BackgroundWorkers;
+using HotelServiceSystem.Data_access.Core.Repositories;
+using HotelServiceSystem.Logic.Features.Helpers;
+using HotelServiceSystem.Logic.Features.Service;
+using HotelServiceSystem.Logic.Interfaces.Helpers;
+using HotelServiceSystem.Logic.Interfaces.Repositories;
+using HotelServiceSystem.Logic.Interfaces.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
-using HotelServiceSystem.Interfaces.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;

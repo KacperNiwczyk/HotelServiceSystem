@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using HotelServiceSystem.Core;
-using HotelServiceSystem.Interfaces.Helpers;
-using HotelServiceSystem.Interfaces.Services;
+using HotelServiceSystem.Data_access.Core;
+using HotelServiceSystem.Logic.Interfaces.Helpers;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

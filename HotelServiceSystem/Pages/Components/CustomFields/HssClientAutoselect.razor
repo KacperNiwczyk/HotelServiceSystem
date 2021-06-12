@@ -1,6 +1,6 @@
-﻿@using HotelServiceSystem.Entities
-@using HotelServiceSystem.Core.Helpers
-@using System.Linq.Expressions
+﻿@using System.Linq.Expressions
+@using HotelServiceSystem.Domain.Entities
+@using HotelServiceSystem.Logic.Features.Helpers
 
 <div class="form-control-wrapper">
 @if (ClientList != null && ClientList.Any())
@@ -13,7 +13,7 @@
                 @template.GetAutocompleteValue()
             </ResultTemplate>
             <NotFoundTemplate>
-                Client not found
+                Nie znaleziono klienta
                 <MudFab Icon="@Icons.Material.Rounded.Add" Label="Dodaj nowy" Size="Size.Medium" DisableElevation="@true" OnClick="@(() => { EnableClientAdd = true;})"/>
             </NotFoundTemplate>
         </BlazoredTypeahead>

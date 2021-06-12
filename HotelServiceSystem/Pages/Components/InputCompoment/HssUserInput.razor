@@ -1,7 +1,6 @@
-﻿@using HotelServiceSystem.Interfaces.Services
-@using HotelServiceSystem.Entities
-@using HotelServiceSystem.Features.Enums
-@using InputType = MudBlazor.InputType
+﻿@using InputType = MudBlazor.InputType
+@using HotelServiceSystem.Logic.Features.Enums
+@using HotelServiceSystem.Domain.Entities
 @inject ISnackbar Snackbar
 
 <EditForm Model="@UserModel" OnValidSubmit="@Submit">

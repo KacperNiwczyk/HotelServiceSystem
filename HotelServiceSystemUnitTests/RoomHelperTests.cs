@@ -1,8 +1,8 @@
 ﻿using System;
-using HotelServiceSystem.Core;
-using HotelServiceSystem.Core.Helpers;
-using HotelServiceSystem.Entities;
-using HotelServiceSystem.Interfaces.Helpers;
+using HotelServiceSystem.Data_access.Core;
+using HotelServiceSystem.Domain.Entities;
+using HotelServiceSystem.Logic.Features.Helpers;
+using HotelServiceSystem.Logic.Interfaces.Helpers;
 using NUnit.Framework;
 
 namespace HotelServiceSystemUnitTests

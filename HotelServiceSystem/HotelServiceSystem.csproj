@@ -29,6 +29,7 @@
         <Link>.gitignore</Link>
       </Content>
       <Content Remove="obj\**" />
+      <Content Remove="Migrations\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -41,18 +42,23 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Migrations" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Compile Remove="obj\**" />
+      <Compile Remove="Migrations\**" />
     </ItemGroup>
 
     <ItemGroup>
       <EmbeddedResource Remove="obj\**" />
+      <EmbeddedResource Remove="Migrations\**" />
     </ItemGroup>
 
     <ItemGroup>
       <None Remove="obj\**" />
+      <None Remove="Migrations\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Data access" />
+      <Folder Include="Domain" />
+      <Folder Include="Logic" />
     </ItemGroup>
 </Project>

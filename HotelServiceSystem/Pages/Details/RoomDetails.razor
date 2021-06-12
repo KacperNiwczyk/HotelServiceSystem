@@ -1,9 +1,9 @@
 ﻿@page "/roomDetails/{Id:int}"
-@using HotelServiceSystem.Interfaces.Services
-@using HotelServiceSystem.Entities
-@using HotelServiceSystem.Core.Helpers
-@using HotelServiceSystem.Core
-@using HotelServiceSystem.Interfaces.Helpers
+@using HotelServiceSystem.Logic.Interfaces.Services
+@using HotelServiceSystem.Logic.Interfaces.Helpers
+@using HotelServiceSystem.Domain.Entities
+@using HotelServiceSystem.Logic.Features.Helpers
+@using HotelServiceSystem.Data_access.Core
 
 @inject IRoomService roomService;
 @inject IAdditionalServiceService additionalServiceService

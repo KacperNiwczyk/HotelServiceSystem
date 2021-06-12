@@ -1,6 +1,5 @@
-﻿
-@using HotelServiceSystem.Core
-@using HotelServiceSystem.ViewModel
+﻿@using HotelServiceSystem.ViewModel
+@using HotelServiceSystem.Data_access.Core
 
 <MudDateRangePicker Label="Wybierz date rezerwacji" DateRangeChanged="CheckDatesSelected" MinDate="@GetMinimalDepartureDate()"/>
 @code {

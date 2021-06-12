@@ -1,6 +1,5 @@
-﻿@using HotelServiceSystem.Interfaces.Services
-@using HotelServiceSystem.Entities
-@using HotelServiceSystem.Core
+﻿@using HotelServiceSystem.Data_access.Core
+@using HotelServiceSystem.Domain.Entities
 @inject ISnackbar Snackbar
 
 <EditForm Model="@AdditionalServiceModel" OnValidSubmit="@Submit">

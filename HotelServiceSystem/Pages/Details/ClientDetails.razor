@@ -1,10 +1,10 @@
 ﻿@page "/clientDetails/{Id:int}"
-@using HotelServiceSystem.Entities
-@using HotelServiceSystem.Interfaces.Helpers
-@using HotelServiceSystem.Interfaces.Services
-@using HotelServiceSystem.Core
-@using HotelServiceSystem.Core.Helpers
 @using System.Reflection.Metadata
+@using HotelServiceSystem.Data_access.Core
+@using HotelServiceSystem.Domain.Entities
+@using HotelServiceSystem.Logic.Features.Helpers
+@using HotelServiceSystem.Logic.Interfaces.Helpers
+@using HotelServiceSystem.Logic.Interfaces.Services
 @inject IClientService clientService
 @inject NavigationManager navigationManager
 @inject IReservationHelper ReservationHelper
